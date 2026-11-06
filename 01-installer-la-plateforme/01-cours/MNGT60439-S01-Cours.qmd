@@ -161,7 +161,7 @@ graphiques. Les séances 1 à 6 existent pour que ce fichier soit le vôtre.
 | **VS Code** | L'éditeur où l'on écrit et exécute le code | Le tableau de bord |
 
 ```text
-mngt60xxx/                  ← ouvrez CE dossier dans VS Code (Fichier → Ouvrir le dossier)
+MNGT60439/                  ← ouvrez CE dossier dans VS Code (Fichier → Ouvrir le dossier)
 ├── .venv/                  ← l'environnement virtuel (créé à la pré-séance)
 ├── data/                   ← les données du cours
 │   ├── entreprises.csv

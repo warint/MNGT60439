@@ -46,7 +46,7 @@ emplacements **à compléter** par les enseignant·es responsables.
 
 1. Installez **Python 3.12 ou 3.13** et **VS Code** — voir la
    [pré-séance 01](01-installer-la-plateforme/00-pre-seance/README.md).
-2. Téléchargez ce dépôt (**Code → Download ZIP**, ou `git clone https://github.com/warint/MNGT60439.git mngt60xxx`), puis, dans le dossier :
+2. Téléchargez ce dépôt (**Code → Download ZIP**, ou `git clone https://github.com/warint/MNGT60439.git`), puis, dans le dossier :
 
 ```bash
 python3 -m venv .venv                    # Windows : py -m venv .venv

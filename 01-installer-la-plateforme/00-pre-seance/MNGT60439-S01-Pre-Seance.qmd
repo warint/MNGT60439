@@ -141,17 +141,17 @@ sélectionner l'interpréteur de votre `.venv`. Les démonstrations se font dans
 ## 3 · Récupérer le dossier du cours
 
 Sur [github.com/warint/MNGT60439](https://github.com/warint/MNGT60439) : **Code → Download ZIP**,
-décompressez sur votre **Bureau** et renommez le dossier `mngt60xxx` (le ZIP s'appelle
-`MNGT60439-main`). Vous connaissez git ? `git clone https://github.com/warint/MNGT60439.git mngt60xxx`.
+décompressez sur votre **Bureau** et renommez le dossier `MNGT60439` (le ZIP s'appelle
+`MNGT60439-main`). Vous connaissez git ? `git clone https://github.com/warint/MNGT60439.git`.
 
 Ouvrez ensuite un terminal **dans ce dossier** :
 
 ```bash
-cd ~/Desktop/mngt60xxx           # Windows : cd $HOME\Desktop\mngt60xxx
+cd ~/Desktop/MNGT60439           # Windows : cd $HOME\Desktop\MNGT60439
 ```
 
 ::: {.step}
-Dans VS Code : **Fichier → Ouvrir le dossier…** → `mngt60xxx`, puis **Terminal → Nouveau
+Dans VS Code : **Fichier → Ouvrir le dossier…** → `MNGT60439`, puis **Terminal → Nouveau
 terminal**. Le terminal s'ouvre directement au bon endroit.
 :::
 

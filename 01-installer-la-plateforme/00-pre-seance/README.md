@@ -36,8 +36,8 @@ théorie ; (3) le rôle qu'il donne à l'observation des données ; (4) une obje
 ## Étape 3 — Le dossier du cours et l'environnement virtuel
 
 Téléchargez le dossier du cours depuis <https://github.com/warint/MNGT60439> (**Code → Download
-ZIP**, ou `git clone https://github.com/warint/MNGT60439.git mngt60xxx`), décompressez-le sur le Bureau sous
-le nom `mngt60xxx`, ouvrez-le dans VS Code (**Fichier → Ouvrir le dossier**), puis, dans le terminal
+ZIP**, ou `git clone https://github.com/warint/MNGT60439.git`), décompressez-le sur le Bureau sous
+le nom `MNGT60439`, ouvrez-le dans VS Code (**Fichier → Ouvrir le dossier**), puis, dans le terminal
 intégré :
 
 ```bash

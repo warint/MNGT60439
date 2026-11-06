@@ -1327,7 +1327,7 @@ Thierry Warin, PhD
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href></a>mngt60xxx/                  ← ouvrez CE dossier dans VS Code (Fichier → Ouvrir le dossier)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href></a>MNGT60439/                  ← ouvrez CE dossier dans VS Code (Fichier → Ouvrir le dossier)</span>
 <span id="cb1-2"><a href></a>├── .venv/                  ← l&#39;environnement virtuel (créé à la pré-séance)</span>
 <span id="cb1-3"><a href></a>├── data/                   ← les données du cours</span>
 <span id="cb1-4"><a href></a>│   ├── entreprises.csv</span>
@@ -1389,7 +1389,7 @@ Thierry Warin, PhD
 </section>
 <section id="des-nombres-et-des-variables" class="slide level2">
 <h2>Des nombres et des variables</h2>
-<div id="158addaf" class="cell" data-execution_count="2">
+<div id="c7bb0349" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href></a>chiffre_affaires <span class="op">=</span> <span class="dv">96_773</span>      <span class="co"># Tesla, 2023, en millions de $ US</span></span>
 <span id="cb3-2"><a href></a>resultat_net <span class="op">=</span> <span class="dv">14_974</span></span>
 <span id="cb3-3"><a href></a></span>
@@ -1409,7 +1409,7 @@ Marge nette de Tesla en 2023 : 15.5%</code></pre>
 </section>
 <section id="les-types-ce-que-python-croit-que-vous-lui-donnez" class="slide level2">
 <h2>Les types : ce que Python croit que vous lui donnez</h2>
-<div id="1daf7a1c" class="cell" data-execution_count="3">
+<div id="fd4f4ecb" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href></a>annee <span class="op">=</span> <span class="dv">2023</span>                 <span class="co"># int   : un entier</span></span>
 <span id="cb5-2"><a href></a>marge <span class="op">=</span> <span class="fl">0.155</span>                <span class="co"># float : un nombre à virgule</span></span>
 <span id="cb5-3"><a href></a>entreprise <span class="op">=</span> <span class="st">&quot;Tesla&quot;</span>         <span class="co"># str   : du texte</span></span>
@@ -1428,7 +1428,7 @@ Marge nette de Tesla en 2023 : 15.5%</code></pre>
 </section>
 <section id="listes-et-dictionnaires" class="slide level2">
 <h2>Listes et dictionnaires</h2>
-<div id="ec8bea7c" class="cell" data-execution_count="4">
+<div id="c69d3d95" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href></a>constructeurs <span class="op">=</span> [<span class="st">&quot;Tesla&quot;</span>, <span class="st">&quot;Ford&quot;</span>, <span class="st">&quot;General Motors&quot;</span>]       <span class="co"># une liste : un ordre</span></span>
 <span id="cb7-2"><a href></a><span class="bu">print</span>(constructeurs[<span class="dv">0</span>], <span class="bu">len</span>(constructeurs))               <span class="co"># Python compte à partir de 0</span></span>
 <span id="cb7-3"><a href></a></span>
@@ -1449,7 +1449,7 @@ General Motors    157,658 M$</code></pre>
 </section>
 <section id="une-fonction-écrire-une-fois-utiliser-partout" class="slide level2">
 <h2>Une fonction : écrire une fois, utiliser partout</h2>
-<div id="c5476e26" class="cell" data-execution_count="5">
+<div id="ba1decef" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href></a><span class="kw">def</span> marge(resultat, ventes):</span>
 <span id="cb9-2"><a href></a>    <span class="co">&quot;&quot;&quot;Marge nette : la part de chaque dollar de ventes qui reste en profit.&quot;&quot;&quot;</span></span>
 <span id="cb9-3"><a href></a>    <span class="cf">return</span> resultat <span class="op">/</span> ventes</span>
@@ -1465,7 +1465,7 @@ General Motors    157,658 M$</code></pre>
 </section>
 <section id="importer-un-paquet" class="slide level2">
 <h2>Importer un paquet</h2>
-<div id="46b5d360" class="cell" data-execution_count="6">
+<div id="4109fce5" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href></a><span class="im">import</span> pandas <span class="im">as</span> pd          <span class="co"># les tableaux de données — le cœur du cours</span></span>
 <span id="cb11-2"><a href></a><span class="im">import</span> numpy <span class="im">as</span> np           <span class="co"># le calcul numérique</span></span>
 <span id="cb11-3"><a href></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt   <span class="co"># les graphiques</span></span>
@@ -1484,7 +1484,7 @@ General Motors    157,658 M$</code></pre>
 </section>
 <section id="dun-dictionnaire-à-un-dataframe" class="slide level2">
 <h2>D’un dictionnaire à un DataFrame</h2>
-<div id="17092e8d" class="cell" data-execution_count="7">
+<div id="4f4e49a5" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb13-2"><a href></a>    <span class="st">&quot;entreprise&quot;</span>: [<span class="st">&quot;Tesla&quot;</span>, <span class="st">&quot;Ford&quot;</span>, <span class="st">&quot;General Motors&quot;</span>],</span>
 <span id="cb13-3"><a href></a>    <span class="st">&quot;ventes&quot;</span>:     [<span class="dv">96_773</span>, <span class="dv">176_191</span>, <span class="dv">157_658</span>],</span>
@@ -1548,7 +1548,7 @@ text-align: right;
 </section>
 <section id="les-vraies-données-dataentreprises.csv" class="slide level2">
 <h2>Les vraies données : <code>data/entreprises.csv</code></h2>
-<div id="bff470ac" class="cell" data-execution_count="8">
+<div id="ac5b56b5" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>)</span>
 <span id="cb14-2"><a href></a><span class="bu">print</span>(entreprises.shape)</span>
 <span id="cb14-3"><a href></a>entreprises.head()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1673,7 +1673,7 @@ text-align: right;
 </section>
 <section id="ce-quil-y-a-dedans" class="slide level2">
 <h2>Ce qu’il y a dedans</h2>
-<div id="ec712fcf" class="cell" data-execution_count="9">
+<div id="77bf7840" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href></a>entreprises.info()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class &#39;pandas.DataFrame&#39;&gt;
@@ -1704,7 +1704,7 @@ memory usage: 58.2 KB</code></pre>
 <section id="une-question-une-ligne-de-code" class="slide level2">
 <h2>Une question, une ligne de code</h2>
 <p><em>Quel constructeur automobile était le plus rentable en 2023 ?</em></p>
-<div id="82c4f37d" class="cell" data-execution_count="10">
+<div id="84fd2090" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href></a>auto <span class="op">=</span> entreprises[(entreprises[<span class="st">&quot;secteur&quot;</span>] <span class="op">==</span> <span class="st">&quot;Automobile&quot;</span>) <span class="op">&amp;</span> (entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>)]</span>
 <span id="cb18-2"><a href></a>auto <span class="op">=</span> auto.assign(marge<span class="op">=</span>auto[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> auto[<span class="st">&quot;chiffre_affaires&quot;</span>])</span>
 <span id="cb18-3"><a href></a>auto[[<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>, <span class="st">&quot;marge&quot;</span>]].sort_values(<span class="st">&quot;marge&quot;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1769,7 +1769,7 @@ text-align: right;
 </section>
 <section id="tesla-ford-gm-quinze-ans-de-ventes" class="slide level2">
 <h2>Tesla, Ford, GM : quinze ans de ventes</h2>
-<div id="783f1002" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="11">
+<div id="03451978" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="11">
 <div class="column">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href></a><span class="im">from</span> plotstyle <span class="im">import</span> setup</span>
 <span id="cb19-2"><a href></a>plt <span class="op">=</span> setup()</span>
