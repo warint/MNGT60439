@@ -1,7 +1,7 @@
 # Séance 05 — Pratique
 
 > **[Diapositives de la pratique](https://warint.github.io/MNGT60439/seance-05-pratique.html)** ·
-> source : [`MGMT60XXX-S05-Pratique.qmd`](MGMT60XXX-S05-Pratique.qmd)
+> source : [`MNGT60439-S05-Pratique.qmd`](MNGT60439-S05-Pratique.qmd)
 
 **Question :** « L'Amérique crée plus de valeur que tout autre pays. » Construisez le graphique
 qui défend la manchette, puis ceux qui la réfutent.

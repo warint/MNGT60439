@@ -321,7 +321,7 @@ div.csl-indent {
 <section id="nettoyer" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="nettoyer"><span class="header-section-number">4.2</span> Nettoyer</h2>
 <p>Les données arrivent rarement prêtes. Voici une petite table comme on en reçoit d’un collègue ou d’un tableur :</p>
-<div id="c573141d" class="cell" data-execution_count="2">
+<div id="a17cf259" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>brut <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Entreprise "</span>: [<span class="st">" Tesla"</span>, <span class="st">"Ford"</span>, <span class="st">"ford"</span>, <span class="st">"General Motors"</span>, <span class="st">"Ford"</span>],</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Annee"</span>:       [<span class="st">"2023"</span>, <span class="st">"2023"</span>, <span class="st">"2023"</span>, <span class="st">"2023"</span>, <span class="st">"2023"</span>],</span>
@@ -338,7 +338,7 @@ dtype: object</code></pre>
 </div>
 </div>
 <p>Tout y est du texte : on ne peut ni additionner ni comparer. Le nettoyage suit toujours le même ordre — les <strong>noms</strong>, le <strong>texte</strong>, les <strong>types</strong>, puis les <strong>doublons</strong> — parce que chaque étape dépend de la précédente : tant que <code>"ford"</code> et <code>"Ford"</code> coexistent, aucune recherche de doublons ne les trouvera.</p>
-<div id="9960424a" class="cell" data-execution_count="3">
+<div id="3d596a6e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>propre <span class="op">=</span> brut.rename(columns<span class="op">=</span>{<span class="st">"Entreprise "</span>: <span class="st">"entreprise"</span>, <span class="st">"Annee"</span>: <span class="st">"annee"</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Ventes (M$)"</span>: <span class="st">"ventes"</span>, <span class="st">"R&amp;D"</span>: <span class="st">"rd"</span>})</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>propre[<span class="st">"entreprise"</span>] <span class="op">=</span> propre[<span class="st">"entreprise"</span>].<span class="bu">str</span>.strip().<span class="bu">str</span>.title()</span>
@@ -397,7 +397,7 @@ dtype: object</code></pre>
 <section id="les-valeurs-manquantes" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="les-valeurs-manquantes"><span class="header-section-number">4.2.1</span> Les valeurs manquantes</h3>
 <p>Dans les données du cours, il n’y a aucun doublon entreprise × année, mais beaucoup de trous :</p>
-<div id="e58b2c77" class="cell" data-execution_count="4">
+<div id="cdf58d5c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(entreprises.duplicated([<span class="st">"ticker"</span>, <span class="st">"annee"</span>]).<span class="bu">sum</span>(), <span class="st">"doublon entreprise × année"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>entreprises.isna().<span class="bu">sum</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -421,7 +421,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 <p>On a trois options : <strong>retirer</strong> les lignes (<code>dropna</code>), <strong>remplir</strong> (<code>fillna</code>) ou <strong>signaler</strong> (créer une colonne booléenne). La troisième devrait toujours précéder les deux autres. La colonne <code>rd</code> montre pourquoi :</p>
-<div id="24d0c29d" class="cell" data-execution_count="5">
+<div id="0c9018aa" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"rd_manquant"</span>] <span class="op">=</span> entreprises[<span class="st">"rd"</span>].isna()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>(entreprises.groupby(<span class="st">"entreprise"</span>)[<span class="st">"rd_manquant"</span>].mean()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    .loc[<span class="kw">lambda</span> s: s <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).<span class="bu">round</span>(<span class="dv">2</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -447,7 +447,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 <section id="joindre" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="joindre"><span class="header-section-number">4.3</span> Joindre</h2>
 <p>Une analyse combine presque toujours plusieurs sources. La jointure (<code>merge</code>) associe les lignes de deux tables qui partagent une <strong>clé</strong>. Le risque principal est silencieux : si la clé apparaît plusieurs fois du côté où l’on attendait une seule ligne, chaque observation est dupliquée, et rien ne signale l’erreur. Deux arguments de <code>merge</code> la rendent visible : <code>validate="m:1"</code> exige que la table de droite ait au plus une ligne par clé, et <code>indicator=True</code> ajoute une colonne <code>_merge</code> qui dit d’où vient chaque ligne.</p>
-<div id="0bac6eac" class="cell" data-execution_count="6">
+<div id="3c9b7120" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pays <span class="op">=</span> pd.read_csv(<span class="st">"data/pays.csv"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>avant <span class="op">=</span> <span class="bu">len</span>(entreprises)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>ent_pays <span class="op">=</span> entreprises.merge(</span>
@@ -506,7 +506,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 </div>
 <p>Le nombre de lignes n’a pas changé, ce qui confirme la relation plusieurs-à-un. Les lignes sans partenaire sont toutes en 2024 : les données de la Banque mondiale du cours s’arrêtent en 2023. Une jointure <code>how="inner"</code> aurait supprimé une année entière sans le dire ; <code>how="left"</code> avec <code>indicator=True</code> la montre.</p>
 <p>La table des secteurs se joint de la même façon, par la colonne <code>secteur</code> :</p>
-<div id="faa8f8ed" class="cell" data-execution_count="7">
+<div id="ff1bdc41" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>secteurs <span class="op">=</span> pd.read_csv(<span class="st">"data/secteurs.csv"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>entreprises.merge(secteurs, on<span class="op">=</span><span class="st">"secteur"</span>, how<span class="op">=</span><span class="st">"left"</span>, validate<span class="op">=</span><span class="st">"m:1"</span>).shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
@@ -518,7 +518,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 <section id="remodeler" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="remodeler"><span class="header-section-number">4.4</span> Remodeler</h2>
 <p>Wickham <span class="citation" data-cites="wickham2014">(<a href="#ref-wickham2014" role="doc-biblioref">2014</a>)</span> appelle <strong>rangées</strong> (<em>tidy</em>) les données où chaque variable est une colonne, chaque observation une ligne, et chaque type d’unité une table. <code>entreprises.csv</code> est rangé : une ligne correspond à une entreprise et une année. Beaucoup de sources publient pourtant un format <strong>large</strong>, avec une colonne par année — c’est le format par défaut des téléchargements de la Banque mondiale et de la plupart des tableaux Excel.</p>
-<div id="ce152048" class="cell" data-execution_count="8">
+<div id="49e68bbc" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>large <span class="op">=</span> (pays[pays[<span class="st">"iso3"</span>].isin([<span class="st">"CAN"</span>, <span class="st">"USA"</span>, <span class="st">"MEX"</span>, <span class="st">"CHN"</span>]) <span class="op">&amp;</span> (pays[<span class="st">"annee"</span>] <span class="op">&gt;=</span> <span class="dv">2019</span>)]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>         .pivot(index<span class="op">=</span><span class="st">"pays"</span>, columns<span class="op">=</span><span class="st">"annee"</span>, values<span class="op">=</span><span class="st">"pib_hab_usd"</span>).<span class="bu">round</span>(<span class="dv">0</span>))</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>large</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -585,7 +585,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 </div>
 </div>
 <p>Ce format se lit bien, mais il ne se prête ni à un <code>groupby</code> par année ni à un graphique. <code>melt</code> le remet au format long :</p>
-<div id="a1fbcc07" class="cell" data-execution_count="9">
+<div id="a0d5c378" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">long</span> <span class="op">=</span> large.reset_index().melt(id_vars<span class="op">=</span><span class="st">"pays"</span>, var_name<span class="op">=</span><span class="st">"annee"</span>, value_name<span class="op">=</span><span class="st">"pib_hab_usd"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">long</span>.shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -593,7 +593,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 </div>
 </div>
 <p><code>pivot</code> refuse les combinaisons index × colonne en double ; <code>pivot_table</code> les agrège avec la fonction qu’on lui donne. La médiane de la marge nette par secteur et par année s’obtient ainsi en une instruction :</p>
-<div id="09036519" class="cell" data-execution_count="10">
+<div id="972c32f6" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(entreprises</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a> .assign(marge<span class="op">=</span>entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"chiffre_affaires"</span>])</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a> .pivot_table(index<span class="op">=</span><span class="st">"secteur"</span>, columns<span class="op">=</span><span class="st">"annee"</span>, values<span class="op">=</span><span class="st">"marge"</span>, aggfunc<span class="op">=</span><span class="st">"median"</span>)</span>
@@ -704,7 +704,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 <section id="agréger-et-comparer-chaque-entreprise-à-son-groupe" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="agréger-et-comparer-chaque-entreprise-à-son-groupe"><span class="header-section-number">4.5</span> Agréger, et comparer chaque entreprise à son groupe</h2>
 <p><code>groupby</code> découpe la table en groupes. Ce que l’on fait ensuite détermine la forme du résultat : <code>agg</code> <strong>réduit</strong> chaque groupe à une ligne, <code>transform</code> <strong>renvoie</strong> une valeur pour chaque ligne d’origine. Le premier produit un tableau de synthèse, le second permet de comparer chaque observation à son groupe.</p>
-<div id="79a26ad2" class="cell" data-execution_count="11">
+<div id="ac528c35" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(entreprises[entreprises[<span class="st">"annee"</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a> .groupby(<span class="st">"secteur"</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a> .agg(n<span class="op">=</span>(<span class="st">"ticker"</span>, <span class="st">"nunique"</span>),</span>
@@ -792,7 +792,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 </div>
 </div>
 <p>Pour répondre à la question des vrais concurrents, on calcule le rendement des actifs (ROA), puis la moyenne du ROA du secteur <strong>la même année</strong>, et l’écart entre les deux :</p>
-<div id="da7f7d79" class="cell" data-execution_count="12">
+<div id="fddc21db" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"roa"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"actifs_totaux"</span>]</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"roa_secteur"</span>] <span class="op">=</span> entreprises.groupby([<span class="st">"secteur"</span>, <span class="st">"annee"</span>])[<span class="st">"roa"</span>].transform(<span class="st">"mean"</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"ecart_secteur"</span>] <span class="op">=</span> entreprises[<span class="st">"roa"</span>] <span class="op">-</span> entreprises[<span class="st">"roa_secteur"</span>]</span>
@@ -910,7 +910,7 @@ Figure&nbsp;4.1: Écart du rendement des actifs à la moyenne du secteur, 2023. 
 </div>
 </div>
 <p>Le choix du groupe de comparaison change le diagnostic. Microsoft affiche un ROA supérieur à celui de la plupart des 32 entreprises, mais inférieur à la moyenne de son propre secteur en 2023, tiré vers le haut par Nvidia et Apple. Inversement, une moyenne calculée sur un très petit groupe ne dit presque rien : Netflix est seule dans son secteur, et son écart y vaut zéro par construction.</p>
-<div id="dee48b02" class="cell" data-execution_count="14">
+<div id="cd34129c" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>entreprises.groupby(<span class="st">"secteur"</span>)[<span class="st">"ticker"</span>].nunique().sort_values()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>secteur
@@ -930,7 +930,7 @@ Name: ticker, dtype: int64</code></pre>
 <section id="le-temps-entité-par-entité" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="le-temps-entité-par-entité"><span class="header-section-number">4.6</span> Le temps, entité par entité</h2>
 <p>Dans un panel, toute opération qui regarde « l’année précédente » doit être faite <strong>par entité</strong>, après un tri. Sans <code>groupby("ticker")</code>, <code>shift</code> et <code>pct_change</code> iraient chercher la dernière année d’une entreprise pour calculer la croissance de la suivante.</p>
-<div id="57d8d794" class="cell" data-execution_count="15">
+<div id="f77996d8" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> entreprises.sort_values([<span class="st">"ticker"</span>, <span class="st">"annee"</span>])</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"croissance"</span>] <span class="op">=</span> entreprises.groupby(<span class="st">"ticker"</span>)[<span class="st">"chiffre_affaires"</span>].pct_change()</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"croissance_3ans"</span>] <span class="op">=</span> (entreprises.groupby(<span class="st">"ticker"</span>)[<span class="st">"croissance"</span>]</span>
@@ -1006,7 +1006,7 @@ Name: ticker, dtype: int64</code></pre>
 <h2 data-number="4.7" class="anchored" data-anchor-id="les-fusions-acquisitions-créent-elles-de-la-valeur-un-premier-regard"><span class="header-section-number">4.7</span> Les fusions-acquisitions créent-elles de la valeur ? Un premier regard</h2>
 <p>Le 18 janvier 2022, Microsoft annonce l’acquisition d’Activision Blizzard ; le 13 mars 2023, Pfizer annonce celle de Seagen. Si le marché juge qu’une acquisition détruit de la valeur pour l’acquéreur, le cours de ce dernier devrait baisser <strong>plus que le marché</strong> autour de l’annonce.</p>
 <p>On commence par importer les cours une seule fois, en les gardant dans un cache local :</p>
-<div id="52153beb" class="cell" data-execution_count="16">
+<div id="fbfadc66" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1056,7 +1056,7 @@ Name: ticker, dtype: int64</code></pre>
 </div>
 </div>
 <p>Le fonds <code>SPY</code>, qui réplique le S&amp;P 500, sert de « marché ». Le <strong>rendement anormal naïf</strong> est la différence entre le rendement de l’acquéreur et celui du marché ; on le cumule sur une fenêtre de cinq jours de Bourse de part et d’autre de l’annonce.</p>
-<div id="f02289b6" class="cell" data-execution_count="17">
+<div id="b26ce550" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fenetre(ticker, annonce, avant<span class="op">=</span><span class="dv">5</span>, apres<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> rendements[[ticker, <span class="st">"SPY"</span>]].copy()</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    r[<span class="st">"anormal"</span>] <span class="op">=</span> r[ticker] <span class="op">-</span> r[<span class="st">"SPY"</span>]</span>
@@ -1617,7 +1617,7 @@ Wickham, Hadley. 2014. <span>«&nbsp;Tidy Data&nbsp;»</span>. <em>Journal of St
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>MGMT 60XXX · HEC Montréal</p>
+<p>MNGT 60439 · HEC Montréal</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

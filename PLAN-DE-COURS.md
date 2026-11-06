@@ -1,4 +1,4 @@
-# Plan de cours — MGMT 60XXX
+# Plan de cours — MNGT 60439
 
 ## Données et stratégie : enjeux locaux et mondiaux
 

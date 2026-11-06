@@ -3,12 +3,12 @@
 > **Les entreprises qui investissent en R-D sont-elles plus rentables ? Et Tesla l'est-elle plus que Ford — de combien, et avec quelle certitude ?**
 
 > **[Diapositives du cours](https://warint.github.io/MNGT60439/seance-06-cours.html)** — source :
-> [`01-cours/MGMT60XXX-S06-Cours.qmd`](01-cours/MGMT60XXX-S06-Cours.qmd) ·
+> [`01-cours/MNGT60439-S06-Cours.qmd`](01-cours/MNGT60439-S06-Cours.qmd) ·
 > **[Chapitre 6 du livre](https://warint.github.io/MNGT60439/livre/seance-06.html)**
 
 **Date : à confirmer** · durée 3 h · Thierry Warin
 
-MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

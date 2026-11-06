@@ -1,6 +1,6 @@
 # Les premiers pas — travail 2
 
-**MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux**
+**MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux**
 Thierry Warin · **5 %** de la note finale · **équipes de deux** · remise : **à confirmer** (ZoneCours)
 
 ---

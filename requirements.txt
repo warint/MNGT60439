@@ -1,4 +1,4 @@
-# MGMT 60XXX — environnement Python du cours (séances 1 à 6)
+# MNGT 60439 — environnement Python du cours (séances 1 à 6)
 # Installation :  python -m pip install -r requirements.txt
 
 # Le cœur : tableaux de données et calcul

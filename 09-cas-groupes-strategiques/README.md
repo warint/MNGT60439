@@ -4,7 +4,7 @@
 
 **Date : à confirmer** · durée 3 h · Russell
 
-MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

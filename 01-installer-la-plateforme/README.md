@@ -3,12 +3,12 @@
 > **Une manchette dit que Tesla est bonne pour l'environnement. Que faudrait-il mesurer pour le vérifier — et avec quel outil ?**
 
 > **[Diapositives du cours](https://warint.github.io/MNGT60439/seance-01-cours.html)** — source :
-> [`01-cours/MGMT60XXX-S01-Cours.qmd`](01-cours/MGMT60XXX-S01-Cours.qmd) ·
+> [`01-cours/MNGT60439-S01-Cours.qmd`](01-cours/MNGT60439-S01-Cours.qmd) ·
 > **[Chapitre 1 du livre](https://warint.github.io/MNGT60439/livre/seance-01.html)**
 
 **Date : à confirmer** · durée 3 h · Thierry Warin
 
-MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

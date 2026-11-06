@@ -21,7 +21,7 @@ format:
     height: 760
     margin: 0.06
     smaller: true
-    footer: "MGMT 60XXX · Séance 01 pré-séance · Thierry Warin, PhD · HEC Montréal"
+    footer: "MNGT 60439 · Séance 01 pré-séance · Thierry Warin, PhD · HEC Montréal"
 ---
 
 ## Plan · Avant le cours {.center .scrollable}

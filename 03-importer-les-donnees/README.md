@@ -3,11 +3,11 @@
 > **Tesla est-elle bonne pour l'environnement ? Avant de répondre, il faut monter le dossier de données.**
 
 > **[Ouvrir les diapositives du cours](https://warint.github.io/MNGT60439/seance-03-cours.html)** — ou lire la source :
-> [`01-cours/MGMT60XXX-S03-Cours.qmd`](01-cours/MGMT60XXX-S03-Cours.qmd).
+> [`01-cours/MNGT60439-S03-Cours.qmd`](01-cours/MNGT60439-S03-Cours.qmd).
 
 **Date : à confirmer** · durée 3 h · Thierry Warin, PhD
 
-MGMT 60XXX · Données et stratégie : enjeux locaux et mondiaux
+MNGT 60439 · Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

@@ -2,14 +2,14 @@
 
 > **Quelles entreprises créent le plus de valeur ?**
 
-> **Diapositives** — pré-séance : [source](00-pre-seance/MGMT60XXX-S02-Pre-Seance.qmd) ·
+> **Diapositives** — pré-séance : [source](00-pre-seance/MNGT60439-S02-Pre-Seance.qmd) ·
 > [rendu](https://warint.github.io/MNGT60439/seance-02-pre-seance.html) ·
-> cours : [source](01-cours/MGMT60XXX-S02-Cours.qmd) · [rendu](https://warint.github.io/MNGT60439/seance-02-cours.html) ·
-> pratique : [source](02-pratique/MGMT60XXX-S02-Pratique.qmd) · [rendu](https://warint.github.io/MNGT60439/seance-02-pratique.html)
+> cours : [source](01-cours/MNGT60439-S02-Cours.qmd) · [rendu](https://warint.github.io/MNGT60439/seance-02-cours.html) ·
+> pratique : [source](02-pratique/MNGT60439-S02-Pratique.qmd) · [rendu](https://warint.github.io/MNGT60439/seance-02-pratique.html)
 >
 > **Chapitre du livre :** [`book/seance-02.qmd`](../book/seance-02.qmd)
 
-**Date : à confirmer** · durée 3 h · MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+**Date : à confirmer** · durée 3 h · MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

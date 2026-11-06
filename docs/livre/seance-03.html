@@ -364,7 +364,7 @@ div.csl-indent {
 <section id="le-fichier-csv-et-ce-quil-ne-dit-pas" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="le-fichier-csv-et-ce-quil-ne-dit-pas"><span class="header-section-number">3.2</span> Le fichier CSV, et ce qu’il ne dit pas</h2>
 <p>Un fichier CSV est du texte : une ligne par observation, un séparateur entre les colonnes. Rien dans le fichier n’indique quel est ce séparateur, quel caractère marque la décimale, ni comment les lettres accentuées sont codées. <code>pd.read_csv</code> fait des hypothèses raisonnables — virgule, point, UTF-8 — qui conviennent au fichier du cours :</p>
-<div id="52bb4ef3" class="cell" data-execution_count="2">
+<div id="df89e3fd" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>entreprises.shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -372,7 +372,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Un Excel configuré en français fait d’autres choix : point-virgule entre les colonnes, virgule décimale, encodage Windows-1252. Le fichier <code>data/entreprises_fr.csv</code> contient exactement les mêmes données, enregistrées ainsi. Lu avec les hypothèses par défaut, il ne provoque <strong>aucune erreur</strong> :</p>
-<div id="d5f78a35" class="cell" data-execution_count="3">
+<div id="9594e2ff" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mal <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises_fr.csv"</span>, encoding<span class="op">=</span><span class="st">"cp1252"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mal.shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -380,7 +380,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Une seule colonne au lieu de douze. pandas n’a trouvé aucune virgule séparatrice et a tout rangé dans la même case. C’est le piège le plus dangereux de l’importation : un échec silencieux. La parade est un réflexe — vérifier <code>.shape</code> et <code>.dtypes</code> après chaque lecture. Les bons paramètres règlent tout :</p>
-<div id="276be3f9" class="cell" data-execution_count="4">
+<div id="cb6f5eb9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bon <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises_fr.csv"</span>, sep<span class="op">=</span><span class="st">";"</span>, decimal<span class="op">=</span><span class="st">","</span>, encoding<span class="op">=</span><span class="st">"cp1252"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(bon.shape)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(bon[[<span class="st">"chiffre_affaires"</span>, <span class="st">"resultat_net"</span>]].dtypes)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -392,7 +392,7 @@ dtype: object</code></pre>
 </div>
 </div>
 <p>Trois autres options servent à lire <strong>moins</strong> : <code>nrows</code> pour un aperçu, <code>usecols</code> pour ne garder que certaines colonnes, <code>dtype</code> pour imposer un type plutôt que de le laisser deviner. Sur les 480 lignes du cours, l’enjeu est nul ; sur un fichier de transactions de plusieurs gigaoctets, c’est la différence entre une analyse et un ordinateur figé <span class="citation" data-cites="mckinney2022">(<a href="#ref-mckinney2022" role="doc-biblioref">McKinney 2022</a>, ch.&nbsp;6)</span>.</p>
-<div id="ec928d7d" class="cell" data-execution_count="5">
+<div id="98e754d4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>leger <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>,</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                    usecols<span class="op">=</span>[<span class="st">"ticker"</span>, <span class="st">"annee"</span>, <span class="st">"chiffre_affaires"</span>],</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                    dtype<span class="op">=</span>{<span class="st">"ticker"</span>: <span class="st">"category"</span>, <span class="st">"annee"</span>: <span class="st">"int16"</span>})</span>
@@ -408,7 +408,7 @@ dtype: object</code></pre>
 <section id="lire-en-ligne-une-fois" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="lire-en-ligne-une-fois"><span class="header-section-number">3.3</span> Lire en ligne, une fois</h2>
 <p><code>pd.read_csv</code> accepte une URL comme un nom de fichier. Mais lire en ligne à chaque exécution est une mauvaise habitude : le réseau est lent, le fichier distant peut changer sans prévenir, et certains serveurs limitent les requêtes. La règle du cours est de télécharger <strong>une fois</strong> et de relire une copie locale. Une petite fonction suffit :</p>
-<div id="9830e113" class="cell" data-execution_count="6">
+<div id="49eea514" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>CACHE <span class="op">=</span> Path(<span class="st">"data/cache"</span>)</span>
@@ -424,7 +424,7 @@ dtype: object</code></pre>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’argument <code>telecharger</code> est une fonction, qui ne s’exécute que si la copie locale manque. Our World in Data publie les émissions de CO₂ de tous les pays dans un seul fichier de 79 colonnes ; on n’en garde que cinq :</p>
-<div id="02375bcc" class="cell" data-execution_count="7">
+<div id="a3149727" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>URL_CO2 <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>co2 <span class="op">=</span> charger(<span class="st">"owid_co2"</span>, <span class="kw">lambda</span>: pd.read_csv(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    URL_CO2, usecols<span class="op">=</span>[<span class="st">"country"</span>, <span class="st">"year"</span>, <span class="st">"iso_code"</span>, <span class="st">"co2_per_capita"</span>, <span class="st">"share_global_co2"</span>]))</span>
@@ -505,7 +505,7 @@ dtype: object</code></pre>
 <p><strong>Le piège des certificats sur macOS.</strong> Avec le Python de python.org, <code>pd.read_csv(url)</code> peut échouer avec <code>CERTIFICATE_VERIFY_FAILED</code> alors que <code>requests.get(url)</code> fonctionne : <code>requests</code> apporte ses propres certificats, pandas utilise ceux du système. Le correctif est d’exécuter une fois <code>Install Certificates.command</code>, dans le dossier Applications/Python 3.x.</p>
 </div>
 <p>Les pages web contiennent aussi des tableaux. <code>pd.read_html</code> les renvoie tous, sous forme de liste ; il faut un <code>User-Agent</code> pour que Wikipédia accepte la requête :</p>
-<div id="98be7a7c" class="cell" data-execution_count="8">
+<div id="c8226ad2" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>URL_WIKI <span class="op">=</span> <span class="st">"https://en.wikipedia.org/wiki/List_of_largest_automotive_companies_by_revenue"</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>constructeurs <span class="op">=</span> charger(<span class="st">"wiki_constructeurs"</span>, <span class="kw">lambda</span>: pd.read_html(</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    URL_WIKI, storage_options<span class="op">=</span>{<span class="st">"User-Agent"</span>: <span class="st">"Mozilla/5.0"</span>})[<span class="dv">0</span>])</span>
@@ -606,7 +606,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 </div>
 </div>
 </div>
-<div id="b0474e00" class="cell" data-execution_count="10">
+<div id="3ec1b07b" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rendements <span class="op">=</span> prix.resample(<span class="st">"YE"</span>).last().pct_change().dropna()</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rendements.<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -661,7 +661,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 </div>
 <p>Le rendement annuel nuance déjà la manchette « le marché croit en Tesla » : en 2021, l’action de Ford a progressé davantage que celle de Tesla. <code>yfinance</code> n’est pas un produit officiel, et les conditions de Yahoo interdisent de redistribuer ces données ; pour une recherche publiée, les bases de référence sont CRSP et Compustat.</p>
 <p>Le paquet <code>wbgapi</code> fait de même pour la Banque mondiale :</p>
-<div id="c74dfdda" class="cell" data-execution_count="11">
+<div id="19381818" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wbgapi <span class="im">as</span> wb</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>co2_hab <span class="op">=</span> charger(<span class="st">"wb_co2_hab"</span>, <span class="kw">lambda</span>: wb.data.DataFrame(</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EN.GHG.CO2.PC.CE.AR5"</span>, [<span class="st">"USA"</span>, <span class="st">"CAN"</span>, <span class="st">"CHN"</span>, <span class="st">"NOR"</span>, <span class="st">"DEU"</span>],</span>
@@ -739,7 +739,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 <section id="les-api" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="les-api"><span class="header-section-number">3.5</span> Les API</h2>
 <p>Une API web est une adresse qui répond avec des données plutôt qu’avec une page. La requête précise une ressource (quels pays, quel indicateur), des paramètres (années, format) et parfois des en-têtes (qui demande, avec quelle clé). La réponse porte un <strong>code de statut</strong> — <code>200</code> pour un succès, <code>404</code> pour une ressource introuvable, <code>429</code> pour trop de requêtes — et, le plus souvent, du JSON : des listes et des dictionnaires imbriqués.</p>
-<div id="2d77773d" class="cell" data-execution_count="12">
+<div id="5d057d58" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.ZS"</span></span>
@@ -754,7 +754,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 </div>
 </div>
 <p>La Banque mondiale renvoie une liste de deux éléments : les métadonnées, puis les observations. Une compréhension de liste les range dans un tableau :</p>
-<div id="59036425" class="cell" data-execution_count="13">
+<div id="eaa224e8" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>elec <span class="op">=</span> pd.DataFrame([{<span class="st">"iso3"</span>: o[<span class="st">"countryiso3code"</span>], <span class="st">"annee"</span>: <span class="bu">int</span>(o[<span class="st">"date"</span>]),</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"renouv_pct"</span>: o[<span class="st">"value"</span>]} <span class="cf">for</span> o <span class="kw">in</span> observations])</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>elec.pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"iso3"</span>, values<span class="op">=</span><span class="st">"renouv_pct"</span>).<span class="bu">round</span>(<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -854,8 +854,8 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 </div>
 <p>Le tableau répond à la troisième question de la séance 1 : une voiture électrique branchée au réseau norvégien ou canadien roule à l’électricité renouvelable bien plus qu’en Chine, en Pologne ou aux États-Unis. Il montre aussi une limite : la dernière ligne est vide, parce que la série publiée s’arrête en 2021. Une source a toujours un retard, et une analyse doit le dire.</p>
 <p>Quand une réponse dépasse une page, l’API l’indique dans ses métadonnées (<code>pages</code>) et il faut boucler. La SEC, elle, exige que chaque programme s’identifie par un <code>User-Agent</code> qui contient un nom et un courriel. On le lit dans une variable d’environnement, pour qu’il n’apparaisse jamais dans un code partagé :</p>
-<div id="e641a10d" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ua <span class="op">=</span> os.environ.get(<span class="st">"SEC_USER_AGENT"</span>, <span class="st">"HEC Montreal MGMT60XXX course"</span>)</span>
+<div id="a8d6d3cb" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ua <span class="op">=</span> os.environ.get(<span class="st">"SEC_USER_AGENT"</span>, <span class="st">"HEC Montreal MNGT60439 course"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> faits_tesla():</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> requests.get(<span class="st">"https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json"</span>,</span>
@@ -917,7 +917,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 <section id="les-bases-de-données" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="les-bases-de-données"><span class="header-section-number">3.6</span> Les bases de données</h2>
 <p>Dans une entreprise, les données vivent rarement dans des fichiers : elles sont dans des bases, qu’on interroge en SQL. Le fichier <code>data/strategie.db</code> est une base SQLite qui contient les trois tables du cours. <code>pd.read_sql</code> envoie la requête et renvoie un DataFrame.</p>
-<div id="94b2b134" class="cell" data-execution_count="15">
+<div id="92e601ad" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> sqlite3.<span class="ex">connect</span>(<span class="st">"data/strategie.db"</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1016,7 +1016,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 </div>
 </div>
 <p>Une jointure relie deux tables par leurs <strong>clés</strong> — ici le pays du siège et l’année :</p>
-<div id="0a64a078" class="cell" data-execution_count="16">
+<div id="072ad911" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pd.read_sql(<span class="st">"""</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT e.entreprise, e.chiffre_affaires / 1000 AS ventes_milliards, p.pib_milliards_usd,</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">       ROUND(e.chiffre_affaires / 1000 / p.pib_milliards_usd * 100, 2) AS pct_pib</span></span>
@@ -1067,11 +1067,11 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 </div>
 </div>
 <p>Les valeurs filtrées passent par <code>params=</code> et des <code>?</code>, jamais par du texte collé dans la requête : un nom comme « McDonald’s » casserait la requête, et un texte malveillant pourrait la détourner.</p>
-<div id="ebedebb5" class="cell" data-execution_count="17">
+<div id="136dd30c" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>con.close()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>DuckDB va plus loin : il interroge un fichier CSV ou parquet <strong>comme une table</strong>, sans base à créer.</p>
-<div id="45723c47" class="cell" data-execution_count="18">
+<div id="76f515b1" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"""</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT ticker, chiffre_affaires, resultat_net</span></span>
@@ -1132,7 +1132,7 @@ Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au pr
 <section id="sauvegarder-et-documenter" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="sauvegarder-et-documenter"><span class="header-section-number">3.7</span> Sauvegarder et documenter</h2>
 <p>Le format parquet conserve les types et occupe moins de place ; le CSV reste lisible par tous. Le cours garde ses copies de travail en parquet et remet ses résultats en CSV.</p>
-<div id="bd5de19c" class="cell" data-execution_count="19">
+<div id="6a8a81f9" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">"sorties"</span>).mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>co2.to_csv(<span class="st">"sorties/co2.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>co2.to_parquet(<span class="st">"sorties/co2.parquet"</span>)</span>
@@ -1590,7 +1590,7 @@ Wickham, Hadley. 2014. <span>«&nbsp;Tidy Data&nbsp;»</span>. <em>Journal of St
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>MGMT 60XXX · HEC Montréal</p>
+<p>MNGT 60439 · HEC Montréal</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

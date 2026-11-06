@@ -1,6 +1,6 @@
 # Séance 03 — Pratique : monter le dossier « Tesla et l'environnement »
 
-> **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-03-pratique.html)** · source : [`MGMT60XXX-S03-Pratique.qmd`](MGMT60XXX-S03-Pratique.qmd)
+> **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-03-pratique.html)** · source : [`MNGT60439-S03-Pratique.qmd`](MNGT60439-S03-Pratique.qmd)
 
 Script de départ : [`starter/seance03_atelier.py`](starter/seance03_atelier.py) — à exécuter depuis
 la racine du dépôt, bloc par bloc (`# %%`, Maj + Entrée dans VS Code).

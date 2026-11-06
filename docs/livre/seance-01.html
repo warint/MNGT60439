@@ -358,7 +358,7 @@ div.csl-indent {
 <section id="python-en-quelques-lignes" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="python-en-quelques-lignes"><span class="header-section-number">1.3</span> Python en quelques lignes</h2>
 <p>Python se lit presque comme de l’anglais. Le signe <code>=</code> range une valeur dans un nom :</p>
-<div id="f2ad6806" class="cell" data-execution_count="2">
+<div id="9e748e59" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>chiffre_affaires <span class="op">=</span> <span class="dv">96_773</span>   <span class="co"># Tesla, 2023, millions de $ US</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>resultat_net <span class="op">=</span> <span class="dv">14_974</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>marge_nette <span class="op">=</span> resultat_net <span class="op">/</span> chiffre_affaires</span>
@@ -368,14 +368,14 @@ div.csl-indent {
 </div>
 </div>
 <p>Chaque valeur a un <strong>type</strong>. Les plus courants sont l’entier (<code>int</code>), le nombre à virgule (<code>float</code>), le texte (<code>str</code>) et le booléen (<code>bool</code>). La confusion entre un nombre et du texte qui ressemble à un nombre est l’erreur la plus fréquente lors de l’importation de données :</p>
-<div id="280416ed" class="cell" data-execution_count="3">
+<div id="18b4a2ac" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">2023</span> <span class="op">+</span> <span class="dv">1</span>, <span class="st">"2023"</span> <span class="op">+</span> <span class="st">"1"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2024 20231</code></pre>
 </div>
 </div>
 <p>Deux structures suffisent pour commencer. La <strong>liste</strong> range des valeurs dans un ordre ; le <strong>dictionnaire</strong> associe des clés à des valeurs :</p>
-<div id="e7e4932c" class="cell" data-execution_count="4">
+<div id="6b3d2564" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>constructeurs <span class="op">=</span> [<span class="st">"Tesla"</span>, <span class="st">"Ford"</span>, <span class="st">"General Motors"</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ventes_2023 <span class="op">=</span> {<span class="st">"Tesla"</span>: <span class="dv">96_773</span>, <span class="st">"Ford"</span>: <span class="dv">176_191</span>, <span class="st">"General Motors"</span>: <span class="dv">157_658</span>}</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nom <span class="kw">in</span> constructeurs:</span>
@@ -387,7 +387,7 @@ General Motors    157,658 M$</code></pre>
 </div>
 </div>
 <p>Enfin, une <strong>fonction</strong> donne un nom à un calcul que l’on répétera. Si la définition change, on la corrige à un seul endroit :</p>
-<div id="ce52a5a9" class="cell" data-execution_count="5">
+<div id="7c1a65fa" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> marge(resultat, ventes):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Part de chaque dollar de ventes qui reste en profit."""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> resultat <span class="op">/</span> ventes</span>
@@ -401,7 +401,7 @@ General Motors    157,658 M$</code></pre>
 <section id="le-premier-tableau-de-données" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="le-premier-tableau-de-données"><span class="header-section-number">1.4</span> Le premier tableau de données</h2>
 <p>Un dictionnaire de listes a déjà la forme d’un tableau : chaque clé est une colonne. Le paquet <strong>pandas</strong> <span class="citation" data-cites="mckinney2010">(<a href="#ref-mckinney2010" role="doc-biblioref">McKinney 2010</a>)</span> transforme cette structure en <em>DataFrame</em>, l’objet central de tout le cours :</p>
-<div id="cab26468" class="cell" data-execution_count="6">
+<div id="4c6196d5" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"entreprise"</span>: [<span class="st">"Tesla"</span>, <span class="st">"Ford"</span>, <span class="st">"General Motors"</span>],</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ventes"</span>:     [<span class="dv">96_773</span>, <span class="dv">176_191</span>, <span class="dv">157_658</span>],</span>
@@ -453,7 +453,7 @@ General Motors    157,658 M$</code></pre>
 </div>
 <p>Une opération écrite sur une colonne s’applique à toutes les lignes à la fois : c’est ce qui rend pandas rapide à écrire et rapide à exécuter.</p>
 <p>Les données du cours sont plus riches. Le fichier <code>data/entreprises.csv</code> réunit 32 grandes entreprises cotées aux États-Unis, de 2010 à 2024, à partir des états financiers qu’elles déposent auprès de la SEC :</p>
-<div id="5ad2e729" class="cell" data-execution_count="7">
+<div id="965f188c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(entreprises.shape)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>entreprises.head()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -564,7 +564,7 @@ General Motors    157,658 M$</code></pre>
 </div>
 </div>
 </div>
-<div id="6a628c10" class="cell" data-execution_count="8">
+<div id="4a304da5" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>entreprises.isna().mean().<span class="bu">round</span>(<span class="dv">2</span>).sort_values(ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>rd                  0.28
@@ -579,7 +579,7 @@ dtype: float64</code></pre>
 <section id="une-première-réponse-et-ses-limites" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="une-première-réponse-et-ses-limites"><span class="header-section-number">1.5</span> Une première réponse, et ses limites</h2>
 <p><em>Quel constructeur automobile était le plus rentable en 2023 ?</em></p>
-<div id="1ebd0d29" class="cell" data-execution_count="9">
+<div id="d5fa2a15" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>auto <span class="op">=</span> entreprises[entreprises[<span class="st">"secteur"</span>] <span class="op">==</span> <span class="st">"Automobile"</span>].copy()</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>auto[<span class="st">"marge"</span>] <span class="op">=</span> auto[<span class="st">"resultat_net"</span>] <span class="op">/</span> auto[<span class="st">"chiffre_affaires"</span>]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>(auto[auto[<span class="st">"annee"</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
@@ -1092,7 +1092,7 @@ McKinney, Wes. 2010. <span>«&nbsp;Data Structures for Statistical Computing in 
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>MGMT 60XXX · HEC Montréal</p>
+<p>MNGT 60439 · HEC Montréal</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

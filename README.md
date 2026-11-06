@@ -1,4 +1,4 @@
-# MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+# MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 **HEC Montréal** · Marie-Ann, Russell et Thierry Warin, PhD
 
@@ -76,7 +76,7 @@ slides/                      ← thème des diapositives et style des graphiques
 
 ```bash
 source .venv/bin/activate
-python -m ipykernel install --user --name mgmt60xxx      # une fois : le noyau des diapositives
+python -m ipykernel install --user --name mngt60439      # une fois : le noyau des diapositives
 scripts/render.sh            # toutes les diapositives et le livre → docs/
 scripts/render.sh livre      # le livre seulement
 scripts/render.sh 03         # les diapositives de la séance 03 seulement

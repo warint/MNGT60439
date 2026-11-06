@@ -3,11 +3,11 @@ project:
   output-dir: ../docs/livre
 
 lang: fr
-jupyter: mgmt60xxx
+jupyter: mngt60439
 
 book:
   title: "Données et stratégie avec Python"
-  subtitle: "MGMT 60XXX · Enjeux locaux et mondiaux · HEC Montréal"
+  subtitle: "MNGT 60439 · Enjeux locaux et mondiaux · HEC Montréal"
   author: "Thierry Warin, PhD"
   date: last-modified
   date-format: "D MMMM YYYY"
@@ -21,7 +21,7 @@ book:
     style: docked
     collapse-level: 1
   page-footer:
-    left: "MGMT 60XXX · HEC Montréal"
+    left: "MNGT 60439 · HEC Montréal"
     right: "Construit à partir du dépôt du cours"
   chapters:
     - index.qmd

@@ -44,7 +44,7 @@ def row(n: str, titre: str, question: str, qui: str) -> str:
 PAGE = """<!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MGMT 60XXX · Données et stratégie</title>
+<title>MNGT 60439 · Données et stratégie</title>
 <style>
 :root {{ --paper:#F7F4ED; --ink:#222; --muted:#6B6B67; --red:#E3120B; --blue:#356B8C; --grid:#D8D3C8; }}
 * {{ box-sizing:border-box; }}
@@ -70,7 +70,7 @@ td.links a {{ color:var(--blue); white-space:nowrap; }}
 </style></head>
 <body><main>
 <h1>Données et stratégie : enjeux locaux et mondiaux</h1>
-<p class="sub">MGMT 60XXX · HEC Montréal · Marie-Ann, Russell et Thierry Warin, PhD</p>
+<p class="sub">MNGT 60439 · HEC Montréal · Marie-Ann, Russell et Thierry Warin, PhD</p>
 <a class="book" href="livre/index.html">📖 <strong>Le livre du cours</strong> — <em>Données et stratégie avec Python</em></a>
 <table>
 <thead><tr><th>#</th><th>Séance</th><th class="who">Qui</th><th>Supports</th></tr></thead>

@@ -1,6 +1,6 @@
 # Séance 02 — Pratique (deuxième moitié, ~90 min)
 
-> **Diapositives :** [`MGMT60XXX-S02-Pratique.qmd`](MGMT60XXX-S02-Pratique.qmd) ·
+> **Diapositives :** [`MNGT60439-S02-Pratique.qmd`](MNGT60439-S02-Pratique.qmd) ·
 > version rendue : [`docs/seance-02-pratique.html`](https://warint.github.io/MNGT60439/seance-02-pratique.html)
 
 ## Le thème

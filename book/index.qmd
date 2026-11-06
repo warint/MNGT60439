@@ -8,7 +8,7 @@ peuvent répondre telle quelle. Avant de les accepter ou de les rejeter, il faut
 bonne *par rapport à quoi*, plus de valeur *selon quelle mesure*, plus rentables *en moyenne,
 dans quel secteur, à quel horizon* ?
 
-Ce livre accompagne le cours MGMT 60XXX, *Données et stratégie : enjeux locaux et mondiaux*, à
+Ce livre accompagne le cours MNGT 60439, *Données et stratégie : enjeux locaux et mondiaux*, à
 HEC Montréal. Il couvre les six séances qui donnent les outils : installer une plateforme de
 travail, comprendre le tableau de données, importer des données depuis un fichier, une adresse
 web, un paquet, une API ou une base de données, les transformer, les représenter et les tester.

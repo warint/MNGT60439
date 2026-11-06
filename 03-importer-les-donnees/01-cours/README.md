@@ -1,6 +1,6 @@
 # Séance 03 — Cours
 
-> **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-03-cours.html)** · source : [`MGMT60XXX-S03-Cours.qmd`](MGMT60XXX-S03-Cours.qmd)
+> **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-03-cours.html)** · source : [`MNGT60439-S03-Cours.qmd`](MNGT60439-S03-Cours.qmd)
 
 | Bloc | Contenu | Durée |
 |---|---|---|
@@ -16,7 +16,7 @@ Le code des diapositives s'exécute depuis la **racine du dépôt**. Pour le ren
 
 ```bash
 cd 03-importer-les-donnees/01-cours
-quarto render MGMT60XXX-S03-Cours.qmd
+quarto render MNGT60439-S03-Cours.qmd
 ```
 
 Le rendu télécharge les sources une seule fois dans `data/cache/` ; les rendus suivants les relisent.

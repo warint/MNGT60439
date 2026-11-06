@@ -362,7 +362,7 @@ window.Quarto = {
 <p>Les cinq premiers chapitres ont appris à obtenir des données et à les regarder. Celui-ci pose une question que le regard seul ne tranche pas : <strong>une différence observée est-elle assez solide pour être affirmée ?</strong> Tesla affiche en 2023 une marge nette supérieure à celle de Ford ; les entreprises technologiques semblent plus rentables que les autres ; les grandes dépenses de R-D paraissent aller avec de grands profits. Chacune de ces impressions peut être vraie, ou être un accident de l’échantillon que l’on a sous les yeux.</p>
 <p>La statistique ne supprime pas cette incertitude. Elle la <strong>mesure</strong>, et elle oblige à dire, avec chaque résultat, de combien il pourrait être faux. C’est une discipline plus qu’une technique : la plupart des erreurs de ce chapitre ne sont pas des erreurs de calcul, mais des phrases qui affirment plus que les chiffres ne le permettent.</p>
 <p>Le chapitre travaille sur trois indicateurs construits à partir de <code>data/entreprises.csv</code> : le <strong>rendement de l’actif</strong> (<code>roa</code>, résultat net divisé par les actifs totaux), la <strong>marge nette</strong> (<code>marge</code>, résultat net divisé par le chiffre d’affaires) et l’<strong>intensité de R-D</strong> (<code>intensite_rd</code>, dépenses de R-D divisées par le chiffre d’affaires).</p>
-<div id="5b358e51" class="cell" data-execution_count="2">
+<div id="f4bbf442" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"roa"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"actifs_totaux"</span>]</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"marge"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"chiffre_affaires"</span>]</span>
@@ -376,7 +376,7 @@ window.Quarto = {
 <section id="le-centre" class="level3" data-number="6.2.1">
 <h3 data-number="6.2.1" class="anchored" data-anchor-id="le-centre"><span class="header-section-number">6.2.1</span> Le centre</h3>
 <p>La <strong>moyenne</strong> est le point d’équilibre d’une distribution ; la <strong>médiane</strong>, le milieu de son classement. Les deux coïncident quand la distribution est symétrique, et divergent quand elle ne l’est pas. Le chiffre d’affaires de nos 32 entreprises en 2023 en donne un exemple net.</p>
-<div id="a83ae0d6" class="cell" data-execution_count="3">
+<div id="23866c0f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ca <span class="op">=</span> e23[<span class="st">"chiffre_affaires"</span>]</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Moyenne : </span><span class="sc">{</span>ca<span class="sc">.</span>mean()<span class="sc">:,.0f}</span><span class="ss"> M$   Médiane : </span><span class="sc">{</span>ca<span class="sc">.</span>median()<span class="sc">:,.0f}</span><span class="ss"> M$   Asymétrie : </span><span class="sc">{</span>ca<span class="sc">.</span>skew()<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -388,7 +388,7 @@ window.Quarto = {
 <section id="la-dispersion" class="level3" data-number="6.2.2">
 <h3 data-number="6.2.2" class="anchored" data-anchor-id="la-dispersion"><span class="header-section-number">6.2.2</span> La dispersion</h3>
 <p>L’<strong>écart type</strong> mesure l’éloignement typique à la moyenne ; il est sensible aux valeurs extrêmes. L’<strong>écart interquartile</strong> (Q3 − Q1) délimite la moitié centrale des observations et y résiste.</p>
-<div id="7b725dc2" class="cell" data-execution_count="4">
+<div id="b5ee85de" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(e23[<span class="st">"roa"</span>].describe().<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>count    32.000
@@ -402,7 +402,7 @@ max       0.453
 Name: roa, dtype: float64</code></pre>
 </div>
 </div>
-<div id="743a1a9b" class="cell" data-execution_count="5">
+<div id="6cf3f653" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(e23.groupby(<span class="st">"secteur"</span>)[<span class="st">"roa"</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    .agg(n<span class="op">=</span><span class="st">"count"</span>, moyenne<span class="op">=</span><span class="st">"mean"</span>, mediane<span class="op">=</span><span class="st">"median"</span>, ecart_type<span class="op">=</span><span class="st">"std"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">"mediane"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -533,7 +533,7 @@ Figure&nbsp;6.1: Chiffre d’affaires 2023 des 32 entreprises, en milliards de d
 <p><span class="math display">\[
 \text{ET}(\bar x) = \frac{s}{\sqrt{n}}
 \]</span></p>
-<div id="121bfa79" class="cell" data-execution_count="7">
+<div id="677329fa" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>roa <span class="op">=</span> e23[<span class="st">"roa"</span>].dropna()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n, moy, s <span class="op">=</span> <span class="bu">len</span>(roa), roa.mean(), roa.std()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>et <span class="op">=</span> s <span class="op">/</span> np.sqrt(n)</span>
@@ -545,7 +545,7 @@ Figure&nbsp;6.1: Chiffre d’affaires 2023 des 32 entreprises, en milliards de d
 </div>
 <p>L’intervalle de confiance à 95 % se lit ainsi : si l’on répétait l’échantillonnage un grand nombre de fois, 95 % des intervalles construits de cette façon contiendraient la vraie moyenne. Il ne dit pas qu’il y a 95 % de chances que la vraie moyenne soit dans <strong>cet</strong> intervalle-ci ; la vraie moyenne n’est pas aléatoire, c’est l’intervalle qui l’est. La nuance paraît scolastique ; elle devient importante dès que l’on compare deux intervalles.</p>
 <p>Le <strong>bootstrap</strong> reprend la même idée sans formule : on ré-échantillonne nos propres données, avec remise, des milliers de fois, et l’on regarde comment varie la statistique.</p>
-<div id="d650c610" class="cell" data-execution_count="8">
+<div id="a434672b" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">60</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>boot_moy <span class="op">=</span> [rng.choice(roa.values, size<span class="op">=</span>n).mean() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>boot_med <span class="op">=</span> [np.median(rng.choice(roa.values, size<span class="op">=</span>n)) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
@@ -563,7 +563,7 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <section id="la-logique-dun-test" class="level3" data-number="6.4.1">
 <h3 data-number="6.4.1" class="anchored" data-anchor-id="la-logique-dun-test"><span class="header-section-number">6.4.1</span> La logique d’un test</h3>
 <p>Un test statistique part d’une <strong>hypothèse nulle</strong> — « le ROA moyen est nul », « les deux groupes ont la même moyenne » — et calcule la probabilité d’observer un écart au moins aussi grand que celui des données <strong>si cette hypothèse était vraie</strong>. Cette probabilité est la <strong>valeur p</strong>.</p>
-<div id="97f98036" class="cell" data-execution_count="9">
+<div id="ad784585" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> stats.ttest_1samp(roa, popmean<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"t = </span><span class="sc">{</span>t1<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>t1<span class="sc">.</span>pvalue<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -575,7 +575,7 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <section id="deux-groupes-indépendants" class="level3" data-number="6.4.2">
 <h3 data-number="6.4.2" class="anchored" data-anchor-id="deux-groupes-indépendants"><span class="header-section-number">6.4.2</span> Deux groupes indépendants</h3>
 <p>Les entreprises technologiques sont-elles plus rentables que les autres ?</p>
-<div id="8b707d49" class="cell" data-execution_count="10">
+<div id="e7734351" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tech <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">==</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>autres <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">!=</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>welch <span class="op">=</span> stats.ttest_ind(tech, autres, equal_var<span class="op">=</span><span class="va">False</span>)</span>
@@ -592,7 +592,7 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <section id="deux-séries-appariées" class="level3" data-number="6.4.3">
 <h3 data-number="6.4.3" class="anchored" data-anchor-id="deux-séries-appariées"><span class="header-section-number">6.4.3</span> Deux séries appariées</h3>
 <p>Tesla et Ford sont observées les mêmes années : on peut les comparer <strong>année par année</strong>, ce qui élimine tout ce que les deux entreprises partagent une année donnée (la conjoncture, les taux, la pandémie).</p>
-<div id="bc484577" class="cell" data-execution_count="11">
+<div id="ba363646" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> (entreprises[entreprises[<span class="st">"ticker"</span>].isin([<span class="st">"TSLA"</span>, <span class="st">"F"</span>])]</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      .pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"ticker"</span>, values<span class="op">=</span><span class="st">"marge"</span>))</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>tf[<span class="st">"ecart"</span>] <span class="op">=</span> tf[<span class="st">"TSLA"</span>] <span class="op">-</span> tf[<span class="st">"F"</span>]</span>
@@ -713,7 +713,7 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 </div>
 </div>
 </div>
-<div id="e1fe3e84" class="cell" data-execution_count="12">
+<div id="78fa4bb4" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p_tout <span class="op">=</span> stats.ttest_rel(tf[<span class="st">"TSLA"</span>], tf[<span class="st">"F"</span>])</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p_rec <span class="op">=</span> stats.ttest_rel(tf.loc[<span class="dv">2020</span>:, <span class="st">"TSLA"</span>], tf.loc[<span class="dv">2020</span>:, <span class="st">"F"</span>])</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2010-2024 : écart moyen </span><span class="sc">{</span>tf[<span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_tout<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
@@ -761,7 +761,7 @@ Figure&nbsp;6.2: Intensité de R-D et marge nette en 2023, pour les entreprises 
 </div>
 </div>
 </div>
-<div id="6fff1864" class="cell" data-execution_count="14">
+<div id="4c7342ee" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pear <span class="op">=</span> stats.pearsonr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>spear <span class="op">=</span> stats.spearmanr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"n = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ss"> · Pearson r = </span><span class="sc">{</span>pear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>pear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">) · Spearman rho = </span><span class="sc">{</span>spear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>spear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -797,7 +797,7 @@ Figure&nbsp;6.3: Corrélations de Spearman entre cinq variables, 2023.
 <p><span class="math display">\[
 \text{ROA}_i = \beta_0 + \beta_1 \times \text{intensité R-D}_i + \varepsilon_i
 \]</span></p>
-<div id="a95e5bb0" class="cell" data-execution_count="16">
+<div id="45e64826" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])).fit()</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m.summary().tables[<span class="dv">1</span>])</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² = </span><span class="sc">{</span>m<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, n = </span><span class="sc">{</span><span class="bu">int</span>(m.nobs)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -820,7 +820,7 @@ R² = 0.001, n = 23</code></pre>
 <section id="un-panel-nest-pas-un-échantillon-plus-grand" class="level3" data-number="6.6.1">
 <h3 data-number="6.6.1" class="anchored" data-anchor-id="un-panel-nest-pas-un-échantillon-plus-grand"><span class="header-section-number">6.6.1</span> Un panel n’est pas un échantillon plus grand</h3>
 <p>Il est tentant d’empiler les quinze années pour gagner des observations.</p>
-<div id="0014e0cd" class="cell" data-execution_count="17">
+<div id="98f4d729" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>panel <span class="op">=</span> entreprises.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>naif <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit()</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>grappe <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit(</span>
@@ -838,7 +838,7 @@ Grappes  : coef = -0.167, ET = 0.186, p = 0.369</code></pre>
 </section>
 <section id="contrôler-le-secteur" class="level3" data-number="6.6.2">
 <h3 data-number="6.6.2" class="anchored" data-anchor-id="contrôler-le-secteur"><span class="header-section-number">6.6.2</span> Contrôler le secteur</h3>
-<div id="fc29d052" class="cell" data-execution_count="18">
+<div id="16d81e64" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>secteur <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd + C(secteur)"</span>, data<span class="op">=</span>panel).fit(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Avec secteur : coef = </span><span class="sc">{</span>secteur<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>secteur<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1343,7 +1343,7 @@ Wasserstein, Ronald L., et Nicole A. Lazar. 2016. <span>«&nbsp;The ASA Statemen
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>MGMT 60XXX · HEC Montréal</p>
+<p>MNGT 60439 · HEC Montréal</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

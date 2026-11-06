@@ -5,7 +5,7 @@
 #   scripts/render.sh livre    le livre seulement
 #   scripts/render.sh 03       les trois jeux de diapositives de la séance 03
 #
-# Exige : .venv avec requirements.txt, le noyau Jupyter « mgmt60xxx », Quarto.
+# Exige : .venv avec requirements.txt, le noyau Jupyter « mngt60439 », Quarto.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT=$(pwd)

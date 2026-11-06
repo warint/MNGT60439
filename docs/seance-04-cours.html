@@ -1167,7 +1167,7 @@ Thierry Warin, PhD
 </section>
 <section id="des-données-comme-on-les-reçoit" class="slide level2">
 <h2>Des données comme on les reçoit</h2>
-<div id="a7a29ec4" class="cell" data-execution_count="2">
+<div id="6f3a4e58" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href></a>brut <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb1-2"><a href></a>    <span class="st">&quot;Entreprise &quot;</span>: [<span class="st">&quot; Tesla&quot;</span>, <span class="st">&quot;Ford&quot;</span>, <span class="st">&quot;ford&quot;</span>, <span class="st">&quot;General Motors&quot;</span>, <span class="st">&quot;Ford&quot;</span>],</span>
 <span id="cb1-3"><a href></a>    <span class="st">&quot;Annee&quot;</span>:       [<span class="st">&quot;2023&quot;</span>, <span class="st">&quot;2023&quot;</span>, <span class="st">&quot;2023&quot;</span>, <span class="st">&quot;2023&quot;</span>, <span class="st">&quot;2023&quot;</span>],</span>
@@ -1241,7 +1241,7 @@ text-align: right;
 </div>
 </div>
 </div>
-<div id="fb0eb25e" class="cell" data-execution_count="3">
+<div id="d7915691" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a>brut.dtypes</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>Entreprise     str
@@ -1255,7 +1255,7 @@ dtype: object</code></pre>
 </section>
 <section id="étape-1-des-noms-de-colonnes-utilisables" class="slide level2">
 <h2>Étape 1 · Des noms de colonnes utilisables</h2>
-<div id="3c198cac" class="cell" data-execution_count="4">
+<div id="96390338" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href></a>propre <span class="op">=</span> brut.rename(columns<span class="op">=</span>{</span>
 <span id="cb4-2"><a href></a>    <span class="st">&quot;Entreprise &quot;</span>: <span class="st">&quot;entreprise&quot;</span>,</span>
 <span id="cb4-3"><a href></a>    <span class="st">&quot;Annee&quot;</span>: <span class="st">&quot;annee&quot;</span>,</span>
@@ -1273,7 +1273,7 @@ dtype: object</code></pre>
 </section>
 <section id="étape-2-le-texte-.str" class="slide level2">
 <h2>Étape 2 · Le texte : <code>.str</code></h2>
-<div id="6c85e3bb" class="cell" data-execution_count="5">
+<div id="44d5f8b5" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href></a>propre[<span class="st">&quot;entreprise&quot;</span>] <span class="op">=</span> propre[<span class="st">&quot;entreprise&quot;</span>].<span class="bu">str</span>.strip().<span class="bu">str</span>.title()</span>
 <span id="cb6-2"><a href></a>propre[<span class="st">&quot;entreprise&quot;</span>].tolist()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -1284,7 +1284,7 @@ dtype: object</code></pre>
 </section>
 <section id="étape-3-les-nombres-astype-et-pd.to_numeric" class="slide level2">
 <h2>Étape 3 · Les nombres : <code>astype</code> et <code>pd.to_numeric</code></h2>
-<div id="96c293f8" class="cell" data-execution_count="6">
+<div id="f313282e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href></a>propre[<span class="st">&quot;annee&quot;</span>] <span class="op">=</span> propre[<span class="st">&quot;annee&quot;</span>].astype(<span class="bu">int</span>)</span>
 <span id="cb8-2"><a href></a>propre[<span class="st">&quot;ventes&quot;</span>] <span class="op">=</span> propre[<span class="st">&quot;ventes&quot;</span>].<span class="bu">str</span>.replace(<span class="st">&quot; &quot;</span>, <span class="st">&quot;&quot;</span>).astype(<span class="bu">float</span>)</span>
 <span id="cb8-3"><a href></a>propre[<span class="st">&quot;rd&quot;</span>] <span class="op">=</span> pd.to_numeric(propre[<span class="st">&quot;rd&quot;</span>].<span class="bu">str</span>.replace(<span class="st">&quot; &quot;</span>, <span class="st">&quot;&quot;</span>), errors<span class="op">=</span><span class="st">&quot;coerce&quot;</span>)</span>
@@ -1361,7 +1361,7 @@ text-align: right;
 </section>
 <section id="étape-4-les-doublons" class="slide level2">
 <h2>Étape 4 · Les doublons</h2>
-<div id="905e8ba8" class="cell" data-execution_count="7">
+<div id="3caad40e" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href></a><span class="bu">print</span>(propre.duplicated().<span class="bu">sum</span>(), <span class="st">&quot;ligne(s) en double&quot;</span>)</span>
 <span id="cb9-2"><a href></a>propre <span class="op">=</span> propre.drop_duplicates()</span>
 <span id="cb9-3"><a href></a>propre</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1424,7 +1424,7 @@ text-align: right;
 </section>
 <section id="et-dans-les-données-du-cours" class="slide level2">
 <h2>Et dans les données du cours ?</h2>
-<div id="523c6ba1" class="cell" data-execution_count="8">
+<div id="b171d39d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>)</span>
 <span id="cb11-2"><a href></a><span class="bu">print</span>(entreprises.duplicated([<span class="st">&quot;ticker&quot;</span>, <span class="st">&quot;annee&quot;</span>]).<span class="bu">sum</span>(), <span class="st">&quot;doublon entreprise × année&quot;</span>)</span>
 <span id="cb11-3"><a href></a>entreprises.isna().<span class="bu">sum</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1487,7 +1487,7 @@ dtype: int64</code></pre>
 </section>
 <section id="qui-ne-publie-pas-de-r-d" class="slide level2">
 <h2>Qui ne publie pas de R-D ?</h2>
-<div id="46653d09" class="cell" data-execution_count="9">
+<div id="cc38fee5" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a>entreprises[<span class="st">&quot;rd_manquant&quot;</span>] <span class="op">=</span> entreprises[<span class="st">&quot;rd&quot;</span>].isna()</span>
 <span id="cb14-2"><a href></a>(entreprises.groupby(<span class="st">&quot;entreprise&quot;</span>)[<span class="st">&quot;rd_manquant&quot;</span>].mean()</span>
 <span id="cb14-3"><a href></a>    .loc[<span class="kw">lambda</span> s: s <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).<span class="bu">round</span>(<span class="dv">2</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1516,7 +1516,7 @@ Name: rd_manquant, dtype: float64</code></pre>
 </section>
 <section id="deux-tables-une-clé" class="slide level2">
 <h2>Deux tables, une clé</h2>
-<div id="ffa40930" class="cell" data-execution_count="10">
+<div id="58d8c668" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href></a>secteurs <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/secteurs.csv&quot;</span>)</span>
 <span id="cb16-2"><a href></a>secteurs</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -1597,7 +1597,7 @@ text-align: right;
 </section>
 <section id="merge-la-jointure" class="slide level2">
 <h2><code>merge</code> : la jointure</h2>
-<div id="3b58e56d" class="cell" data-execution_count="11">
+<div id="f8ae57f1" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href></a>avant <span class="op">=</span> <span class="bu">len</span>(entreprises)</span>
 <span id="cb17-2"><a href></a>ent_sect <span class="op">=</span> entreprises.merge(secteurs, on<span class="op">=</span><span class="st">&quot;secteur&quot;</span>, how<span class="op">=</span><span class="st">&quot;left&quot;</span>, validate<span class="op">=</span><span class="st">&quot;m:1&quot;</span>)</span>
 <span id="cb17-3"><a href></a><span class="bu">print</span>(avant, <span class="st">&quot;→&quot;</span>, <span class="bu">len</span>(ent_sect), <span class="st">&quot;lignes&quot;</span>)</span>
@@ -1707,7 +1707,7 @@ text-align: right;
 <section id="joindre-les-entreprises-à-leur-pays" class="slide level2">
 <h2>Joindre les entreprises à leur pays</h2>
 <p><code>pays_siege</code> contient <code>&quot;USA&quot;</code> ; <code>pays.csv</code> a une colonne <code>iso3</code>. Les noms diffèrent : on le dit.</p>
-<div id="0916fc00" class="cell" data-execution_count="12">
+<div id="e81d72f1" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href></a>pays <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/pays.csv&quot;</span>)</span>
 <span id="cb19-2"><a href></a>ent_pays <span class="op">=</span> entreprises.merge(</span>
 <span id="cb19-3"><a href></a>    pays[[<span class="st">&quot;iso3&quot;</span>, <span class="st">&quot;annee&quot;</span>, <span class="st">&quot;pib_hab_usd&quot;</span>, <span class="st">&quot;croissance_pib&quot;</span>]],</span>
@@ -1726,7 +1726,7 @@ Name: count, dtype: int64</code></pre>
 </section>
 <section id="indicatortrue-qui-na-pas-trouvé-de-partenaire" class="slide level2">
 <h2><code>indicator=True</code> : qui n’a pas trouvé de partenaire ?</h2>
-<div id="6e40b209" class="cell" data-execution_count="13">
+<div id="c94f503f" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href></a>ent_pays.loc[ent_pays[<span class="st">&quot;_merge&quot;</span>] <span class="op">==</span> <span class="st">&quot;left_only&quot;</span>, <span class="st">&quot;annee&quot;</span>].value_counts()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>annee
@@ -1738,7 +1738,7 @@ Name: count, dtype: int64</code></pre>
 </section>
 <section id="concat-empiler-des-tables" class="slide level2">
 <h2><code>concat</code> : empiler des tables</h2>
-<div id="0872631b" class="cell" data-execution_count="14">
+<div id="dfc46651" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href></a>tesla <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;ticker&quot;</span>] <span class="op">==</span> <span class="st">&quot;TSLA&quot;</span>]</span>
 <span id="cb23-2"><a href></a>ford <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;ticker&quot;</span>] <span class="op">==</span> <span class="st">&quot;F&quot;</span>]</span>
 <span id="cb23-3"><a href></a>auto <span class="op">=</span> pd.concat([tesla, ford], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
@@ -1791,7 +1791,7 @@ Name: count, dtype: int64</code></pre>
 </section>
 <section id="du-long-au-large-pivot" class="slide level2">
 <h2>Du long au large : <code>pivot</code></h2>
-<div id="112ec04c" class="cell" data-execution_count="15">
+<div id="06954b06" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href></a>large <span class="op">=</span> (pays[pays[<span class="st">&quot;iso3&quot;</span>].isin([<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>, <span class="st">&quot;MEX&quot;</span>, <span class="st">&quot;CHN&quot;</span>]) <span class="op">&amp;</span> (pays[<span class="st">&quot;annee&quot;</span>] <span class="op">&gt;=</span> <span class="dv">2019</span>)]</span>
 <span id="cb25-2"><a href></a>         .pivot(index<span class="op">=</span><span class="st">&quot;pays&quot;</span>, columns<span class="op">=</span><span class="st">&quot;annee&quot;</span>, values<span class="op">=</span><span class="st">&quot;pib_hab_usd&quot;</span>)</span>
 <span id="cb25-3"><a href></a>         .<span class="bu">round</span>(<span class="dv">0</span>))</span>
@@ -1872,7 +1872,7 @@ text-align: right;
 </section>
 <section id="du-large-au-long-melt" class="slide level2">
 <h2>Du large au long : <code>melt</code></h2>
-<div id="6c60e241" class="cell" data-execution_count="16">
+<div id="eb1dab9b" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href></a><span class="bu">long</span> <span class="op">=</span> (large.reset_index()</span>
 <span id="cb26-2"><a href></a>        .melt(id_vars<span class="op">=</span><span class="st">&quot;pays&quot;</span>, var_name<span class="op">=</span><span class="st">&quot;annee&quot;</span>, value_name<span class="op">=</span><span class="st">&quot;pib_hab_usd&quot;</span>))</span>
 <span id="cb26-3"><a href></a><span class="bu">print</span>(<span class="bu">long</span>.shape)</span>
@@ -1950,7 +1950,7 @@ text-align: right;
 </section>
 <section id="pivot_table-remodeler-et-agréger" class="slide level2">
 <h2><code>pivot_table</code> : remodeler <strong>et</strong> agréger</h2>
-<div id="a1cf7d11" class="cell" data-execution_count="17">
+<div id="398eef55" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href></a>(entreprises</span>
 <span id="cb28-2"><a href></a> .assign(marge<span class="op">=</span>entreprises[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> entreprises[<span class="st">&quot;chiffre_affaires&quot;</span>])</span>
 <span id="cb28-3"><a href></a> .pivot_table(index<span class="op">=</span><span class="st">&quot;secteur&quot;</span>, columns<span class="op">=</span><span class="st">&quot;annee&quot;</span>, values<span class="op">=</span><span class="st">&quot;marge&quot;</span>, aggfunc<span class="op">=</span><span class="st">&quot;median&quot;</span>)</span>
@@ -2077,7 +2077,7 @@ text-align: right;
 </section>
 <section id="groupby-agg-un-tableau-par-secteur" class="slide level2">
 <h2><code>groupby</code> + <code>agg</code> : un tableau par secteur</h2>
-<div id="3e1d0fe5" class="cell" data-execution_count="18">
+<div id="17882351" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href></a>(entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
 <span id="cb29-2"><a href></a> .groupby(<span class="st">&quot;secteur&quot;</span>)</span>
 <span id="cb29-3"><a href></a> .agg(n<span class="op">=</span>(<span class="st">&quot;ticker&quot;</span>, <span class="st">&quot;nunique&quot;</span>),</span>
@@ -2216,7 +2216,7 @@ text-align: right;
 </tr>
 </tbody>
 </table>
-<div id="98f26cb7" class="cell" data-execution_count="19">
+<div id="194564b9" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href></a>entreprises[<span class="st">&quot;roa&quot;</span>] <span class="op">=</span> entreprises[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> entreprises[<span class="st">&quot;actifs_totaux&quot;</span>]</span>
 <span id="cb30-2"><a href></a>entreprises[<span class="st">&quot;roa_secteur&quot;</span>] <span class="op">=</span> (entreprises</span>
 <span id="cb30-3"><a href></a>                              .groupby([<span class="st">&quot;secteur&quot;</span>, <span class="st">&quot;annee&quot;</span>])[<span class="st">&quot;roa&quot;</span>]</span>
@@ -2226,7 +2226,7 @@ text-align: right;
 </section>
 <section id="les-vrais-concurrents-lécart-au-secteur" class="slide level2">
 <h2>Les vrais concurrents : l’écart au secteur</h2>
-<div id="c1ef216d" class="cell" data-execution_count="20">
+<div id="8b601bad" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href></a>(entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
 <span id="cb31-2"><a href></a> [[<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;secteur&quot;</span>, <span class="st">&quot;roa&quot;</span>, <span class="st">&quot;roa_secteur&quot;</span>, <span class="st">&quot;ecart_secteur&quot;</span>]]</span>
 <span id="cb31-3"><a href></a> .sort_values(<span class="st">&quot;ecart_secteur&quot;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -2330,7 +2330,7 @@ text-align: right;
 </section>
 <section id="et-au-bas-du-classement" class="slide level2">
 <h2>… et au bas du classement</h2>
-<div id="c2ea690e" class="cell" data-execution_count="21">
+<div id="37824881" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href></a>(entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
 <span id="cb32-2"><a href></a> [[<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;secteur&quot;</span>, <span class="st">&quot;roa&quot;</span>, <span class="st">&quot;roa_secteur&quot;</span>, <span class="st">&quot;ecart_secteur&quot;</span>]]</span>
 <span id="cb32-3"><a href></a> .sort_values(<span class="st">&quot;ecart_secteur&quot;</span>)</span>
@@ -2421,7 +2421,7 @@ text-align: right;
 </section>
 <section id="une-limite-à-garder-en-tête" class="slide level2">
 <h2>Une limite à garder en tête</h2>
-<div id="e95599a0" class="cell" data-execution_count="22">
+<div id="6fb5ae29" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href></a>entreprises.groupby(<span class="st">&quot;secteur&quot;</span>)[<span class="st">&quot;ticker&quot;</span>].nunique().sort_values()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>secteur
@@ -2446,7 +2446,7 @@ Name: ticker, dtype: int64</code></pre>
 </section>
 <section id="trier-dabord-décaler-ensuite" class="slide level2">
 <h2>Trier d’abord, décaler ensuite</h2>
-<div id="61f99f9f" class="cell" data-execution_count="23">
+<div id="b1557b5f" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href></a>entreprises <span class="op">=</span> entreprises.sort_values([<span class="st">&quot;ticker&quot;</span>, <span class="st">&quot;annee&quot;</span>])</span>
 <span id="cb35-2"><a href></a>entreprises[<span class="st">&quot;ventes_an_prec&quot;</span>] <span class="op">=</span> entreprises.groupby(<span class="st">&quot;ticker&quot;</span>)[<span class="st">&quot;chiffre_affaires&quot;</span>].shift(<span class="dv">1</span>)</span>
 <span id="cb35-3"><a href></a>entreprises[<span class="st">&quot;croissance&quot;</span>] <span class="op">=</span> entreprises.groupby(<span class="st">&quot;ticker&quot;</span>)[<span class="st">&quot;chiffre_affaires&quot;</span>].pct_change()</span>
@@ -2531,7 +2531,7 @@ text-align: right;
 </section>
 <section id="lisser-la-moyenne-mobile" class="slide level2">
 <h2>Lisser : la moyenne mobile</h2>
-<div id="71be8d3e" class="cell" data-execution_count="24">
+<div id="c3ed63a5" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href></a>entreprises[<span class="st">&quot;croissance_3ans&quot;</span>] <span class="op">=</span> (entreprises.groupby(<span class="st">&quot;ticker&quot;</span>)[<span class="st">&quot;croissance&quot;</span>]</span>
 <span id="cb36-2"><a href></a>                                  .transform(<span class="kw">lambda</span> s: s.rolling(<span class="dv">3</span>).mean()))</span>
 <span id="cb36-3"><a href></a>(entreprises[entreprises[<span class="st">&quot;secteur&quot;</span>] <span class="op">==</span> <span class="st">&quot;Automobile&quot;</span>]</span>
@@ -2623,7 +2623,7 @@ text-align: right;
 </section>
 <section id="importer-les-cours-une-seule-fois" class="slide level2">
 <h2>Importer les cours, une seule fois</h2>
-<div id="476e32ca" class="cell" data-execution_count="25">
+<div id="8a89f4ee" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb37-2"><a href></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb37-3"><a href></a></span>
@@ -2696,7 +2696,7 @@ text-align: right;
 </section>
 <section id="des-prix-aux-rendements" class="slide level2">
 <h2>Des prix aux rendements</h2>
-<div id="6f42c89d" class="cell" data-execution_count="26">
+<div id="92a94235" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href></a>rendements <span class="op">=</span> prix.pct_change().dropna()</span>
 <span id="cb38-2"><a href></a>rendements.describe().loc[[<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;std&quot;</span>, <span class="st">&quot;min&quot;</span>, <span class="st">&quot;max&quot;</span>]].<span class="bu">round</span>(<span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
@@ -2758,7 +2758,7 @@ text-align: right;
 <section id="rendement-anormal-version-naïve" class="slide level2">
 <h2>Rendement anormal, version naïve</h2>
 <p><span class="math display">\[\text{rendement anormal}_t = r_{\text{entreprise},t} - r_{\text{marché},t}\]</span></p>
-<div id="3bfaf659" class="cell" data-execution_count="27">
+<div id="44400b4b" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href></a><span class="kw">def</span> fenetre(ticker, annonce, avant<span class="op">=</span><span class="dv">5</span>, apres<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb39-2"><a href></a>    r <span class="op">=</span> rendements[[ticker, <span class="st">&quot;SPY&quot;</span>]].copy()</span>
 <span id="cb39-3"><a href></a>    r[<span class="st">&quot;anormal&quot;</span>] <span class="op">=</span> r[ticker] <span class="op">-</span> r[<span class="st">&quot;SPY&quot;</span>]</span>
@@ -2901,7 +2901,7 @@ text-align: right;
 </section>
 <section id="pfizer-et-seagen" class="slide level2">
 <h2>Pfizer et Seagen</h2>
-<div id="a75f59ef" class="cell" data-execution_count="28">
+<div id="b22cc721" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href></a>pfe <span class="op">=</span> fenetre(<span class="st">&quot;PFE&quot;</span>, <span class="st">&quot;2023-03-13&quot;</span>)</span>
 <span id="cb40-2"><a href></a>pfe[[<span class="st">&quot;jour&quot;</span>, <span class="st">&quot;PFE&quot;</span>, <span class="st">&quot;SPY&quot;</span>, <span class="st">&quot;anormal&quot;</span>, <span class="st">&quot;cumul&quot;</span>]].<span class="bu">round</span>(<span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
@@ -3035,7 +3035,7 @@ text-align: right;
 </section>
 <section id="les-deux-fenêtres-côte-à-côte" class="slide level2">
 <h2>Les deux fenêtres côte à côte</h2>
-<div id="9beb427e" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="29">
+<div id="8dba5260" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="29">
 <div class="column">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href></a><span class="im">from</span> plotstyle <span class="im">import</span> setup, CL</span>
 <span id="cb41-2"><a href></a>plt <span class="op">=</span> setup()</span>
@@ -3155,7 +3155,7 @@ text-align: right;
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>MGMT 60XXX · Séance 04 · Thierry Warin, PhD · HEC Montréal</p>
+<p>MNGT 60439 · Séance 04 · Thierry Warin, PhD · HEC Montréal</p>
 </div>
 </div></div>
 

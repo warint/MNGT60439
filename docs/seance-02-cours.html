@@ -1162,7 +1162,7 @@ Thierry Warin, PhD
 </section>
 <section id="le-fichier-de-la-séance" class="slide level2">
 <h2>Le fichier de la séance</h2>
-<div id="cd478bc0" class="cell" data-execution_count="2">
+<div id="eedea861" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href></a></span>
 <span id="cb1-3"><a href></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>)</span>
@@ -1290,7 +1290,7 @@ text-align: right;
 </section>
 <section id="un-dataframe-cest-des-series-côte-à-côte" class="slide level2">
 <h2>Un DataFrame, c’est des Series côte à côte</h2>
-<div id="0095e994" class="cell" data-execution_count="3">
+<div id="789878d6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a>ventes <span class="op">=</span> entreprises[<span class="st">&quot;chiffre_affaires&quot;</span>]</span>
 <span id="cb2-2"><a href></a><span class="bu">print</span>(<span class="bu">type</span>(entreprises))</span>
 <span id="cb2-3"><a href></a><span class="bu">print</span>(<span class="bu">type</span>(ventes))</span>
@@ -1315,7 +1315,7 @@ Name: chiffre_affaires, dtype: float64</code></pre>
 </section>
 <section id="lindex-létiquette-de-chaque-ligne" class="slide level2">
 <h2>L’index : l’étiquette de chaque ligne</h2>
-<div id="33eae394" class="cell" data-execution_count="4">
+<div id="ed7e0048" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href></a><span class="bu">print</span>(entreprises.index)</span>
 <span id="cb5-2"><a href></a><span class="bu">print</span>(entreprises.columns.tolist())</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1324,7 +1324,7 @@ Name: chiffre_affaires, dtype: float64</code></pre>
 </div>
 </div>
 <p>Par défaut, l’index est <code>0, 1, 2, …</code>. On peut le remplacer par une colonne qui a du sens :</p>
-<div id="72b86849" class="cell" data-execution_count="5">
+<div id="bf1c20a8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href></a>par_ticker <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>].set_index(<span class="st">&quot;ticker&quot;</span>)</span>
 <span id="cb7-2"><a href></a>par_ticker.loc[<span class="st">&quot;TSLA&quot;</span>, [<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -1337,7 +1337,7 @@ Name: TSLA, dtype: object</code></pre>
 </section>
 <section id="les-types-de-colonnes" class="slide level2">
 <h2>Les types de colonnes</h2>
-<div id="51edcec1" class="cell" data-execution_count="6">
+<div id="992070be" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href></a>entreprises.dtypes</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>ticker                  str
@@ -1397,7 +1397,7 @@ dtype: object</code></pre>
 </section>
 <section id="shape-et-info" class="slide level2">
 <h2><code>shape</code> et <code>info</code></h2>
-<div id="7cf58a5c" class="cell" data-execution_count="7">
+<div id="fc60dbe0" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href></a><span class="bu">print</span>(entreprises.shape)       <span class="co"># (lignes, colonnes)</span></span>
 <span id="cb11-2"><a href></a>entreprises.info()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1427,7 +1427,7 @@ memory usage: 58.2 KB</code></pre>
 </section>
 <section id="describe-le-résumé-numérique" class="slide level2">
 <h2><code>describe</code> : le résumé numérique</h2>
-<div id="27dc53fc" class="cell" data-execution_count="8">
+<div id="7f60d0d0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href></a>entreprises[[<span class="st">&quot;chiffre_affaires&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>, <span class="st">&quot;actifs_totaux&quot;</span>, <span class="st">&quot;rd&quot;</span>]].describe().<span class="bu">round</span>(<span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
@@ -1522,7 +1522,7 @@ text-align: right;
 </section>
 <section id="combien-de-quoi-unique-et-value_counts" class="slide level2">
 <h2>Combien de quoi : <code>unique</code> et <code>value_counts</code></h2>
-<div id="76fba17a" class="cell" data-execution_count="9">
+<div id="2e1c77fd" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a><span class="bu">print</span>(entreprises[<span class="st">&quot;secteur&quot;</span>].nunique(), <span class="st">&quot;secteurs&quot;</span>)</span>
 <span id="cb14-2"><a href></a>entreprises[<span class="st">&quot;secteur&quot;</span>].value_counts()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1553,7 +1553,7 @@ Name: count, dtype: int64</code></pre>
 </section>
 <section id="une-colonne-ou-plusieurs-et" class="slide level2">
 <h2>Une colonne ou plusieurs : <code>[ ]</code> et <code>[[ ]]</code></h2>
-<div id="41435935" class="cell" data-execution_count="10">
+<div id="6b94a6e0" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href></a>une <span class="op">=</span> entreprises[<span class="st">&quot;entreprise&quot;</span>]                         <span class="co"># une Series</span></span>
 <span id="cb17-2"><a href></a>plusieurs <span class="op">=</span> entreprises[[<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;annee&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>]]   <span class="co"># un DataFrame</span></span>
 <span id="cb17-3"><a href></a><span class="bu">print</span>(<span class="bu">type</span>(une).<span class="va">__name__</span>, une.shape)</span>
@@ -1569,7 +1569,7 @@ DataFrame (480, 3)</code></pre>
 </section>
 <section id="des-lignes-par-étiquette-.loc" class="slide level2">
 <h2>Des lignes par étiquette : <code>.loc</code></h2>
-<div id="b7f1843f" class="cell" data-execution_count="11">
+<div id="5b3897f7" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href></a>a23 <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>].set_index(<span class="st">&quot;ticker&quot;</span>)</span>
 <span id="cb19-2"><a href></a>a23.loc[[<span class="st">&quot;AAPL&quot;</span>, <span class="st">&quot;MSFT&quot;</span>, <span class="st">&quot;NVDA&quot;</span>], [<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
@@ -1630,7 +1630,7 @@ text-align: right;
 </section>
 <section id="des-lignes-par-position-.iloc" class="slide level2">
 <h2>Des lignes par position : <code>.iloc</code></h2>
-<div id="b0b8bfe6" class="cell" data-execution_count="12">
+<div id="5a43b109" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href></a>entreprises.iloc[<span class="dv">0</span>:<span class="dv">3</span>, <span class="dv">0</span>:<span class="dv">6</span>]     <span class="co"># les 3 premières lignes, les 6 premières colonnes</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <div>
@@ -1729,7 +1729,7 @@ text-align: right;
 </section>
 <section id="un-masque-booléen" class="slide level2">
 <h2>Un masque booléen</h2>
-<div id="bf463a98" class="cell" data-execution_count="13">
+<div id="b4043259" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href></a>masque <span class="op">=</span> entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span></span>
 <span id="cb21-2"><a href></a><span class="bu">print</span>(masque.head(<span class="dv">16</span>).tolist())</span>
 <span id="cb21-3"><a href></a><span class="bu">print</span>(masque.<span class="bu">sum</span>(), <span class="st">&quot;lignes sont vraies&quot;</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1739,7 +1739,7 @@ text-align: right;
 </div>
 </div>
 <p>Une comparaison sur une colonne produit une Series de <code>True</code>/<code>False</code>. Placée entre crochets, elle <strong>garde les lignes vraies</strong> :</p>
-<div id="cf2a5400" class="cell" data-execution_count="14">
+<div id="b2df49d1" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href></a>entreprises[masque].shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>(32, 12)</code></pre>
@@ -1748,7 +1748,7 @@ text-align: right;
 </section>
 <section id="combiner" class="slide level2">
 <h2>Combiner : <code>&amp;</code>, <code>|</code>, <code>~</code></h2>
-<div id="06931f99" class="cell" data-execution_count="15">
+<div id="60593b88" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href></a>grosses_tech_2023 <span class="op">=</span> entreprises[</span>
 <span id="cb25-2"><a href></a>    (entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>)</span>
 <span id="cb25-3"><a href></a>    <span class="op">&amp;</span> (entreprises[<span class="st">&quot;secteur&quot;</span>] <span class="op">==</span> <span class="st">&quot;Technologie&quot;</span>)</span>
@@ -1810,7 +1810,7 @@ text-align: right;
 </section>
 <section id="isin-et-between" class="slide level2">
 <h2><code>isin</code> et <code>between</code></h2>
-<div id="524e4b7a" class="cell" data-execution_count="16">
+<div id="c3cbaba6" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href></a>auto_energie <span class="op">=</span> entreprises[</span>
 <span id="cb26-2"><a href></a>    entreprises[<span class="st">&quot;secteur&quot;</span>].isin([<span class="st">&quot;Automobile&quot;</span>, <span class="st">&quot;Énergie&quot;</span>])</span>
 <span id="cb26-3"><a href></a>    <span class="op">&amp;</span> entreprises[<span class="st">&quot;annee&quot;</span>].between(<span class="dv">2020</span>, <span class="dv">2022</span>)</span>
@@ -1904,7 +1904,7 @@ text-align: right;
 </section>
 <section id="query-la-même-chose-en-phrase" class="slide level2">
 <h2><code>query</code> : la même chose, en phrase</h2>
-<div id="b63b1b25" class="cell" data-execution_count="17">
+<div id="6de5ecae" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href></a>entreprises.query(<span class="st">&quot;annee == 2023 and resultat_net &lt; 0&quot;</span>)[</span>
 <span id="cb27-2"><a href></a>    [<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;secteur&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>]</span>
 <span id="cb27-3"><a href></a>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1959,7 +1959,7 @@ text-align: right;
 </section>
 <section id="qui-gagne-le-plus-dargent" class="slide level2">
 <h2>Qui gagne le plus d’argent ?</h2>
-<div id="6547fd8a" class="cell" data-execution_count="18">
+<div id="5adc1b9f" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href></a>a23 <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
 <span id="cb28-2"><a href></a>a23.sort_values(<span class="st">&quot;resultat_net&quot;</span>, ascending<span class="op">=</span><span class="va">False</span>)[</span>
 <span id="cb28-3"><a href></a>    [<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;secteur&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>]</span>
@@ -2027,7 +2027,7 @@ text-align: right;
 </section>
 <section id="nlargest-plus-court" class="slide level2">
 <h2><code>nlargest</code> : plus court</h2>
-<div id="f091d359" class="cell" data-execution_count="19">
+<div id="55f36038" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href></a>a23.nlargest(<span class="dv">5</span>, <span class="st">&quot;chiffre_affaires&quot;</span>)[[<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;secteur&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <div>
@@ -2098,7 +2098,7 @@ text-align: right;
 </section>
 <section id="quatre-ratios-une-ligne-chacun" class="slide level2">
 <h2>Quatre ratios, une ligne chacun</h2>
-<div id="d4a5d7db" class="cell" data-execution_count="20">
+<div id="291c1064" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href></a>df <span class="op">=</span> entreprises.copy()</span>
 <span id="cb30-2"><a href></a>df[<span class="st">&quot;marge_nette&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> df[<span class="st">&quot;chiffre_affaires&quot;</span>]</span>
 <span id="cb30-3"><a href></a>df[<span class="st">&quot;roa&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> df[<span class="st">&quot;actifs_totaux&quot;</span>]</span>
@@ -2190,7 +2190,7 @@ text-align: right;
 </section>
 <section id="le-classement-change-avec-la-mesure" class="slide level2">
 <h2>Le classement change avec la mesure</h2>
-<div id="f9b7c6a8" class="cell" data-execution_count="21">
+<div id="a1939b3f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href></a>a23 <span class="op">=</span> df[df[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>]</span>
 <span id="cb31-2"><a href></a>cols <span class="op">=</span> [<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;marge_nette&quot;</span>, <span class="st">&quot;roa&quot;</span>]</span>
 <span id="cb31-3"><a href></a><span class="bu">print</span>(a23.nlargest(<span class="dv">5</span>, <span class="st">&quot;marge_nette&quot;</span>)[cols].<span class="bu">round</span>(<span class="dv">3</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
@@ -2215,7 +2215,7 @@ Johnson &amp; Johnson        0.413 0.210
 </section>
 <section id="un-ratio-peut-mentir-le-roe" class="slide level2">
 <h2>Un ratio peut mentir : le ROE</h2>
-<div id="bfcd61b1" class="cell" data-execution_count="22">
+<div id="b0e456b5" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href></a>a23[a23[<span class="st">&quot;capitaux_propres&quot;</span>] <span class="op">&lt;</span> <span class="dv">0</span>][[<span class="st">&quot;entreprise&quot;</span>, <span class="st">&quot;resultat_net&quot;</span>, <span class="st">&quot;capitaux_propres&quot;</span>, <span class="st">&quot;roe&quot;</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <div>
@@ -2275,7 +2275,7 @@ text-align: right;
 </section>
 <section id="assign-créer-sans-modifier" class="slide level2">
 <h2><code>assign</code> : créer sans modifier</h2>
-<div id="ba2effdc" class="cell" data-execution_count="23">
+<div id="48bc8734" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href></a>(entreprises</span>
 <span id="cb34-2"><a href></a>    .query(<span class="st">&quot;annee == 2023&quot;</span>)</span>
 <span id="cb34-3"><a href></a>    .assign(marge_nette<span class="op">=</span><span class="kw">lambda</span> d: d[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> d[<span class="st">&quot;chiffre_affaires&quot;</span>])</span>
@@ -2329,7 +2329,7 @@ text-align: right;
 </section>
 <section id="pandas-3-la-copie-à-lécriture" class="slide level2">
 <h2>pandas 3 : la copie à l’écriture</h2>
-<div id="611c42ce" class="cell" data-execution_count="24">
+<div id="2698ebc4" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href></a>tesla <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;ticker&quot;</span>] <span class="op">==</span> <span class="st">&quot;TSLA&quot;</span>]</span>
 <span id="cb35-2"><a href></a>tesla[<span class="st">&quot;chiffre_affaires&quot;</span>] <span class="op">=</span> <span class="dv">0</span>              <span class="co"># modifie la sélection…</span></span>
 <span id="cb35-3"><a href></a><span class="bu">print</span>(entreprises.loc[entreprises[<span class="st">&quot;ticker&quot;</span>] <span class="op">==</span> <span class="st">&quot;TSLA&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>].head(<span class="dv">3</span>).tolist())</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2350,7 +2350,7 @@ text-align: right;
 </section>
 <section id="groupby-découper-appliquer-combiner" class="slide level2">
 <h2><code>groupby</code> : découper, appliquer, combiner</h2>
-<div id="d249853e" class="cell" data-execution_count="25">
+<div id="da17b975" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href></a>a23.groupby(<span class="st">&quot;secteur&quot;</span>)[<span class="st">&quot;marge_nette&quot;</span>].median().sort_values(ascending<span class="op">=</span><span class="va">False</span>).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>secteur
@@ -2374,7 +2374,7 @@ Name: marge_nette, dtype: float64</code></pre>
 </section>
 <section id="plusieurs-résumés-.agg" class="slide level2">
 <h2>Plusieurs résumés : <code>.agg</code></h2>
-<div id="1392779b" class="cell" data-execution_count="26">
+<div id="29ea7936" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href></a>(a23.groupby(<span class="st">&quot;secteur&quot;</span>)</span>
 <span id="cb40-2"><a href></a>    .agg(n<span class="op">=</span>(<span class="st">&quot;ticker&quot;</span>, <span class="st">&quot;count&quot;</span>),</span>
 <span id="cb40-3"><a href></a>         ventes_totales<span class="op">=</span>(<span class="st">&quot;chiffre_affaires&quot;</span>, <span class="st">&quot;sum&quot;</span>),</span>
@@ -2489,7 +2489,7 @@ text-align: right;
 </section>
 <section id="par-entreprise-sur-quinze-ans" class="slide level2">
 <h2>Par entreprise, sur quinze ans</h2>
-<div id="febc325d" class="cell" data-execution_count="27">
+<div id="a14e4e18" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href></a>(df.groupby(<span class="st">&quot;entreprise&quot;</span>)[<span class="st">&quot;marge_nette&quot;</span>]</span>
 <span id="cb41-2"><a href></a>   .agg([<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;min&quot;</span>, <span class="st">&quot;max&quot;</span>])</span>
 <span id="cb41-3"><a href></a>   .sort_values(<span class="st">&quot;mean&quot;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -2576,7 +2576,7 @@ text-align: right;
 </section>
 <section id="combien-et-où" class="slide level2">
 <h2>Combien, et où ?</h2>
-<div id="d339da8e" class="cell" data-execution_count="28">
+<div id="4a7132db" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href></a>entreprises.isna().<span class="bu">sum</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>ticker                0
@@ -2597,7 +2597,7 @@ dtype: int64</code></pre>
 </section>
 <section id="une-absence-qui-a-un-sens" class="slide level2">
 <h2>Une absence qui a un sens</h2>
-<div id="2149293d" class="cell" data-execution_count="29">
+<div id="1c28d821" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href></a>(entreprises.groupby(<span class="st">&quot;secteur&quot;</span>)[<span class="st">&quot;rd&quot;</span>]</span>
 <span id="cb44-2"><a href></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> s: s.isna().mean())</span>
 <span id="cb44-3"><a href></a>    .sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -2622,7 +2622,7 @@ Name: rd, dtype: float64</code></pre>
 </section>
 <section id="ce-que-pandas-fait-des-nan" class="slide level2">
 <h2>Ce que pandas fait des <code>NaN</code></h2>
-<div id="a5aee3c5" class="cell" data-execution_count="30">
+<div id="44bd6f13" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href></a>rd <span class="op">=</span> entreprises[<span class="st">&quot;rd&quot;</span>]</span>
 <span id="cb46-2"><a href></a><span class="bu">print</span>(<span class="st">&quot;moyenne (NaN ignorés) :&quot;</span>, <span class="bu">round</span>(rd.mean(), <span class="dv">1</span>))</span>
 <span id="cb46-3"><a href></a><span class="bu">print</span>(<span class="st">&quot;moyenne (NaN = 0)     :&quot;</span>, <span class="bu">round</span>(rd.fillna(<span class="dv">0</span>).mean(), <span class="dv">1</span>))</span>
@@ -2685,7 +2685,7 @@ lignes avec R-D       : 345 sur 480</code></pre>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>MGMT 60XXX · Séance 02 · Thierry Warin, PhD · HEC Montréal</p>
+<p>MNGT 60439 · Séance 02 · Thierry Warin, PhD · HEC Montréal</p>
 </div>
 </div></div>
 

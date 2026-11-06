@@ -3,9 +3,9 @@
 > **L'Amérique crée-t-elle plus de valeur que tout autre pays ? Cela dépend de la mesure — et du graphique.**
 
 > **[Diapositives du cours](https://warint.github.io/MNGT60439/seance-05-cours.html)** — ou la source :
-> [`01-cours/MGMT60XXX-S05-Cours.qmd`](01-cours/MGMT60XXX-S05-Cours.qmd)
+> [`01-cours/MNGT60439-S05-Cours.qmd`](01-cours/MNGT60439-S05-Cours.qmd)
 
-**Date : à confirmer** · 3 h · MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+**Date : à confirmer** · 3 h · MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

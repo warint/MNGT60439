@@ -1,7 +1,7 @@
 # Séance 01 — Pratique
 
 > **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-01-pratique.html)** · source :
-> [`MGMT60XXX-S01-Pratique.qmd`](MGMT60XXX-S01-Pratique.qmd)
+> [`MNGT60439-S01-Pratique.qmd`](MNGT60439-S01-Pratique.qmd)
 
 **Question :** *Tesla est-elle plus rentable que Ford — et depuis quand ?*
 

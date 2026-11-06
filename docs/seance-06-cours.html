@@ -1132,7 +1132,7 @@ Thierry Warin, PhD
 </section>
 <section id="trois-indicateurs-construits-une-fois" class="slide level2 scrollable">
 <h2>Trois indicateurs, construits une fois</h2>
-<div id="dc7df34c" class="cell" data-execution_count="2">
+<div id="01367a41" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>)</span>
 <span id="cb1-2"><a href></a></span>
 <span id="cb1-3"><a href></a>entreprises[<span class="st">&quot;roa&quot;</span>] <span class="op">=</span> entreprises[<span class="st">&quot;resultat_net&quot;</span>] <span class="op">/</span> entreprises[<span class="st">&quot;actifs_totaux&quot;</span>]          <span class="co"># rendement de l&#39;actif</span></span>
@@ -1224,7 +1224,7 @@ text-align: right;
 </section>
 <section id="le-centre-moyenne-ou-médiane" class="slide level2 scrollable">
 <h2>Le centre : moyenne ou médiane ?</h2>
-<div id="70e04568" class="cell" data-execution_count="3">
+<div id="203ab246" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a>ca <span class="op">=</span> e23[<span class="st">&quot;chiffre_affaires&quot;</span>]</span>
 <span id="cb2-2"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Moyenne : </span><span class="sc">{</span>ca<span class="sc">.</span>mean()<span class="sc">:&gt;10,.0f}</span><span class="ss"> M$&quot;</span>)</span>
 <span id="cb2-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Médiane : </span><span class="sc">{</span>ca<span class="sc">.</span>median()<span class="sc">:&gt;10,.0f}</span><span class="ss"> M$&quot;</span>)</span>
@@ -1242,7 +1242,7 @@ Asymétrie (skew) : 2.01</code></pre>
 </section>
 <section id="la-dispersion-écart-type-et-écart-interquartile" class="slide level2 scrollable">
 <h2>La dispersion : écart type et écart interquartile</h2>
-<div id="ba9d0419" class="cell" data-execution_count="4">
+<div id="25dd923c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href></a><span class="bu">print</span>(e23[<span class="st">&quot;roa&quot;</span>].describe().<span class="bu">round</span>(<span class="dv">3</span>))</span>
 <span id="cb4-2"><a href></a>q1, q3 <span class="op">=</span> e23[<span class="st">&quot;roa&quot;</span>].quantile([<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span>
 <span id="cb4-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Écart interquartile : </span><span class="sc">{</span>q3 <span class="op">-</span> q1<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1267,7 +1267,7 @@ Name: roa, dtype: float64
 </section>
 <section id="décrire-par-groupe" class="slide level2 scrollable">
 <h2>Décrire par groupe</h2>
-<div id="f7ca04af" class="cell" data-execution_count="5">
+<div id="9d842052" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href></a>(e23.groupby(<span class="st">&quot;secteur&quot;</span>)[<span class="st">&quot;roa&quot;</span>]</span>
 <span id="cb6-2"><a href></a>    .agg(n<span class="op">=</span><span class="st">&quot;count&quot;</span>, moyenne<span class="op">=</span><span class="st">&quot;mean&quot;</span>, mediane<span class="op">=</span><span class="st">&quot;median&quot;</span>, ecart_type<span class="op">=</span><span class="st">&quot;std&quot;</span>)</span>
 <span id="cb6-3"><a href></a>    .sort_values(<span class="st">&quot;mediane&quot;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -1379,7 +1379,7 @@ text-align: right;
 </section>
 <section id="la-forme-regarder-avant-de-calculer" class="slide level2 scrollable">
 <h2>La forme : regarder avant de calculer</h2>
-<div id="901790a6" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="6">
+<div id="8943e351" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="6">
 <div class="column">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href></a>fig, (a1, a2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">4.2</span>))</span>
 <span id="cb7-2"><a href></a>a1.hist(e23[<span class="st">&quot;chiffre_affaires&quot;</span>] <span class="op">/</span> <span class="dv">1000</span>, bins<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span>CL.ink)</span>
@@ -1420,7 +1420,7 @@ text-align: right;
 <p><span class="math display">\[
 \text{ET}(\bar x) = \frac{s}{\sqrt{n}}
 \]</span></p>
-<div id="c67cc8f9" class="cell" data-execution_count="7">
+<div id="4f208eeb" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href></a>roa <span class="op">=</span> e23[<span class="st">&quot;roa&quot;</span>].dropna()</span>
 <span id="cb8-2"><a href></a>n, moyenne, s <span class="op">=</span> <span class="bu">len</span>(roa), roa.mean(), roa.std()</span>
 <span id="cb8-3"><a href></a>erreur_type <span class="op">=</span> s <span class="op">/</span> np.sqrt(n)</span>
@@ -1433,7 +1433,7 @@ text-align: right;
 </section>
 <section id="lintervalle-de-confiance-à-95" class="slide level2 scrollable">
 <h2>L’intervalle de confiance à 95 %</h2>
-<div id="7d54b815" class="cell" data-execution_count="8">
+<div id="d4c2e11e" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href></a>ic <span class="op">=</span> stats.t.interval(<span class="fl">0.95</span>, df<span class="op">=</span>n <span class="op">-</span> <span class="dv">1</span>, loc<span class="op">=</span>moyenne, scale<span class="op">=</span>erreur_type)</span>
 <span id="cb10-2"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;ROA moyen 2023 : </span><span class="sc">{</span>moyenne<span class="sc">:.3f}</span><span class="ss">, IC 95 % : [</span><span class="sc">{</span>ic[<span class="dv">0</span>]<span class="sc">:.3f}</span><span class="ss"> ; </span><span class="sc">{</span>ic[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">]&quot;</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1448,7 +1448,7 @@ text-align: right;
 <section id="le-bootstrap-la-même-idée-sans-formule" class="slide level2 scrollable">
 <h2>Le bootstrap : la même idée, sans formule</h2>
 <p>On ré-échantillonne <strong>nos propres données</strong>, avec remise, des milliers de fois.</p>
-<div id="cbb6cd51" class="cell" data-execution_count="9">
+<div id="6a9f6a48" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">60</span>)</span>
 <span id="cb12-2"><a href></a>moyennes <span class="op">=</span> [rng.choice(roa.values, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">True</span>).mean() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
 <span id="cb12-3"><a href></a>bas, haut <span class="op">=</span> np.percentile(moyennes, [<span class="fl">2.5</span>, <span class="fl">97.5</span>])</span>
@@ -1510,7 +1510,7 @@ IC bootstrap de la MÉDIANE : [0.075 ; 0.121]</code></pre>
 <section id="test-t-sur-un-seul-échantillon" class="slide level2 scrollable">
 <h2>Test t sur un seul échantillon</h2>
 <p><em>Nos grandes entreprises sont-elles, en moyenne, rentables ?</em></p>
-<div id="93944fb1" class="cell" data-execution_count="10">
+<div id="3bba54d5" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a>t1 <span class="op">=</span> stats.ttest_1samp(roa, popmean<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb14-2"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;t = </span><span class="sc">{</span>t1<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>t1<span class="sc">.</span>pvalue<span class="sc">:.2g}</span><span class="ss">&quot;</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1521,7 +1521,7 @@ IC bootstrap de la MÉDIANE : [0.075 ; 0.121]</code></pre>
 </section>
 <section id="deux-groupes-la-technologie-est-elle-plus-rentable" class="slide level2 scrollable">
 <h2>Deux groupes : la technologie est-elle plus rentable ?</h2>
-<div id="81f48f1d" class="cell" data-execution_count="11">
+<div id="0b8bc49a" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href></a>tech <span class="op">=</span> e23.loc[e23[<span class="st">&quot;secteur&quot;</span>] <span class="op">==</span> <span class="st">&quot;Technologie&quot;</span>, <span class="st">&quot;roa&quot;</span>]</span>
 <span id="cb16-2"><a href></a>autres <span class="op">=</span> e23.loc[e23[<span class="st">&quot;secteur&quot;</span>] <span class="op">!=</span> <span class="st">&quot;Technologie&quot;</span>, <span class="st">&quot;roa&quot;</span>]</span>
 <span id="cb16-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Technologie : n = </span><span class="sc">{</span><span class="bu">len</span>(tech)<span class="sc">}</span><span class="ss">, ROA moyen = </span><span class="sc">{</span>tech<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
@@ -1552,7 +1552,7 @@ t = 1.85, p = 0.108</code></pre>
 <section id="pourquoi-welch-et-pas-le-test-t-classique" class="slide level2 scrollable">
 <h2>Pourquoi Welch, et pas le test t « classique » ?</h2>
 <p>Le test t de Student classique suppose que les deux groupes ont la <strong>même variance</strong>. Rien ne le garantit ici.</p>
-<div id="f63ccc9a" class="cell" data-execution_count="12">
+<div id="2506ffd2" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Écart type tech : </span><span class="sc">{</span>tech<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss"> · autres : </span><span class="sc">{</span>autres<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
 <span id="cb18-2"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Student (variances égales) : p = </span><span class="sc">{</span>stats<span class="sc">.</span>ttest_ind(tech, autres)<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
 <span id="cb18-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Welch                      : p = </span><span class="sc">{</span>stats<span class="sc">.</span>ttest_ind(tech, autres, equal_var<span class="op">=</span><span class="va">False</span>)<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1569,7 +1569,7 @@ Welch                      : p = 0.108</code></pre>
 <section id="tesla-contre-ford-des-observations-appariées" class="slide level2 scrollable">
 <h2>Tesla contre Ford : des observations appariées</h2>
 <p>Les deux entreprises sont observées <strong>les mêmes années</strong> : on compare année par année.</p>
-<div id="225baaf9" class="cell" data-execution_count="13">
+<div id="84a2c53d" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href></a>tf <span class="op">=</span> (entreprises[entreprises[<span class="st">&quot;ticker&quot;</span>].isin([<span class="st">&quot;TSLA&quot;</span>, <span class="st">&quot;F&quot;</span>])]</span>
 <span id="cb20-2"><a href></a>      .pivot(index<span class="op">=</span><span class="st">&quot;annee&quot;</span>, columns<span class="op">=</span><span class="st">&quot;ticker&quot;</span>, values<span class="op">=</span><span class="st">&quot;marge&quot;</span>))</span>
 <span id="cb20-3"><a href></a>tf[<span class="st">&quot;ecart&quot;</span>] <span class="op">=</span> tf[<span class="st">&quot;TSLA&quot;</span>] <span class="op">-</span> tf[<span class="st">&quot;F&quot;</span>]</span>
@@ -1691,7 +1691,7 @@ text-align: right;
 </section>
 <section id="le-test-apparié-et-ce-quil-cache" class="slide level2 scrollable">
 <h2>Le test apparié, et ce qu’il cache</h2>
-<div id="14cb9db0" class="cell" data-execution_count="14">
+<div id="df2fcbf2" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href></a>p_tout <span class="op">=</span> stats.ttest_rel(tf[<span class="st">&quot;TSLA&quot;</span>], tf[<span class="st">&quot;F&quot;</span>])</span>
 <span id="cb21-2"><a href></a>p_recent <span class="op">=</span> stats.ttest_rel(tf.loc[<span class="dv">2020</span>:, <span class="st">&quot;TSLA&quot;</span>], tf.loc[<span class="dv">2020</span>:, <span class="st">&quot;F&quot;</span>])</span>
 <span id="cb21-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;2010-2024 : écart moyen = </span><span class="sc">{</span>tf[<span class="st">&#39;ecart&#39;</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_tout<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
@@ -1746,7 +1746,7 @@ text-align: right;
 </section>
 <section id="r-d-et-marge-dabord-le-nuage-de-points" class="slide level2 scrollable">
 <h2>R-D et marge : d’abord, le nuage de points</h2>
-<div id="33d2e558" class="cell columns column-output-location" data-fig-height="4.4" data-fig-width="6" data-execution_count="15">
+<div id="71d27d43" class="cell columns column-output-location" data-fig-height="4.4" data-fig-width="6" data-execution_count="15">
 <div class="column">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href></a>x <span class="op">=</span> e23.dropna(subset<span class="op">=</span>[<span class="st">&quot;intensite_rd&quot;</span>, <span class="st">&quot;marge&quot;</span>])</span>
 <span id="cb23-2"><a href></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">4.4</span>))</span>
@@ -1771,7 +1771,7 @@ text-align: right;
 </section>
 <section id="pearson-et-spearman" class="slide level2 scrollable">
 <h2>Pearson et Spearman</h2>
-<div id="a97d6e2a" class="cell" data-execution_count="16">
+<div id="54c0abeb" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href></a>pearson <span class="op">=</span> stats.pearsonr(x[<span class="st">&quot;intensite_rd&quot;</span>], x[<span class="st">&quot;marge&quot;</span>])</span>
 <span id="cb24-2"><a href></a>spearman <span class="op">=</span> stats.spearmanr(x[<span class="st">&quot;intensite_rd&quot;</span>], x[<span class="st">&quot;marge&quot;</span>])</span>
 <span id="cb24-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;n = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ss">&quot;</span>)</span>
@@ -1791,7 +1791,7 @@ Spearman rho = +0.123  (p = 0.58)</code></pre>
 </section>
 <section id="la-matrice-de-corrélation" class="slide level2 scrollable">
 <h2>La matrice de corrélation</h2>
-<div id="f6765397" class="cell columns column-output-location" data-fig-height="4.4" data-fig-width="5.6" data-execution_count="17">
+<div id="30982a87" class="cell columns column-output-location" data-fig-height="4.4" data-fig-width="5.6" data-execution_count="17">
 <div class="column">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb26-2"><a href></a>cols <span class="op">=</span> [<span class="st">&quot;roa&quot;</span>, <span class="st">&quot;marge&quot;</span>, <span class="st">&quot;intensite_rd&quot;</span>, <span class="st">&quot;chiffre_affaires&quot;</span>, <span class="st">&quot;actifs_totaux&quot;</span>]</span>
@@ -1822,7 +1822,7 @@ Spearman rho = +0.123  (p = 0.58)</code></pre>
 <p><span class="math display">\[
 \text{ROA}_i = \beta_0 + \beta_1 \times \text{intensité R-D}_i + \varepsilon_i
 \]</span></p>
-<div id="6c16ab9b" class="cell" data-execution_count="18">
+<div id="be273c99" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
 <span id="cb27-2"><a href></a></span>
 <span id="cb27-3"><a href></a>m <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd&quot;</span>, data<span class="op">=</span>e23.dropna(subset<span class="op">=</span>[<span class="st">&quot;intensite_rd&quot;</span>, <span class="st">&quot;roa&quot;</span>])).fit()</span>
@@ -1929,7 +1929,7 @@ R² = 0.001, n = 23</code></pre>
 <section id="un-panel-nest-pas-un-échantillon-de-343-entreprises" class="slide level2 scrollable">
 <h2>Un panel n’est pas un échantillon de 343 entreprises</h2>
 <p>Tentation : utiliser <strong>toutes</strong> les années pour avoir plus d’observations.</p>
-<div id="8a187107" class="cell" data-execution_count="19">
+<div id="5f3c06fe" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href></a>panel <span class="op">=</span> entreprises.dropna(subset<span class="op">=</span>[<span class="st">&quot;intensite_rd&quot;</span>, <span class="st">&quot;roa&quot;</span>])</span>
 <span id="cb29-2"><a href></a>naif <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd&quot;</span>, data<span class="op">=</span>panel).fit()</span>
 <span id="cb29-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;n = </span><span class="sc">{</span><span class="bu">int</span>(naif.nobs)<span class="sc">}</span><span class="ss"> lignes, mais </span><span class="sc">{</span>panel[<span class="st">&#39;ticker&#39;</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss"> entreprises&quot;</span>)</span>
@@ -1943,7 +1943,7 @@ Coefficient = -0.167, erreur type naïve = 0.041, p = 0.000</code></pre>
 </section>
 <section id="regrouper-les-erreurs-par-entreprise" class="slide level2 scrollable">
 <h2>Regrouper les erreurs par entreprise</h2>
-<div id="be5be912" class="cell" data-execution_count="20">
+<div id="06822a9b" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href></a>grappes <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd&quot;</span>, data<span class="op">=</span>panel).fit(</span>
 <span id="cb31-2"><a href></a>    cov_type<span class="op">=</span><span class="st">&quot;cluster&quot;</span>, cov_kwds<span class="op">=</span>{<span class="st">&quot;groups&quot;</span>: panel[<span class="st">&quot;ticker&quot;</span>]})</span>
 <span id="cb31-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Erreur type naïve      : </span><span class="sc">{</span>naif<span class="sc">.</span>bse[<span class="st">&#39;intensite_rd&#39;</span>]<span class="sc">:.3f}</span><span class="ss">  p = </span><span class="sc">{</span>naif<span class="sc">.</span>pvalues[<span class="st">&#39;intensite_rd&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
@@ -1960,7 +1960,7 @@ Erreur type par grappe : 0.186  p = 0.369</code></pre>
 </section>
 <section id="contrôler-le-secteur" class="slide level2 scrollable">
 <h2>Contrôler le secteur</h2>
-<div id="eae1b8ad" class="cell" data-execution_count="21">
+<div id="f28d40ba" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href></a>avec_secteur <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd + C(secteur)&quot;</span>, data<span class="op">=</span>panel).fit(</span>
 <span id="cb33-2"><a href></a>    cov_type<span class="op">=</span><span class="st">&quot;cluster&quot;</span>, cov_kwds<span class="op">=</span>{<span class="st">&quot;groups&quot;</span>: panel[<span class="st">&quot;ticker&quot;</span>]})</span>
 <span id="cb33-3"><a href></a><span class="bu">print</span>(<span class="ss">f&quot;Sans secteur : </span><span class="sc">{</span>grappes<span class="sc">.</span>params[<span class="st">&#39;intensite_rd&#39;</span>]<span class="sc">:+.3f}</span><span class="ss">  (p = </span><span class="sc">{</span>grappes<span class="sc">.</span>pvalues[<span class="st">&#39;intensite_rd&#39;</span>]<span class="sc">:.3f}</span><span class="ss">)&quot;</span>)</span>
@@ -1974,7 +1974,7 @@ Avec secteur : -0.421  (p = 2.4e-09)</code></pre>
 </section>
 <section id="et-tesla-dans-tout-ça" class="slide level2 scrollable">
 <h2>Et Tesla dans tout ça ?</h2>
-<div id="16aa5eaa" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="22">
+<div id="510df9fc" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="22">
 <div class="column">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">4.2</span>))</span>
 <span id="cb35-2"><a href></a>ax.scatter(panel[<span class="st">&quot;intensite_rd&quot;</span>], panel[<span class="st">&quot;roa&quot;</span>], color<span class="op">=</span>CL.muted, s<span class="op">=</span><span class="dv">12</span>, label<span class="op">=</span><span class="st">&quot;autres&quot;</span>)</span>
@@ -2062,7 +2062,7 @@ Avec secteur : -0.421  (p = 2.4e-09)</code></pre>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>MGMT 60XXX · Séance 06 · Thierry Warin, PhD · HEC Montréal</p>
+<p>MNGT 60439 · Séance 06 · Thierry Warin, PhD · HEC Montréal</p>
 </div>
 </div></div>
 

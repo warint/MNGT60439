@@ -358,7 +358,7 @@ div.csl-indent {
 </section>
 <section id="le-fichier" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="le-fichier"><span class="header-section-number">2.2</span> Le fichier</h2>
-<div id="59d97c0c" class="cell" data-execution_count="2">
+<div id="49fffa79" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>entreprises.head()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -470,7 +470,7 @@ div.csl-indent {
 <section id="lanatomie-dun-dataframe" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="lanatomie-dun-dataframe"><span class="header-section-number">2.3</span> L’anatomie d’un DataFrame</h2>
 <p>Un DataFrame est un ensemble de <strong>Series</strong> — des colonnes — qui partagent un même <strong>index</strong>, l’étiquette de chaque ligne. Chaque Series a un <strong>type</strong>.</p>
-<div id="ec48f07a" class="cell" data-execution_count="3">
+<div id="78a4c2c0" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>entreprises.dtypes</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>ticker                  str
@@ -490,7 +490,7 @@ dtype: object</code></pre>
 </div>
 <p>Les montants sont des <code>float64</code>, même lorsqu’ils sont ronds : il leur manque des valeurs, et la valeur manquante de pandas, <code>NaN</code>, est un nombre à virgule. Le texte (<code>entreprise</code>, <code>secteur</code>) est de type chaîne. Un type inattendu — un montant lu comme du texte, par exemple — est le symptôme le plus fréquent d’une importation ratée ; la séance 3 y reviendra.</p>
 <p>L’index par défaut numérote les lignes. On peut le remplacer par une colonne qui a du sens, ce qui permet ensuite de désigner une ligne par son nom :</p>
-<div id="f7373e0b" class="cell" data-execution_count="4">
+<div id="01f9f7a0" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>a23_idx <span class="op">=</span> entreprises[entreprises[<span class="st">"annee"</span>] <span class="op">==</span> <span class="dv">2023</span>].set_index(<span class="st">"ticker"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>a23_idx.loc[[<span class="st">"TSLA"</span>, <span class="st">"F"</span>, <span class="st">"GM"</span>], [<span class="st">"entreprise"</span>, <span class="st">"chiffre_affaires"</span>, <span class="st">"resultat_net"</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -541,7 +541,7 @@ dtype: object</code></pre>
 <section id="regarder-avant-de-calculer" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="regarder-avant-de-calculer"><span class="header-section-number">2.4</span> Regarder avant de calculer</h2>
 <p>Trois commandes donnent l’essentiel : <code>shape</code> (la taille), <code>info()</code> (les types et le nombre de valeurs présentes par colonne) et <code>describe()</code> (le résumé numérique).</p>
-<div id="87449d71" class="cell" data-execution_count="5">
+<div id="0685000b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>entreprises[[<span class="st">"chiffre_affaires"</span>, <span class="st">"resultat_net"</span>, <span class="st">"actifs_totaux"</span>, <span class="st">"rd"</span>]].describe().<span class="bu">round</span>(<span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -625,7 +625,7 @@ dtype: object</code></pre>
 <section id="sélectionner-et-filtrer" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="sélectionner-et-filtrer"><span class="header-section-number">2.5</span> Sélectionner et filtrer</h2>
 <p>Les crochets simples avec un nom renvoient une Series ; les crochets doubles avec une liste de noms renvoient un DataFrame. Pour les lignes, <code>.loc</code> sélectionne par étiquette et <code>.iloc</code> par position. Mais l’outil le plus utilisé est le <strong>masque booléen</strong> : une condition sur une colonne produit une Series de vrais et de faux, qui garde les lignes vraies.</p>
-<div id="23c0f79e" class="cell" data-execution_count="6">
+<div id="522b4fd4" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>entreprises[</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (entreprises[<span class="st">"annee"</span>] <span class="op">==</span> <span class="dv">2023</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> entreprises[<span class="st">"secteur"</span>].isin([<span class="st">"Automobile"</span>, <span class="st">"Énergie"</span>])</span>
@@ -694,7 +694,7 @@ dtype: object</code></pre>
 </div>
 </div>
 <p>Les conditions se combinent avec <code>&amp;</code> (et), <code>|</code> (ou) et <code>~</code> (non), chacune entre parenthèses. La méthode <code>query</code> exprime la même chose sous forme de phrase :</p>
-<div id="5626ba27" class="cell" data-execution_count="7">
+<div id="08b127b0" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>entreprises.query(<span class="st">"annee == 2023 and resultat_net &lt; 0"</span>)[[<span class="st">"entreprise"</span>, <span class="st">"resultat_net"</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
@@ -729,7 +729,7 @@ dtype: object</code></pre>
 <section id="quatre-mesures-quatre-classements" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="quatre-mesures-quatre-classements"><span class="header-section-number">2.6</span> Quatre mesures, quatre classements</h2>
 <p>Créer une colonne revient à écrire une formule sur des colonnes entières ; pandas l’applique à toutes les lignes d’un coup.</p>
-<div id="ad4fb082" class="cell" data-execution_count="8">
+<div id="1b7363a2" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> entreprises.copy()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"marge_nette"</span>] <span class="op">=</span> df[<span class="st">"resultat_net"</span>] <span class="op">/</span> df[<span class="st">"chiffre_affaires"</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"roa"</span>] <span class="op">=</span> df[<span class="st">"resultat_net"</span>] <span class="op">/</span> df[<span class="st">"actifs_totaux"</span>]</span>
@@ -814,7 +814,7 @@ Table&nbsp;2.1: Les cinq premières entreprises de 2023 selon quatre mesures.
 <section id="quand-un-ratio-ment" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="quand-un-ratio-ment"><span class="header-section-number">2.7</span> Quand un ratio ment</h2>
 <p>Un ratio n’a de sens que si son dénominateur en a un. Les capitaux propres peuvent devenir négatifs, lorsqu’une entreprise a racheté massivement ses actions ou accumulé des pertes.</p>
-<div id="486acd88" class="cell" data-execution_count="11">
+<div id="f4850d1f" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>neg[[<span class="st">"entreprise"</span>, <span class="st">"resultat_net"</span>, <span class="st">"capitaux_propres"</span>, <span class="st">"roe"</span>]].<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
@@ -1005,7 +1005,7 @@ Figure&nbsp;2.1: Chiffre d’affaires et ROA en 2023. La taille et l’efficacit
 <section id="les-valeurs-manquantes" class="level2" data-number="2.10">
 <h2 data-number="2.10" class="anchored" data-anchor-id="les-valeurs-manquantes"><span class="header-section-number">2.10</span> Les valeurs manquantes</h2>
 <p>La colonne <code>rd</code> contient 135 valeurs manquantes. Elles ne sont pas réparties au hasard :</p>
-<div id="6d449a30" class="cell" data-execution_count="14">
+<div id="88f7f6d5" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(entreprises.groupby(<span class="st">"secteur"</span>)[<span class="st">"rd"</span>]</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> s: s.isna().mean())</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    .sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -1473,7 +1473,7 @@ McKinney, Wes. 2010. <span>«&nbsp;Data Structures for Statistical Computing in 
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>MGMT 60XXX · HEC Montréal</p>
+<p>MNGT 60439 · HEC Montréal</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

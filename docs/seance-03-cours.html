@@ -1175,7 +1175,7 @@ Thierry Warin, PhD
 </section>
 <section id="read_csv-le-cas-simple" class="slide level2 scrollable">
 <h2><code>read_csv</code> : le cas simple</h2>
-<div id="13d4f8e1" class="cell" data-execution_count="2">
+<div id="45337d3d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href></a></span>
 <span id="cb1-3"><a href></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>)</span>
@@ -1262,7 +1262,7 @@ text-align: right;
 <section id="le-même-fichier-à-la-française" class="slide level2 scrollable">
 <h2>Le même fichier, « à la française »</h2>
 <p>Excel en français enregistre un CSV avec <strong><code>;</code></strong> entre les colonnes, <strong><code>,</code></strong> pour la décimale, et un encodage Windows. Ouvrons <code>data/entreprises_fr.csv</code> comme si de rien n’était :</p>
-<div id="ba918c6d" class="cell" data-execution_count="3">
+<div id="8cdc4b84" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href></a>mal <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises_fr.csv&quot;</span>, encoding<span class="op">=</span><span class="st">&quot;cp1252&quot;</span>)</span>
 <span id="cb3-2"><a href></a><span class="bu">print</span>(mal.shape)</span>
 <span id="cb3-3"><a href></a>mal.head(<span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1326,7 +1326,7 @@ text-align: right;
 </section>
 <section id="sans-lencodage-une-erreur-cette-fois" class="slide level2 scrollable">
 <h2>Sans l’encodage : une erreur, cette fois</h2>
-<div id="b4e4f7f0" class="cell" data-execution_count="4">
+<div id="289289d1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href></a><span class="cf">try</span>:</span>
 <span id="cb5-2"><a href></a>    pd.read_csv(<span class="st">&quot;data/entreprises_fr.csv&quot;</span>, sep<span class="op">=</span><span class="st">&quot;;&quot;</span>)</span>
 <span id="cb5-3"><a href></a><span class="cf">except</span> <span class="pp">UnicodeDecodeError</span> <span class="im">as</span> erreur:</span>
@@ -1339,7 +1339,7 @@ text-align: right;
 </section>
 <section id="les-trois-options-qui-règlent-tout" class="slide level2 scrollable">
 <h2>Les trois options qui règlent tout</h2>
-<div id="b6d02973" class="cell" data-execution_count="5">
+<div id="e9328d05" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href></a>bon <span class="op">=</span> pd.read_csv(</span>
 <span id="cb7-2"><a href></a>    <span class="st">&quot;data/entreprises_fr.csv&quot;</span>,</span>
 <span id="cb7-3"><a href></a>    sep<span class="op">=</span><span class="st">&quot;;&quot;</span>,            <span class="co"># séparateur de colonnes</span></span>
@@ -1357,7 +1357,7 @@ float64</code></pre>
 </section>
 <section id="lire-moins-lire-juste-usecols-dtype-nrows" class="slide level2 scrollable">
 <h2>Lire moins, lire juste : <code>usecols</code>, <code>dtype</code>, <code>nrows</code></h2>
-<div id="49f48caa" class="cell" data-execution_count="6">
+<div id="c3899f15" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href></a>apercu <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>, nrows<span class="op">=</span><span class="dv">5</span>)          <span class="co"># un coup d&#39;œil</span></span>
 <span id="cb9-2"><a href></a>leger <span class="op">=</span> pd.read_csv(</span>
 <span id="cb9-3"><a href></a>    <span class="st">&quot;data/entreprises.csv&quot;</span>,</span>
@@ -1379,7 +1379,7 @@ dtype: object</code></pre>
 </section>
 <section id="excel-aller-retour" class="slide level2 scrollable">
 <h2>Excel : aller-retour</h2>
-<div id="14416c22" class="cell" data-execution_count="7">
+<div id="545b60b0" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb11-2"><a href></a></span>
 <span id="cb11-3"><a href></a>Path(<span class="st">&quot;sorties&quot;</span>).mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
@@ -1475,7 +1475,7 @@ text-align: right;
 <section id="une-règle-avant-daller-en-ligne-télécharger-une-fois" class="slide level2 scrollable">
 <h2>Une règle avant d’aller en ligne : télécharger une fois</h2>
 <p>Le réseau de la salle est lent, les serveurs changent leurs fichiers, et certains limitent le nombre de requêtes. On télécharge <strong>une fois</strong>, on garde une copie, on relit la copie.</p>
-<div id="09743490" class="cell" data-execution_count="8">
+<div id="c7371596" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb13-2"><a href></a></span>
 <span id="cb13-3"><a href></a>CACHE <span class="op">=</span> Path(<span class="st">&quot;data/cache&quot;</span>)</span>
@@ -1494,7 +1494,7 @@ text-align: right;
 </section>
 <section id="our-world-in-data-le-co₂-de-tous-les-pays" class="slide level2 scrollable">
 <h2>Our World in Data : le CO₂ de tous les pays</h2>
-<div id="52915dd8" class="cell" data-execution_count="9">
+<div id="5dcbb729" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a>URL_CO2 <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv&quot;</span></span>
 <span id="cb14-2"><a href></a></span>
 <span id="cb14-3"><a href></a>co2 <span class="op">=</span> charger(<span class="st">&quot;owid_co2&quot;</span>, <span class="kw">lambda</span>: pd.read_csv(</span>
@@ -1590,7 +1590,7 @@ text-align: right;
 </section>
 <section id="un-tableau-dans-une-page-web-read_html" class="slide level2 scrollable">
 <h2>Un tableau dans une page web : <code>read_html</code></h2>
-<div id="d65beab1" class="cell" data-execution_count="10">
+<div id="1b752e98" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href></a>URL_WIKI <span class="op">=</span> <span class="st">&quot;https://en.wikipedia.org/wiki/List_of_largest_automotive_companies_by_revenue&quot;</span></span>
 <span id="cb17-2"><a href></a></span>
 <span id="cb17-3"><a href></a><span class="kw">def</span> tableau_wiki():</span>
@@ -1725,7 +1725,7 @@ text-align: right;
 </section>
 <section id="yfinance-les-cours-boursiers" class="slide level2 scrollable">
 <h2><code>yfinance</code> : les cours boursiers</h2>
-<div id="d4b350d4" class="cell" data-execution_count="11">
+<div id="d64a9c86" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb18-2"><a href></a></span>
 <span id="cb18-3"><a href></a><span class="kw">def</span> cours():</span>
@@ -1797,7 +1797,7 @@ text-align: right;
 </section>
 <section id="ce-que-le-marché-a-dit-en-un-graphique" class="slide level2 scrollable">
 <h2>Ce que le marché a dit, en un graphique</h2>
-<div id="5211bdaa" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="12">
+<div id="3a074b95" class="cell columns column-output-location" data-fig-height="4.2" data-fig-width="6" data-execution_count="12">
 <div class="column">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href></a><span class="im">from</span> plotstyle <span class="im">import</span> setup</span>
 <span id="cb20-2"><a href></a>plt <span class="op">=</span> setup()</span>
@@ -1830,7 +1830,7 @@ text-align: right;
 </section>
 <section id="wbgapi-la-banque-mondiale-en-une-ligne" class="slide level2 scrollable">
 <h2><code>wbgapi</code> : la Banque mondiale en une ligne</h2>
-<div id="44cf9600" class="cell" data-execution_count="13">
+<div id="99ecefeb" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href></a><span class="im">import</span> wbgapi <span class="im">as</span> wb</span>
 <span id="cb21-2"><a href></a></span>
 <span id="cb21-3"><a href></a>co2_hab <span class="op">=</span> charger(<span class="st">&quot;wb_co2_hab&quot;</span>, <span class="kw">lambda</span>: wb.data.DataFrame(</span>
@@ -1964,7 +1964,7 @@ text-align: right;
 </section>
 <section id="requests.get-la-requête" class="slide level2 scrollable">
 <h2><code>requests.get</code> : la requête</h2>
-<div id="c22cdfc9" class="cell" data-execution_count="14">
+<div id="f7800b72" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href></a><span class="im">import</span> requests</span>
 <span id="cb23-2"><a href></a></span>
 <span id="cb23-3"><a href></a>url <span class="op">=</span> <span class="st">&quot;https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.ZS&quot;</span></span>
@@ -1982,7 +1982,7 @@ https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.Z
 </section>
 <section id="lire-le-json" class="slide level2 scrollable">
 <h2>Lire le JSON</h2>
-<div id="0d6138a2" class="cell" data-execution_count="15">
+<div id="19d37298" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href></a>donnees <span class="op">=</span> reponse.json()</span>
 <span id="cb25-2"><a href></a><span class="bu">print</span>(<span class="bu">type</span>(donnees), <span class="bu">len</span>(donnees))</span>
 <span id="cb25-3"><a href></a><span class="bu">print</span>(donnees[<span class="dv">0</span>])                 <span class="co"># l&#39;en-tête : pages, total</span></span>
@@ -2007,7 +2007,7 @@ https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.Z
 </section>
 <section id="du-json-au-dataframe" class="slide level2 scrollable">
 <h2>Du JSON au DataFrame</h2>
-<div id="24ef6d79" class="cell" data-execution_count="16">
+<div id="968798cf" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href></a>lignes <span class="op">=</span> [</span>
 <span id="cb28-2"><a href></a>    {<span class="st">&quot;iso3&quot;</span>: obs[<span class="st">&quot;countryiso3code&quot;</span>], <span class="st">&quot;annee&quot;</span>: <span class="bu">int</span>(obs[<span class="st">&quot;date&quot;</span>]), <span class="st">&quot;renouv_pct&quot;</span>: obs[<span class="st">&quot;value&quot;</span>]}</span>
 <span id="cb28-3"><a href></a>    <span class="cf">for</span> obs <span class="kw">in</span> donnees[<span class="dv">1</span>]</span>
@@ -2090,7 +2090,7 @@ text-align: right;
 </section>
 <section id="la-pagination-quand-la-réponse-ne-tient-pas-sur-une-page" class="slide level2 scrollable">
 <h2>La pagination : quand la réponse ne tient pas sur une page</h2>
-<div id="9b9865b4" class="cell" data-execution_count="17">
+<div id="bf4a51e8" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href></a><span class="kw">def</span> banque_mondiale(indicateur, pays<span class="op">=</span><span class="st">&quot;all&quot;</span>, dates<span class="op">=</span><span class="st">&quot;2015:2022&quot;</span>):</span>
 <span id="cb29-2"><a href></a>    <span class="co">&quot;&quot;&quot;Toutes les pages d&#39;un indicateur de la Banque mondiale, dans un DataFrame.&quot;&quot;&quot;</span></span>
 <span id="cb29-3"><a href></a>    url <span class="op">=</span> <span class="ss">f&quot;https://api.worldbank.org/v2/country/</span><span class="sc">{</span>pays<span class="sc">}</span><span class="ss">/indicator/</span><span class="sc">{</span>indicateur<span class="sc">}</span><span class="ss">&quot;</span></span>
@@ -2115,12 +2115,12 @@ text-align: right;
 </section>
 <section id="sec-edgar-les-états-financiers-déposés" class="slide level2 scrollable">
 <h2>SEC EDGAR : les états financiers déposés</h2>
-<div id="3f84a13f" class="cell" data-execution_count="18">
+<div id="acd53a0b" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href></a><span class="im">import</span> os</span>
 <span id="cb31-2"><a href></a></span>
 <span id="cb31-3"><a href></a><span class="co"># La SEC exige un User-Agent qui vous identifie : « Prénom Nom courriel ».</span></span>
 <span id="cb31-4"><a href></a><span class="co"># On le lit dans une variable d&#39;environnement, jamais écrit dans le code.</span></span>
-<span id="cb31-5"><a href></a>ua <span class="op">=</span> os.environ.get(<span class="st">&quot;SEC_USER_AGENT&quot;</span>, <span class="st">&quot;HEC Montreal MGMT60XXX course&quot;</span>)</span>
+<span id="cb31-5"><a href></a>ua <span class="op">=</span> os.environ.get(<span class="st">&quot;SEC_USER_AGENT&quot;</span>, <span class="st">&quot;HEC Montreal MNGT60439 course&quot;</span>)</span>
 <span id="cb31-6"><a href></a></span>
 <span id="cb31-7"><a href></a><span class="kw">def</span> faits_tesla():</span>
 <span id="cb31-8"><a href></a>    url <span class="op">=</span> <span class="st">&quot;https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json&quot;</span></span>
@@ -2203,7 +2203,7 @@ text-align: right;
 <section id="démêler-la-réponse-de-la-sec" class="slide level2 scrollable">
 <h2>Démêler la réponse de la SEC</h2>
 <p>Une même année de ventes apparaît <strong>plusieurs fois</strong> : dans le rapport annuel de l’année, puis comme point de comparaison dans les deux rapports suivants. Le champ <code>frame</code> désigne la valeur retenue pour chaque année civile.</p>
-<div id="593190dc" class="cell" data-execution_count="19">
+<div id="027ee7d5" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href></a>annuel <span class="op">=</span> brut[brut[<span class="st">&quot;frame&quot;</span>].fillna(<span class="st">&quot;&quot;</span>).<span class="bu">str</span>.fullmatch(<span class="vs">r&quot;CY</span><span class="dv">\d</span><span class="op">{4}</span><span class="vs">&quot;</span>)]</span>
 <span id="cb33-2"><a href></a>annuel <span class="op">=</span> annuel.assign(annee<span class="op">=</span>annuel[<span class="st">&quot;frame&quot;</span>].<span class="bu">str</span>[<span class="dv">2</span>:].astype(<span class="bu">int</span>),</span>
 <span id="cb33-3"><a href></a>                       ventes_G<span class="op">=</span>annuel[<span class="st">&quot;val&quot;</span>] <span class="op">/</span> <span class="fl">1e9</span>)</span>
@@ -2318,7 +2318,7 @@ text-align: right;
 </section>
 <section id="une-clé-dapi-ne-sécrit-jamais-dans-le-code" class="slide level2 scrollable">
 <h2>Une clé d’API ne s’écrit jamais dans le code</h2>
-<div id="2e007223" class="cell" data-execution_count="20">
+<div id="f9713e32" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href></a><span class="im">import</span> os, requests</span>
 <span id="cb34-2"><a href></a></span>
 <span id="cb34-3"><a href></a>cle <span class="op">=</span> os.environ[<span class="st">&quot;FRED_API_KEY&quot;</span>]          <span class="co"># définie dans le terminal, pas ici</span></span>
@@ -2374,7 +2374,7 @@ text-align: right;
 </section>
 <section id="se-connecter-à-sqlite" class="slide level2 scrollable">
 <h2>Se connecter à SQLite</h2>
-<div id="9fd5b9a0" class="cell" data-execution_count="21">
+<div id="93d5833f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href></a><span class="im">import</span> sqlite3</span>
 <span id="cb36-2"><a href></a></span>
 <span id="cb36-3"><a href></a>con <span class="op">=</span> sqlite3.<span class="ex">connect</span>(<span class="st">&quot;data/strategie.db&quot;</span>)</span>
@@ -2423,7 +2423,7 @@ text-align: right;
 </section>
 <section id="select-from-where" class="slide level2 scrollable">
 <h2><code>SELECT … FROM … WHERE</code></h2>
-<div id="eb957863" class="cell" data-execution_count="22">
+<div id="713e725a" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href></a>requete <span class="op">=</span> <span class="st">&quot;&quot;&quot;</span></span>
 <span id="cb37-2"><a href></a><span class="st">SELECT entreprise, annee, chiffre_affaires, resultat_net</span></span>
 <span id="cb37-3"><a href></a><span class="st">FROM entreprises</span></span>
@@ -2529,7 +2529,7 @@ text-align: right;
 </section>
 <section id="group-by-agréger-dans-la-base" class="slide level2 scrollable">
 <h2><code>GROUP BY</code> : agréger dans la base</h2>
-<div id="aff11901" class="cell" data-execution_count="23">
+<div id="4565b01b" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href></a>pd.read_sql(<span class="st">&quot;&quot;&quot;</span></span>
 <span id="cb38-2"><a href></a><span class="st">SELECT secteur,</span></span>
 <span id="cb38-3"><a href></a><span class="st">       COUNT(DISTINCT ticker)               AS n_entreprises,</span></span>
@@ -2637,7 +2637,7 @@ text-align: right;
 </section>
 <section id="join-relier-deux-tables" class="slide level2 scrollable">
 <h2><code>JOIN</code> : relier deux tables</h2>
-<div id="6a8542c4" class="cell" data-execution_count="24">
+<div id="c11d8c83" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href></a>pd.read_sql(<span class="st">&quot;&quot;&quot;</span></span>
 <span id="cb39-2"><a href></a><span class="st">SELECT e.entreprise, e.annee, e.chiffre_affaires,</span></span>
 <span id="cb39-3"><a href></a><span class="st">       p.pib_milliards_usd,</span></span>
@@ -2706,7 +2706,7 @@ text-align: right;
 </section>
 <section id="paramètres-ne-jamais-coller-du-texte-dans-une-requête" class="slide level2 scrollable">
 <h2>Paramètres : ne jamais coller du texte dans une requête</h2>
-<div id="5a41c27e" class="cell" data-execution_count="25">
+<div id="ded4e5b7" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href></a>secteur_choisi <span class="op">=</span> <span class="st">&quot;Énergie&quot;</span></span>
 <span id="cb40-2"><a href></a>pd.read_sql(<span class="st">&quot;SELECT entreprise, annee, resultat_net FROM entreprises &quot;</span></span>
 <span id="cb40-3"><a href></a>            <span class="st">&quot;WHERE secteur = ? AND annee = ?&quot;</span>, con, params<span class="op">=</span>(secteur_choisi, <span class="dv">2023</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2759,13 +2759,13 @@ text-align: right;
 </div>
 </div>
 <p>Le <code>?</code> est rempli par <code>params=</code>. Construire la requête avec <code>f&quot;... &#39;{secteur_choisi}&#39;&quot;</code> casse dès qu’un nom contient une apostrophe (« McDonald’s ») — et ouvre la porte à l’injection SQL.</p>
-<div id="dbf63eda" class="cell" data-execution_count="26">
+<div id="5df9e194" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href></a>con.close()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="duckdb-du-sql-directement-sur-un-fichier" class="slide level2 scrollable">
 <h2>DuckDB : du SQL directement sur un fichier</h2>
-<div id="976649ca" class="cell" data-execution_count="27">
+<div id="f38ac8ed" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href></a><span class="im">import</span> duckdb</span>
 <span id="cb42-2"><a href></a></span>
 <span id="cb42-3"><a href></a>duckdb.sql(<span class="st">&quot;&quot;&quot;</span></span>
@@ -2844,7 +2844,7 @@ text-align: right;
 </section>
 <section id="csv-ou-parquet" class="slide level2 scrollable">
 <h2>CSV ou parquet ?</h2>
-<div id="2fef0465" class="cell" data-execution_count="28">
+<div id="1027c5cf" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href></a>co2.to_csv(<span class="st">&quot;sorties/co2.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb43-2"><a href></a>co2.to_parquet(<span class="st">&quot;sorties/co2.parquet&quot;</span>)</span>
 <span id="cb43-3"><a href></a></span>
@@ -2885,7 +2885,7 @@ sorties/co2.parquet     0.17 Mo</code></pre>
 </section>
 <section id="ce-que-vous-avez-dans-le-cache" class="slide level2 scrollable">
 <h2>Ce que vous avez dans le cache</h2>
-<div id="ca01cb01" class="cell" data-execution_count="29">
+<div id="59a342bd" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href></a><span class="cf">for</span> f <span class="kw">in</span> <span class="bu">sorted</span>(CACHE.glob(<span class="st">&quot;*.parquet&quot;</span>)):</span>
 <span id="cb45-2"><a href></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>f<span class="sc">.</span>name<span class="sc">:28s}</span><span class="ss"> </span><span class="sc">{</span>pd<span class="sc">.</span>read_parquet(f)<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">&quot;</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2983,7 +2983,7 @@ wiki_constructeurs.parquet   (50, 5)</code></pre>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>MGMT 60XXX · Séance 03 · Thierry Warin, PhD · HEC Montréal</p>
+<p>MNGT 60439 · Séance 03 · Thierry Warin, PhD · HEC Montréal</p>
 </div>
 </div></div>
 

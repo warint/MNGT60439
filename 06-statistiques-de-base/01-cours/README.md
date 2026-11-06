@@ -1,7 +1,7 @@
 # Séance 06 — Cours
 
 > **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-06-cours.html)** · source :
-> [`MGMT60XXX-S06-Cours.qmd`](MGMT60XXX-S06-Cours.qmd)
+> [`MNGT60439-S06-Cours.qmd`](MNGT60439-S06-Cours.qmd)
 
 | Partie | Contenu |
 |---|---|

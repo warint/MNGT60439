@@ -3,12 +3,12 @@
 > **Qui sont les vrais concurrents d'une entreprise — et les fusions-acquisitions créent-elles de la valeur ? Avant de répondre, il faut fabriquer des données qui le permettent.**
 
 > **[Diapositives du cours](https://warint.github.io/MNGT60439/seance-04-cours.html)** — source :
-> [`01-cours/MGMT60XXX-S04-Cours.qmd`](01-cours/MGMT60XXX-S04-Cours.qmd) ·
+> [`01-cours/MNGT60439-S04-Cours.qmd`](01-cours/MNGT60439-S04-Cours.qmd) ·
 > **[Chapitre 4 du livre](https://warint.github.io/MNGT60439/livre/seance-04.html)**
 
 **Date : à confirmer** · durée 3 h · Thierry Warin
 
-MGMT 60XXX — Données et stratégie : enjeux locaux et mondiaux
+MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 
 ---
 

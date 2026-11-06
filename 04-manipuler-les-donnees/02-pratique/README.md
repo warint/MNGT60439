@@ -1,7 +1,7 @@
 # Séance 04 — Pratique
 
 > **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-04-pratique.html)** · source :
-> [`MGMT60XXX-S04-Pratique.qmd`](MGMT60XXX-S04-Pratique.qmd)
+> [`MNGT60439-S04-Pratique.qmd`](MNGT60439-S04-Pratique.qmd)
 
 **Question :** *Qui sont les vrais concurrents de mon entreprise — et que dit la Bourse de ses
 acquisitions ?*

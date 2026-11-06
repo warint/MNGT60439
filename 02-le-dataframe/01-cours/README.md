@@ -1,6 +1,6 @@
 # Séance 02 — Cours (première moitié, ~90 min)
 
-> **Diapositives :** [`MGMT60XXX-S02-Cours.qmd`](MGMT60XXX-S02-Cours.qmd) ·
+> **Diapositives :** [`MNGT60439-S02-Cours.qmd`](MNGT60439-S02-Cours.qmd) ·
 > version rendue : [`docs/seance-02-cours.html`](https://warint.github.io/MNGT60439/seance-02-cours.html)
 
 ## La question

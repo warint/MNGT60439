@@ -1,7 +1,7 @@
 # Séance 03 — Préparation
 
 > **[Ouvrir les diapositives de la pré-séance](https://warint.github.io/MNGT60439/seance-03-pre-seance.html)** ·
-> source : [`MGMT60XXX-S03-Pre-Seance.qmd`](MGMT60XXX-S03-Pre-Seance.qmd)
+> source : [`MNGT60439-S03-Pre-Seance.qmd`](MNGT60439-S03-Pre-Seance.qmd)
 
 > Comptez **80 minutes**. Tout ce qui suit doit être fait **avant** le cours.
 

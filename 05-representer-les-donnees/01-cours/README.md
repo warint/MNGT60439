@@ -1,7 +1,7 @@
 # Séance 05 — Cours
 
 > **[Diapositives du cours](https://warint.github.io/MNGT60439/seance-05-cours.html)** ·
-> source : [`MGMT60XXX-S05-Cours.qmd`](MGMT60XXX-S05-Cours.qmd)
+> source : [`MNGT60439-S05-Cours.qmd`](MNGT60439-S05-Cours.qmd)
 
 Environ 90 minutes. Tout le code des diapositives s'exécute depuis la racine du dépôt.
 
@@ -20,10 +20,10 @@ Pour reconstruire les diapositives :
 
 ```bash
 cd 05-representer-les-donnees/01-cours
-quarto render MGMT60XXX-S05-Cours.qmd
+quarto render MNGT60439-S05-Cours.qmd
 ```
 
-Le noyau Jupyter `mgmt60xxx` doit être installé (voir la séance 1). Les figures plotly
+Le noyau Jupyter `mngt60439` doit être installé (voir la séance 1). Les figures plotly
 chargent `plotly.js` depuis un CDN au moment du rendu.
 
 [Retour à la séance 05](../README.md)

@@ -224,7 +224,7 @@ nom et un courriel. On le lit dans une variable d'environnement, pour qu'il n'ap
 dans un code partagé :
 
 ```{python}
-ua = os.environ.get("SEC_USER_AGENT", "HEC Montreal MGMT60XXX course")
+ua = os.environ.get("SEC_USER_AGENT", "HEC Montreal MNGT60439 course")
 
 def faits_tesla():
     r = requests.get("https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json",

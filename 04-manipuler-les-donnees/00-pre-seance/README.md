@@ -1,7 +1,7 @@
 # Séance 04 — Préparation (pré-séance)
 
 > **[Diapositives de la pré-séance](https://warint.github.io/MNGT60439/seance-04-pre-seance.html)** ·
-> source : [`MGMT60XXX-S04-Pre-Seance.qmd`](MGMT60XXX-S04-Pre-Seance.qmd)
+> source : [`MNGT60439-S04-Pre-Seance.qmd`](MNGT60439-S04-Pre-Seance.qmd)
 
 > Faites **les quatre étapes** avant le cours. Prévoyez environ 90 minutes.
 

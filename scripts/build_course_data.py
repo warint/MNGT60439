@@ -1,4 +1,4 @@
-"""Construit les données du cours MGMT 60XXX à partir de sources publiques.
+"""Construit les données du cours MNGT 60439 à partir de sources publiques.
 
 Exécuter depuis la racine du dépôt :
 
@@ -33,7 +33,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 DATA.mkdir(exist_ok=True)
 
-UA = os.environ.get("SEC_USER_AGENT", "HEC Montreal MGMT60XXX course data builder")
+UA = os.environ.get("SEC_USER_AGENT", "HEC Montreal MNGT60439 course data builder")
 HEADERS = {"User-Agent": UA}
 
 ANNEES = range(2010, 2025)

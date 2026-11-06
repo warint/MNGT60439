@@ -1,7 +1,7 @@
 # Séance 06 — Pratique
 
 > **[Ouvrir les diapositives](https://warint.github.io/MNGT60439/seance-06-pratique.html)** · source :
-> [`MGMT60XXX-S06-Pratique.qmd`](MGMT60XXX-S06-Pratique.qmd)
+> [`MNGT60439-S06-Pratique.qmd`](MNGT60439-S06-Pratique.qmd)
 
 **Question :** *Les entreprises qui investissent en R-D sont-elles plus rentables ?*
 

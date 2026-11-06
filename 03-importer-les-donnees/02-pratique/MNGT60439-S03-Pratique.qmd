@@ -22,7 +22,7 @@ format:
     margin: 0.06
     smaller: true
     code-overflow: scroll
-    footer: "MGMT 60XXX · Séance 03 pratique · Thierry Warin, PhD · HEC Montréal"
+    footer: "MNGT 60439 · Séance 03 pratique · Thierry Warin, PhD · HEC Montréal"
 ---
 
 ## Plan · L'atelier {.center .scrollable}
