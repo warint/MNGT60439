@@ -1,0 +1,189 @@
+---
+title: "Séance 4 : Pratique"
+subtitle: "Qui sont les vrais concurrents de mon entreprise — et que dit la Bourse de ses acquisitions ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    footer: "MGMT 60XXX · Séance 04 pratique · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · L'atelier {.center .scrollable}
+
+1. Quatre-vingt-dix minutes
+2. Avant de commencer
+3. Comparer à son secteur
+4. Un tableau de synthèse
+5. Remodeler
+6. Nettoyer un fichier d'annonces
+7. Que dit la Bourse ?
+8. Ce que le calcul ne permet pas de conclure
+9. Remettre
+10. Ce qui coûte des points
+
+# Pratique {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Qui sont les vrais concurrents de mon entreprise — et que dit la Bourse de ses acquisitions ?
+:::
+
+## Quatre-vingt-dix minutes
+
+| | | |
+|---|---|---|
+| **00–20** | Comparer | votre entreprise à **son** secteur, la même année (`transform`) |
+| **20–30** | Résumer | un tableau par secteur (`groupby().agg()`) |
+| **30–40** | Remodeler | du long au large, et retour (`pivot`, `melt`) |
+| **40–60** | Nettoyer | un fichier d'annonces de F&A mal formé, puis le joindre |
+| **60–80** | Mesurer | la réaction boursière autour de chaque annonce (`concat`) |
+| **80–90** | Écrire, et dire | ce que le calcul ne permet pas de conclure — deux minutes |
+
+::: {.warn}
+À deux, sur **un seul** clavier ; on change de clavier à chaque section. La personne qui
+présente est tirée au sort.
+:::
+
+## Avant de commencer
+
+```bash
+python 01-installer-la-plateforme/00-pre-seance/verifier_environnement.py   # tout en OK
+```
+
+Ouvrez le fichier de départ et choisissez **votre entreprise** parmi les 32 :
+
+```text
+04-manipuler-les-donnees/02-pratique/starter/seance04_atelier.py
+```
+
+```python
+MON_ENTREPRISE = "KO"     # un ticker de data/entreprises.csv
+```
+
+::: {.step}
+Si vous avez exécuté la pré-séance, les cours boursiers sont déjà dans `data/cache/` et la
+partie 5 fonctionne sans Internet.
+:::
+
+## 1 · Comparer à son secteur — 20 min
+
+$$\text{écart au secteur}_{i,t} = \text{ROA}_{i,t} - \overline{\text{ROA}}_{\text{secteur}(i),t}$$
+
+| | |
+|---|---|
+| **a** | `roa_secteur` avec `groupby(["secteur", "annee"])["roa"].transform("mean")` |
+| **b** | `ecart_secteur`, puis la série de votre entreprise, 2019–2024 |
+| **c** | La même chose avec la **médiane** du secteur. Le diagnostic change-t-il ? |
+| **d** | Combien d'entreprises dans votre secteur ? Que vaut une moyenne sur trois firmes ? |
+
+::: {.muted}
+`agg` rend une ligne par groupe ; `transform` rend une valeur par ligne. Ici, vous voulez
+comparer **chaque** ligne à son groupe : c'est `transform`.
+:::
+
+## 2 · Un tableau de synthèse — 10 min
+
+Pour 2023, une ligne par secteur :
+
+```python
+(entreprises[entreprises["annee"] == 2023]
+ .groupby("secteur")
+ .agg(n=("ticker", "nunique"), roa_moyen=(...), roa_median=(...), rd_publiee=(...)))
+```
+
+**Question :** dans quels secteurs la moyenne et la médiane du ROA s'écartent-elles le plus ?
+Quelle entreprise tire la moyenne ?
+
+## 3 · Remodeler — 10 min
+
+1. `pivot` : une ligne par année, **une colonne par entreprise de votre secteur**, valeurs = ROA.
+2. `melt` : remettez-le au format long.
+
+**Question :** combien de lignes après `melt` ? Retrouvez ce nombre par un calcul
+(années × entreprises) — c'est votre vérification.
+
+## 4 · Nettoyer un fichier d'annonces — 20 min
+
+`02-pratique/donnees/annonces_fa.csv` : neuf annonces d'acquisition réelles, saisies comme
+on les reçoit.
+
+| Problème | Outil |
+|---|---|
+| Séparateur `;`, virgule décimale | `read_csv(sep=";")`, `.str.replace(",", ".")` |
+| `" MSFT"`, `"pfe"`, `"JNJ "` | `.str.strip().str.upper()` |
+| Dates `18/01/2022` en texte | `pd.to_datetime(..., format="%d/%m/%Y")` |
+| `"n.d."` dans une colonne de montants | `pd.to_numeric(..., errors="coerce")` **et** un drapeau |
+| Une annonce en double | `drop_duplicates()` — comptez avant et après |
+
+Puis joignez `entreprise` et `secteur` de l'acquéreur : `merge(..., how="left",
+validate="m:1", indicator=True)`. **Même nombre de lignes avant et après**, sinon arrêtez-vous.
+
+::: {.warn}
+Vérifiez **une** date d'annonce dans le communiqué de presse de l'entreprise. Une base de données
+de F&A n'est jamais plus fiable que sa saisie.
+:::
+
+## 5 · Que dit la Bourse ? — 20 min
+
+La fonction `fenetre()` du fichier de départ calcule le rendement **anormal naïf** :
+
+$$\text{anormal}_t = r_{\text{acquéreur},t} - r_{\text{SPY},t}, \qquad \text{cumul} = \sum_{-5}^{t} \text{anormal}$$
+
+1. Complétez les deux `TODO` de `fenetre()`.
+2. Appliquez-la à chaque annonce, ajoutez une colonne `cible`, **empilez** avec `pd.concat`.
+3. Un tableau : le cumul au jour +5, par annonce, trié.
+4. Un graphique : une ligne par annonce → `sorties/seance04_car.png`.
+
+::: {.muted}
+L'annonce de Merck tombe un **dimanche**. `searchsorted` prend le jour de Bourse suivant ;
+`get_loc`, utilisé en cours, aurait échoué. Lisez l'erreur avant de la contourner.
+:::
+
+## 6 · Ce que le calcul ne permet pas de conclure — 10 min
+
+En trois à cinq lignes, dans un commentaire à la fin du script :
+
+- pourquoi ces cumuls **ne prouvent pas** qu'une acquisition crée ou détruit de la valeur ;
+- au moins **deux** limites (modèle de marché, nombre d'annonces, absence de test, fuites,
+  autres nouvelles le même jour…) ;
+- ce qu'une **étude d'événement** (MacKinlay, 1997) ferait de plus — mes collègues y reviendront.
+
+**Deux minutes devant la classe :** votre entreprise, son vrai groupe de comparaison, et une
+annonce.
+
+## Remettre
+
+Sur ZoneCours, avant la fin de la journée :
+
+- `seance04_atelier.py`, qui **s'exécute de haut en bas sans erreur** ;
+- `sorties/seance04_car.png`.
+
+Compte pour la **participation**. Si vous avez utilisé l'IA, déclarez-le en tête du script :
+la requête, et ce que vous avez vérifié.
+
+## Ce qui coûte des points
+
+| | |
+|---|---|
+| Un `merge` qui change le nombre de lignes sans explication | Les doublons silencieux faussent tout ce qui suit |
+| Un `fillna(0)` sans justification | Une absence de publication n'est pas un zéro |
+| Un `shift` ou un `pct_change` sans `groupby` | La croissance d'une entreprise calculée sur celle d'une autre |
+| Une moyenne de secteur sans le nombre d'entreprises | Trois firmes ne font pas un secteur |
+| « L'acquisition a créé de la valeur » | Deux mots de trop pour un calcul naïf sur neuf annonces |
+
+**Séance 5 :** représenter les données — montrer, sans tromper.

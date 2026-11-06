@@ -1,0 +1,65 @@
+---
+title: "Aide-mémoire Python"
+---
+
+Les fonctions utilisées dans les séances 1 à 6, une ligne chacune.
+
+## Lire et écrire
+
+| Code | Effet |
+|---|---|
+| `pd.read_csv("data/f.csv")` | Lire un CSV (aussi une URL `https://…`) |
+| `pd.read_csv(f, sep=";", decimal=",", encoding="cp1252")` | Lire un CSV « Excel français » |
+| `pd.read_excel("f.xlsx", sheet_name=0)` | Lire une feuille Excel |
+| `pd.read_html(url)` | Lire les tableaux d'une page web (liste de DataFrame) |
+| `pd.read_sql("SELECT …", con)` | Exécuter une requête SQL sur une base |
+| `requests.get(url, params=…, headers=…).json()` | Interroger une API |
+| `df.to_csv("f.csv", index=False)` · `df.to_parquet("f.parquet")` | Enregistrer |
+
+## Regarder
+
+| Code | Effet |
+|---|---|
+| `df.shape` · `df.head()` · `df.info()` · `df.describe()` | Taille, premières lignes, types, résumé |
+| `df["col"].value_counts()` · `df["col"].unique()` | Fréquences, valeurs distinctes |
+| `df.isna().sum()` | Valeurs manquantes par colonne |
+
+## Sélectionner et créer
+
+| Code | Effet |
+|---|---|
+| `df["col"]` · `df[["a", "b"]]` | Une colonne (Series) · plusieurs colonnes (DataFrame) |
+| `df.loc[lignes, colonnes]` · `df.iloc[0:5, 0:3]` | Par étiquette · par position |
+| `df[(df["a"] > 0) & (df["b"] == "x")]` | Filtrer (`&` et, `\|` ou, `~` non) |
+| `df[df["ticker"].isin(["TSLA", "F"])]` | Filtrer sur une liste |
+| `df.sort_values("col", ascending=False)` · `df.nlargest(5, "col")` | Trier |
+| `df["marge"] = df["resultat_net"] / df["chiffre_affaires"]` | Nouvelle colonne |
+| `df.assign(marge=lambda d: d.resultat_net / d.chiffre_affaires)` | Nouvelle colonne, dans une chaîne |
+
+## Transformer
+
+| Code | Effet |
+|---|---|
+| `df.groupby("secteur")["roa"].agg(["mean", "median", "count"])` | Résumer par groupe |
+| `df.groupby(["secteur", "annee"])["roa"].transform("mean")` | Moyenne du groupe, ligne à ligne |
+| `df.merge(autre, on="cle", how="left", validate="m:1")` | Joindre deux tables |
+| `pd.concat([a, b])` | Empiler |
+| `df.melt(id_vars=…, var_name=…, value_name=…)` · `df.pivot(index=…, columns=…, values=…)` | Large ↔ long |
+| `df.groupby("ticker")["ventes"].pct_change()` | Taux de croissance par entreprise |
+
+## Représenter
+
+| Code | Effet |
+|---|---|
+| `fig, ax = plt.subplots()` · `ax.plot(x, y)` · `fig.savefig("f.png", dpi=150)` | matplotlib |
+| `sns.histplot`, `sns.boxplot`, `sns.scatterplot(hue=…)`, `sns.relplot(col=…)` | seaborn |
+| `px.scatter(df, x=…, y=…, size=…, hover_name=…)` · `px.choropleth(df, locations="iso3")` | plotly |
+
+## Tester
+
+| Code | Effet |
+|---|---|
+| `df["x"].mean()`, `.median()`, `.std()`, `.quantile([.25, .75])`, `.skew()` | Descriptives |
+| `stats.ttest_ind(a, b, equal_var=False)` | Test t de Welch |
+| `df[["x", "y"]].corr(method="spearman")` | Corrélation |
+| `smf.ols("y ~ x + C(secteur)", data=df).fit().summary()` | Régression MCO |

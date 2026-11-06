@@ -1,0 +1,401 @@
+---
+title: "Séance 1 : Installer la plateforme"
+subtitle: "Une manchette, des données, et un ordinateur qui sait les lire"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+jupyter: mgmt60xxx
+execute:
+  echo: true
+  warning: false
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 01 · Thierry Warin, PhD · HEC Montréal"
+---
+
+```{python}
+#| include: false
+# Les exemples s'écrivent comme si on travaillait depuis la racine du dépôt.
+import os, sys
+os.chdir("../..")
+sys.path.insert(0, "slides")
+```
+
+## Plan · La séance {.center .scrollable}
+
+1. Une manchette à vérifier
+2. Le cours : treize séances, trois façons d'apprendre
+3. La plateforme : Python, VS Code, l'environnement virtuel
+4. Python en vingt minutes
+5. Le premier tableau de données
+6. Le premier graphique
+7. L'IA générative dans ce cours
+
+## À quoi sert la séance 1 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Transformer une **affirmation** (« Tesla est bonne pour l'environnement ») en **question vérifiable**
+- Dire quelles données il faudrait pour y répondre
+- Distinguer un fait, une mesure et une interprétation
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- Lancer Python dans VS Code, dans un **environnement virtuel**
+- Écrire des variables, des listes, des dictionnaires, une fonction
+- Lire un fichier CSV avec `pd.read_csv` et afficher ses premières lignes
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Exécuter un script de bout en bout, sans copier-coller dans une console
+- Lire un message d'erreur avant de demander de l'aide
+- Utiliser l'IA générative pour **expliquer**, jamais pour remplacer la vérification
+
+::::
+
+:::::
+
+# Une manchette à vérifier {background-color="#E3120B" style="color:#F7F4ED"}
+
+## « Tesla est vraiment bonne pour l'environnement »
+
+On lit ce genre de phrase tous les jours. Avant de l'accepter ou de la rejeter, un gestionnaire
+devrait poser **trois questions** :
+
+| | Question | Ce qu'il faudrait mesurer |
+|---|---|---|
+| **1** | Bonne *par rapport à quoi* ? | Ford, GM, la moyenne du secteur, un autobus ? |
+| **2** | Bonne *selon quelle mesure* ? | Émissions à l'usage, à la fabrication, sur le cycle de vie ? |
+| **3** | Bonne *pour qui, et où* ? | Le mix électrique du Québec n'est pas celui de la Pologne |
+
+::: {.warn}
+Une donnée ne répond jamais à une manchette. Elle répond à une **question précise**, que la
+manchette ne pose pas. Le travail de l'analyste commence par l'écrire.
+:::
+
+## Deux autres manchettes, pour la suite du cours
+
+> « L'Amérique crée plus de valeur que tout autre pays. »
+
+> « Les entreprises qui investissent en R-D sont plus rentables. »
+
+D'ici la séance 6, vous aurez les outils pour **importer** les données qui permettent de les
+tester, les **manipuler**, les **représenter** et les **tester statistiquement**.
+
+::: {.muted}
+Les séances 7 à 11, données par mes collègues, reprendront ces questions à partir d'articles
+de recherche et de cas (Harvard, Ivey) : fusions-acquisitions, ESG, groupes stratégiques,
+rémunération des dirigeants.
+:::
+
+# Le cours {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Treize séances, trois façons d'apprendre
+
+| Séances | Qui | Comment |
+|---|---|---|
+| **1 à 6** | Thierry Warin | Python sur des données réelles : installer, manipuler, importer, représenter, tester |
+| **7 à 11** | Marie-Ann et Russell | Articles de recherche et études de cas ; coaching des projets |
+| **12 et 13** | L'équipe | Présentations individuelles |
+
+Chaque séance a **trois temps**, toujours dans le même ordre :
+
+| | Quand | Quoi |
+|---|---|---|
+| **Pré-séance** | Avant le cours | Lecture, installation, données, autovérification |
+| **Cours** | ~90 min | Les concepts et le code, démontrés en direct |
+| **Pratique** | ~90 min | Vous écrivez le code, sur une question de stratégie |
+
+## L'évaluation
+
+| Activité | Niveau | Poids |
+|---|---|---|
+| Les premiers pas — travail 1 | Équipe de 2 | 5 % |
+| Les premiers pas — travail 2 (séances 1 à 6) | Équipe de 2 | 5 % |
+| Présentation en début de séance (10 min) | Équipe de 2-3 | 20 % |
+| Participation | Individuel | 10 % |
+| Présentation de vulgarisation (S12-S13, 5 min) | Individuel | 10 % |
+| Projet de recherche : rapport + code Python | Individuel | 60 % |
+
+::: {.warn}
+Le projet final demande **un fichier de code Python** qui reproduit vos tableaux et vos
+graphiques. Les séances 1 à 6 existent pour que ce fichier soit le vôtre.
+:::
+
+# La plateforme {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Quatre pièces, et ce que fait chacune
+
+| Pièce | Ce que c'est | Analogie |
+|---|---|---|
+| **Python** | Le langage, et l'*interpréteur* qui exécute le code | Le moteur |
+| **Les paquets** (`pandas`, `matplotlib`…) | Du code écrit par d'autres, que l'on importe | Les outils dans le coffre |
+| **L'environnement virtuel** (`.venv`) | Une copie de Python propre à **ce** projet, avec **ses** paquets | Un coffre par chantier |
+| **VS Code** | L'éditeur où l'on écrit et exécute le code | Le tableau de bord |
+
+```text
+mngt60xxx/                  ← ouvrez CE dossier dans VS Code (Fichier → Ouvrir le dossier)
+├── .venv/                  ← l'environnement virtuel (créé à la pré-séance)
+├── data/                   ← les données du cours
+│   ├── entreprises.csv
+│   ├── pays.csv
+│   └── strategie.db
+├── 01-installer-la-plateforme/
+└── requirements.txt        ← la liste des paquets
+```
+
+## Pourquoi un environnement virtuel ?
+
+Sans lui, tous vos projets partagent les mêmes paquets. Le jour où un projet exige
+`pandas 2.2` et un autre `pandas 3.0`, l'un des deux casse — souvent la veille d'une remise.
+
+```bash
+python -m venv .venv                    # créer (une seule fois)
+source .venv/bin/activate               # activer — macOS / Linux
+.venv\Scripts\activate                  # activer — Windows
+python -m pip install -r requirements.txt   # installer les paquets du cours
+```
+
+::: {.step}
+Dans VS Code : `Ctrl/Cmd + Maj + P` → **Python: Select Interpreter** → choisissez celui qui
+contient `.venv`. Le nom apparaît en bas à droite de la fenêtre. S'il n'y est pas, vos `import`
+échoueront.
+:::
+
+## Script ou notebook ?
+
+| | Script `.py` | Notebook `.ipynb` |
+|---|---|---|
+| Exécution | De haut en bas, en entier | Cellule par cellule, dans n'importe quel ordre |
+| Force | Reproductible : même entrée, même sortie | Exploratoire : on voit le résultat sous le code |
+| Piège | Il faut tout relancer pour voir un résultat | Une cellule exécutée hors d'ordre ment |
+
+Dans ce cours, **on explore en notebook ou avec `# %%`, on remet un script**. Dans VS Code, une
+ligne `# %%` découpe un script en cellules exécutables avec `Maj + Entrée` : on a les deux.
+
+# Python en vingt minutes {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Des nombres et des variables
+
+```{python}
+chiffre_affaires = 96_773      # Tesla, 2023, en millions de $ US
+resultat_net = 14_974
+
+marge_nette = resultat_net / chiffre_affaires
+print(marge_nette)
+print(f"Marge nette de Tesla en 2023 : {marge_nette:.1%}")
+```
+
+- Le signe `=` **range** une valeur dans un nom ; il ne dit pas que deux choses sont égales.
+- Le `_` dans `96_773` est permis et ne change rien : il aide à lire.
+- La chaîne `f"..."` insère des valeurs ; `:.1%` affiche en pourcentage à une décimale.
+
+## Les types : ce que Python croit que vous lui donnez
+
+```{python}
+annee = 2023                 # int   : un entier
+marge = 0.155                # float : un nombre à virgule
+entreprise = "Tesla"         # str   : du texte
+est_rentable = marge > 0     # bool  : vrai ou faux
+
+print(type(annee), type(marge), type(entreprise), type(est_rentable))
+print("2023" + "1", 2023 + 1)
+```
+
+::: {.warn}
+`"2023" + "1"` donne `"20231"`. Un chiffre lu comme du texte est **l'erreur la plus fréquente**
+lorsqu'on importe des données ; on la retrouvera à la séance 3.
+:::
+
+## Listes et dictionnaires
+
+```{python}
+constructeurs = ["Tesla", "Ford", "General Motors"]       # une liste : un ordre
+print(constructeurs[0], len(constructeurs))               # Python compte à partir de 0
+
+ventes_2023 = {"Tesla": 96_773, "Ford": 176_191, "General Motors": 157_658}   # clé → valeur
+print(ventes_2023["Ford"])
+
+for nom in constructeurs:
+    print(f"{nom:15s} {ventes_2023[nom]:>9,} M$")
+```
+
+Un **dictionnaire de listes** a déjà la forme d'un tableau : chaque clé est une colonne.
+
+## Une fonction : écrire une fois, utiliser partout
+
+```{python}
+def marge(resultat, ventes):
+    """Marge nette : la part de chaque dollar de ventes qui reste en profit."""
+    return resultat / ventes
+
+print(f"{marge(14_974, 96_773):.1%}")   # Tesla
+print(f"{marge(4_347, 176_191):.1%}")   # Ford
+```
+
+Si vous copiez-collez le même calcul trois fois, écrivez une fonction. Si la formule change,
+vous la corrigez à un seul endroit.
+
+## Importer un paquet
+
+```{python}
+import pandas as pd          # les tableaux de données — le cœur du cours
+import numpy as np           # le calcul numérique
+import matplotlib.pyplot as plt   # les graphiques
+
+print(pd.__version__)
+```
+
+`as pd` est une convention, pas une obligation — mais tout le monde l'utilise, et toutes les
+réponses que vous trouverez en ligne (ou que l'IA vous donnera) la supposent.
+
+# Le premier tableau de données {background-color="#E3120B" style="color:#F7F4ED"}
+
+## D'un dictionnaire à un DataFrame
+
+```{python}
+df = pd.DataFrame({
+    "entreprise": ["Tesla", "Ford", "General Motors"],
+    "ventes":     [96_773, 176_191, 157_658],
+    "resultat":   [14_974, 4_347, 9_840],
+})
+df["marge"] = df["resultat"] / df["ventes"]
+df
+```
+
+Un **DataFrame** est un tableau : des lignes (les observations) et des colonnes (les variables).
+Une opération sur une colonne s'applique à **toutes** les lignes d'un coup.
+
+## Les vraies données : `data/entreprises.csv`
+
+```{python}
+entreprises = pd.read_csv("data/entreprises.csv")
+print(entreprises.shape)
+entreprises.head()
+```
+
+32 grandes entreprises cotées aux États-Unis, exercices 2010 à 2024, tirées des états
+financiers déposés à la **SEC** (montants en millions de dollars US).
+
+## Ce qu'il y a dedans
+
+```{python}
+entreprises.info()
+```
+
+::: {.muted}
+`rd` manque pour un quart des lignes : Amazon, Walmart ou Coca-Cola ne publient pas de ligne
+« recherche et développement ». Une donnée manquante est souvent une **information**, pas un
+accident. Nous y reviendrons à la séance 2.
+:::
+
+## Une question, une ligne de code
+
+*Quel constructeur automobile était le plus rentable en 2023 ?*
+
+```{python}
+auto = entreprises[(entreprises["secteur"] == "Automobile") & (entreprises["annee"] == 2023)]
+auto = auto.assign(marge=auto["resultat_net"] / auto["chiffre_affaires"])
+auto[["entreprise", "chiffre_affaires", "resultat_net", "marge"]].sort_values("marge", ascending=False)
+```
+
+Tesla vend **près de deux fois moins** que Ford, mais garde **six fois plus** de chaque dollar de ventes (15,5 % contre 2,5 %). Est-ce que
+cela dit quelque chose de l'environnement ? **Non** — et c'est exactement la discipline du cours.
+
+# Le premier graphique {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Tesla, Ford, GM : quinze ans de ventes
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.2
+from plotstyle import setup
+plt = setup()
+
+auto = entreprises[entreprises["secteur"] == "Automobile"]
+fig, ax = plt.subplots()
+for nom, groupe in auto.groupby("entreprise"):
+    ax.plot(groupe["annee"], groupe["chiffre_affaires"] / 1000,
+            marker="o", label=nom)
+ax.set_title("Chiffre d'affaires, milliards $ US")
+ax.legend(frameon=False)
+plt.show()
+```
+
+## Ce que le graphique montre, et ce qu'il ne montre pas
+
+| Il montre | Il ne montre pas |
+|---|---|
+| La croissance de Tesla depuis 2018 | Les émissions de ces véhicules |
+| Le creux de 2020 chez Ford et GM | La part de véhicules électriques dans les ventes de Ford et GM |
+| Que Tesla reste plus petite en ventes | Si Tesla est « bonne pour l'environnement » |
+
+::: {.step}
+Pour la question environnementale, il faudra **d'autres données** : les émissions de CO₂ par
+pays (Our World in Data), le mix électrique, les ventes de véhicules électriques. Les importer
+est l'objet de la séance 3.
+:::
+
+# L'IA générative dans ce cours {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Un partenaire d'étude, pas un corrigé
+
+| Utilisez-la pour | Ne l'utilisez pas pour |
+|---|---|
+| **Expliquer** un message d'erreur | Produire un résultat que vous ne savez pas vérifier |
+| **Commenter** votre code ligne par ligne | Inventer des chiffres ou des références |
+| Vous **interroger** sur un concept | Écrire votre rapport à votre place |
+| Proposer **une autre façon** d'écrire un calcul | Choisir vos données sans regarder la source |
+
+> **Règle permanente du cours.** Chaque fois que l'IA intervient dans un travail remis, vous
+> indiquez ce que vous lui avez demandé et **ce que vous avez vérifié, et comment**. Une
+> affirmation non vérifiée d'un modèle de langage a la valeur d'une affirmation non vérifiée
+> d'un inconnu.
+
+## Trois requêtes qui fonctionnent
+
+- « Voici mon message d'erreur et les cinq lignes qui le précèdent. **Explique** ce qu'il veut
+  dire, sans me donner le code corrigé. »
+- « Explique-moi ce que fait chaque ligne de ce code pandas, comme à quelqu'un qui débute. »
+- « Pose-moi cinq questions pour vérifier que j'ai compris ce qu'est un DataFrame. »
+
+::: {.warn}
+Une IA écrit volontiers `df.append(...)` : cette méthode **n'existe plus** depuis pandas 2.0.
+Le code généré vise souvent une version ancienne. Exécutez-le, lisez l'erreur, et corrigez.
+:::
+
+## Avant la pratique
+
+- Votre `.venv` est **activé** et sélectionné dans VS Code
+- `verifier_environnement.py` affiche **OK** partout
+- Vous savez où est `data/entreprises.csv`
+
+**Pratique :** *Tesla est-elle plus rentable que Ford — et depuis quand ?*

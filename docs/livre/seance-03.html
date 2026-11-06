@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Importer des données – Données et stratégie avec Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./seance-04.html" rel="next">
+<link href="./seance-02.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-87cceeb0dc72897ec58809a022325911.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-654b0d63ec6aea178ec964394c84683d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./seance-01.html">Python pour la stratégie</a></li><li class="breadcrumb-item"><a href="./seance-03.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Importer des données</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Données et stratégie avec Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/warint/MNGT60439/tree/main/book/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Avant-propos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Python pour la stratégie</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installer la plateforme</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Le DataFrame, la table de l’analyste</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-03.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Importer des données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Manipuler les données : nettoyer, joindre, remodeler, agréger</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Articles et études de cas</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seances-07-13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Des outils aux questions : les séances 7 à 13</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Annexes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installation pas à pas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sources-de-donnees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Sources de données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./aide-memoire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Aide-mémoire Python</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#une-question-plusieurs-sources" id="toc-une-question-plusieurs-sources" class="nav-link active" data-scroll-target="#une-question-plusieurs-sources"><span class="header-section-number">3.1</span> Une question, plusieurs sources</a></li>
+  <li><a href="#le-fichier-csv-et-ce-quil-ne-dit-pas" id="toc-le-fichier-csv-et-ce-quil-ne-dit-pas" class="nav-link" data-scroll-target="#le-fichier-csv-et-ce-quil-ne-dit-pas"><span class="header-section-number">3.2</span> Le fichier CSV, et ce qu’il ne dit pas</a></li>
+  <li><a href="#lire-en-ligne-une-fois" id="toc-lire-en-ligne-une-fois" class="nav-link" data-scroll-target="#lire-en-ligne-une-fois"><span class="header-section-number">3.3</span> Lire en ligne, une fois</a></li>
+  <li><a href="#les-paquets-qui-parlent-aux-sources" id="toc-les-paquets-qui-parlent-aux-sources" class="nav-link" data-scroll-target="#les-paquets-qui-parlent-aux-sources"><span class="header-section-number">3.4</span> Les paquets qui parlent aux sources</a></li>
+  <li><a href="#les-api" id="toc-les-api" class="nav-link" data-scroll-target="#les-api"><span class="header-section-number">3.5</span> Les API</a></li>
+  <li><a href="#les-bases-de-données" id="toc-les-bases-de-données" class="nav-link" data-scroll-target="#les-bases-de-données"><span class="header-section-number">3.6</span> Les bases de données</a></li>
+  <li><a href="#sauvegarder-et-documenter" id="toc-sauvegarder-et-documenter" class="nav-link" data-scroll-target="#sauvegarder-et-documenter"><span class="header-section-number">3.7</span> Sauvegarder et documenter</a></li>
+  <li><a href="#à-retenir" id="toc-à-retenir" class="nav-link" data-scroll-target="#à-retenir"><span class="header-section-number">3.8</span> À retenir</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/warint/MNGT60439/blob/main/book/seance-03.qmd" class="toc-action"><i class="bi bi-github"></i>Voir la source</a></li><li><a href="https://github.com/warint/MNGT60439/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./seance-01.html">Python pour la stratégie</a></li><li class="breadcrumb-item"><a href="./seance-03.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Importer des données</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Importer des données</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="une-question-plusieurs-sources" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="une-question-plusieurs-sources"><span class="header-section-number">3.1</span> Une question, plusieurs sources</h2>
+<p>À la séance 1, la manchette « Tesla est vraiment bonne pour l’environnement » est devenue trois questions : bonne par rapport à quoi, selon quelle mesure, et pour qui, où. Aucune des trois ne se tranche avec un seul fichier. La taille et la rentabilité de Tesla viennent de ses états financiers ; le contenu en carbone de l’électricité qui recharge ses voitures vient de statistiques nationales ; ce que les investisseurs pensent de son avenir se lit dans les cours boursiers. Chaque source est produite par une organisation différente, et servie d’une façon différente.</p>
+<p>C’est la condition ordinaire de la recherche en gestion internationale. Bosma et van Witteloostuijn montrent que l’essor de l’apprentissage automatique dans le domaine tient moins à de nouveaux algorithmes qu’à l’arrivée de nouvelles sources de données — textes, données administratives, données en ligne — qu’il faut d’abord savoir faire entrer dans un tableau <span class="citation" data-cites="bosma2024">(<a href="#ref-bosma2024" role="doc-biblioref">Bosma et Witteloostuijn 2024</a>)</span>. Ce chapitre traite de cette étape : faire venir les données jusqu’à soi, sans les abîmer en chemin, et en sachant d’où elles viennent.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ce qu’on veut savoir</th>
+<th>Source</th>
+<th>Mode d’accès</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Taille et rentabilité de Tesla, Ford, GM</td>
+<td>SEC, via <code>data/entreprises.csv</code></td>
+<td>fichier CSV local</td>
+</tr>
+<tr class="even">
+<td>CO₂ par habitant, par pays</td>
+<td>Our World in Data</td>
+<td>URL d’un fichier</td>
+</tr>
+<tr class="odd">
+<td>Ce que le marché pense de Tesla</td>
+<td>Yahoo Finance</td>
+<td>paquet <code>yfinance</code></td>
+</tr>
+<tr class="even">
+<td>Part de l’électricité renouvelable</td>
+<td>Banque mondiale</td>
+<td>API web, paquet <code>wbgapi</code></td>
+</tr>
+<tr class="odd">
+<td>États financiers détaillés</td>
+<td>SEC EDGAR</td>
+<td>API avec en-tête obligatoire</td>
+</tr>
+<tr class="even">
+<td>Les données du cours, réunies</td>
+<td><code>data/strategie.db</code></td>
+<td>base de données SQL</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="le-fichier-csv-et-ce-quil-ne-dit-pas" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="le-fichier-csv-et-ce-quil-ne-dit-pas"><span class="header-section-number">3.2</span> Le fichier CSV, et ce qu’il ne dit pas</h2>
+<p>Un fichier CSV est du texte : une ligne par observation, un séparateur entre les colonnes. Rien dans le fichier n’indique quel est ce séparateur, quel caractère marque la décimale, ni comment les lettres accentuées sont codées. <code>pd.read_csv</code> fait des hypothèses raisonnables — virgule, point, UTF-8 — qui conviennent au fichier du cours :</p>
+<div id="52bb4ef3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>entreprises.shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>(480, 12)</code></pre>
+</div>
+</div>
+<p>Un Excel configuré en français fait d’autres choix : point-virgule entre les colonnes, virgule décimale, encodage Windows-1252. Le fichier <code>data/entreprises_fr.csv</code> contient exactement les mêmes données, enregistrées ainsi. Lu avec les hypothèses par défaut, il ne provoque <strong>aucune erreur</strong> :</p>
+<div id="d5f78a35" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mal <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises_fr.csv"</span>, encoding<span class="op">=</span><span class="st">"cp1252"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mal.shape</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>(480, 1)</code></pre>
+</div>
+</div>
+<p>Une seule colonne au lieu de douze. pandas n’a trouvé aucune virgule séparatrice et a tout rangé dans la même case. C’est le piège le plus dangereux de l’importation : un échec silencieux. La parade est un réflexe — vérifier <code>.shape</code> et <code>.dtypes</code> après chaque lecture. Les bons paramètres règlent tout :</p>
+<div id="276be3f9" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bon <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises_fr.csv"</span>, sep<span class="op">=</span><span class="st">";"</span>, decimal<span class="op">=</span><span class="st">","</span>, encoding<span class="op">=</span><span class="st">"cp1252"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(bon.shape)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(bon[[<span class="st">"chiffre_affaires"</span>, <span class="st">"resultat_net"</span>]].dtypes)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(480, 12)
+chiffre_affaires    float64
+resultat_net        float64
+dtype: object</code></pre>
+</div>
+</div>
+<p>Trois autres options servent à lire <strong>moins</strong> : <code>nrows</code> pour un aperçu, <code>usecols</code> pour ne garder que certaines colonnes, <code>dtype</code> pour imposer un type plutôt que de le laisser deviner. Sur les 480 lignes du cours, l’enjeu est nul ; sur un fichier de transactions de plusieurs gigaoctets, c’est la différence entre une analyse et un ordinateur figé <span class="citation" data-cites="mckinney2022">(<a href="#ref-mckinney2022" role="doc-biblioref">McKinney 2022</a>, ch.&nbsp;6)</span>.</p>
+<div id="ec928d7d" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>leger <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                    usecols<span class="op">=</span>[<span class="st">"ticker"</span>, <span class="st">"annee"</span>, <span class="st">"chiffre_affaires"</span>],</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                    dtype<span class="op">=</span>{<span class="st">"ticker"</span>: <span class="st">"category"</span>, <span class="st">"annee"</span>: <span class="st">"int16"</span>})</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>leger.dtypes</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>ticker              category
+annee                  int16
+chiffre_affaires     float64
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="lire-en-ligne-une-fois" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="lire-en-ligne-une-fois"><span class="header-section-number">3.3</span> Lire en ligne, une fois</h2>
+<p><code>pd.read_csv</code> accepte une URL comme un nom de fichier. Mais lire en ligne à chaque exécution est une mauvaise habitude : le réseau est lent, le fichier distant peut changer sans prévenir, et certains serveurs limitent les requêtes. La règle du cours est de télécharger <strong>une fois</strong> et de relire une copie locale. Une petite fonction suffit :</p>
+<div id="9830e113" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>CACHE <span class="op">=</span> Path(<span class="st">"data/cache"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>CACHE.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> charger(nom, telecharger):</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Relit data/cache/&lt;nom&gt;.parquet s'il existe ; sinon télécharge, enregistre, renvoie."""</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    fichier <span class="op">=</span> CACHE <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>nom<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fichier.exists():</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pd.read_parquet(fichier)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> telecharger()</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    df.to_parquet(fichier)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>L’argument <code>telecharger</code> est une fonction, qui ne s’exécute que si la copie locale manque. Our World in Data publie les émissions de CO₂ de tous les pays dans un seul fichier de 79 colonnes ; on n’en garde que cinq :</p>
+<div id="02375bcc" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>URL_CO2 <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>co2 <span class="op">=</span> charger(<span class="st">"owid_co2"</span>, <span class="kw">lambda</span>: pd.read_csv(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    URL_CO2, usecols<span class="op">=</span>[<span class="st">"country"</span>, <span class="st">"year"</span>, <span class="st">"iso_code"</span>, <span class="st">"co2_per_capita"</span>, <span class="st">"share_global_co2"</span>]))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>pays <span class="op">=</span> [<span class="st">"USA"</span>, <span class="st">"CAN"</span>, <span class="st">"CHN"</span>, <span class="st">"DEU"</span>, <span class="st">"NOR"</span>, <span class="st">"POL"</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>co2[co2[<span class="st">"iso_code"</span>].isin(pays) <span class="op">&amp;</span> (co2[<span class="st">"year"</span>] <span class="op">==</span> <span class="dv">2023</span>)]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">iso_code</th>
+<th data-quarto-table-cell-role="th">co2_per_capita</th>
+<th data-quarto-table-cell-role="th">share_global_co2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8876</td>
+<td>Canada</td>
+<td>2023</td>
+<td>CAN</td>
+<td>13.880</td>
+<td>1.432</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9932</td>
+<td>China</td>
+<td>2023</td>
+<td>CHN</td>
+<td>8.556</td>
+<td>31.953</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18318</td>
+<td>Germany</td>
+<td>2023</td>
+<td>DEU</td>
+<td>7.023</td>
+<td>1.559</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">34909</td>
+<td>Norway</td>
+<td>2023</td>
+<td>NOR</td>
+<td>7.043</td>
+<td>0.102</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">37609</td>
+<td>Poland</td>
+<td>2023</td>
+<td>POL</td>
+<td>7.307</td>
+<td>0.744</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">48006</td>
+<td>United States</td>
+<td>2023</td>
+<td>USA</td>
+<td>14.319</td>
+<td>12.911</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="warn">
+<p><strong>Le piège des certificats sur macOS.</strong> Avec le Python de python.org, <code>pd.read_csv(url)</code> peut échouer avec <code>CERTIFICATE_VERIFY_FAILED</code> alors que <code>requests.get(url)</code> fonctionne : <code>requests</code> apporte ses propres certificats, pandas utilise ceux du système. Le correctif est d’exécuter une fois <code>Install Certificates.command</code>, dans le dossier Applications/Python 3.x.</p>
+</div>
+<p>Les pages web contiennent aussi des tableaux. <code>pd.read_html</code> les renvoie tous, sous forme de liste ; il faut un <code>User-Agent</code> pour que Wikipédia accepte la requête :</p>
+<div id="98be7a7c" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>URL_WIKI <span class="op">=</span> <span class="st">"https://en.wikipedia.org/wiki/List_of_largest_automotive_companies_by_revenue"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>constructeurs <span class="op">=</span> charger(<span class="st">"wiki_constructeurs"</span>, <span class="kw">lambda</span>: pd.read_html(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    URL_WIKI, storage_options<span class="op">=</span>{<span class="st">"User-Agent"</span>: <span class="st">"Mozilla/5.0"</span>})[<span class="dv">0</span>])</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>constructeurs.head(<span class="dv">5</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">No.</th>
+<th data-quarto-table-cell-role="th">Company</th>
+<th data-quarto-table-cell-role="th">Industry</th>
+<th data-quarto-table-cell-role="th">Revenue (in billion US$)</th>
+<th data-quarto-table-cell-role="th">Headquarters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>Apple</td>
+<td>Electronics</td>
+<td>391.035</td>
+<td>United States</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>Volkswagen Group</td>
+<td>Automotive</td>
+<td>351.093</td>
+<td>Germany</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>Toyota</td>
+<td>Automotive</td>
+<td>315.110</td>
+<td>Japan</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>Samsung Electronics</td>
+<td>Electronics</td>
+<td>220.637</td>
+<td>South Korea</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>Foxconn</td>
+<td>Electronics</td>
+<td>213.699</td>
+<td>Taiwan</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Wikipédia sert à <strong>trouver</strong> une source, non à la citer : ces chiffres recopient des rapports annuels, et c’est le rapport annuel qu’un travail sérieux doit citer.</p>
+</section>
+<section id="les-paquets-qui-parlent-aux-sources" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="les-paquets-qui-parlent-aux-sources"><span class="header-section-number">3.4</span> Les paquets qui parlent aux sources</h2>
+<p>Certaines sources ont un paquet Python qui cache les détails de l’accès. <code>yfinance</code> lit les cours boursiers de Yahoo Finance ; <code>auto_adjust=True</code> corrige les cours pour les dividendes et les fractionnements d’actions.</p>
+<div id="cell-fig-cours" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotstyle <span class="im">import</span> setup</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> setup()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>prix <span class="op">=</span> charger(<span class="st">"cours_auto"</span>, <span class="kw">lambda</span>: yf.download(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"TSLA"</span>, <span class="st">"F"</span>, <span class="st">"GM"</span>], start<span class="op">=</span><span class="st">"2020-01-01"</span>, end<span class="op">=</span><span class="st">"2025-01-01"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    auto_adjust<span class="op">=</span><span class="va">True</span>, progress<span class="op">=</span><span class="va">False</span>)[<span class="st">"Close"</span>])</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>base100 <span class="op">=</span> prix <span class="op">/</span> prix.iloc[<span class="dv">0</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> base100.columns:</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    ax.plot(base100.index, base100[t], label<span class="op">=</span>t)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-cours" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cours-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-03_files/figure-html/fig-cours-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cours-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au premier jour de cotation de 2020, échelle logarithmique. Source : Yahoo Finance via yfinance.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="b0474e00" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rendements <span class="op">=</span> prix.resample(<span class="st">"YE"</span>).last().pct_change().dropna()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rendements.<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Ticker</th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">GM</th>
+<th data-quarto-table-cell-role="th">TSLA</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2021-12-31</td>
+<td>1.37</td>
+<td>0.41</td>
+<td>0.50</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2022-12-31</td>
+<td>-0.42</td>
+<td>-0.42</td>
+<td>-0.65</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2023-12-31</td>
+<td>0.16</td>
+<td>0.08</td>
+<td>1.02</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2024-12-31</td>
+<td>-0.13</td>
+<td>0.50</td>
+<td>0.63</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Le rendement annuel nuance déjà la manchette « le marché croit en Tesla » : en 2021, l’action de Ford a progressé davantage que celle de Tesla. <code>yfinance</code> n’est pas un produit officiel, et les conditions de Yahoo interdisent de redistribuer ces données ; pour une recherche publiée, les bases de référence sont CRSP et Compustat.</p>
+<p>Le paquet <code>wbgapi</code> fait de même pour la Banque mondiale :</p>
+<div id="c74dfdda" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wbgapi <span class="im">as</span> wb</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>co2_hab <span class="op">=</span> charger(<span class="st">"wb_co2_hab"</span>, <span class="kw">lambda</span>: wb.data.DataFrame(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EN.GHG.CO2.PC.CE.AR5"</span>, [<span class="st">"USA"</span>, <span class="st">"CAN"</span>, <span class="st">"CHN"</span>, <span class="st">"NOR"</span>, <span class="st">"DEU"</span>],</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    time<span class="op">=</span><span class="bu">range</span>(<span class="dv">2018</span>, <span class="dv">2023</span>)).reset_index())</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>co2_hab.<span class="bu">round</span>(<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">economy</th>
+<th data-quarto-table-cell-role="th">YR2018</th>
+<th data-quarto-table-cell-role="th">YR2019</th>
+<th data-quarto-table-cell-role="th">YR2020</th>
+<th data-quarto-table-cell-role="th">YR2021</th>
+<th data-quarto-table-cell-role="th">YR2022</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>CAN</td>
+<td>16.5</td>
+<td>16.2</td>
+<td>14.4</td>
+<td>14.7</td>
+<td>14.8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>CHN</td>
+<td>8.2</td>
+<td>8.4</td>
+<td>8.5</td>
+<td>8.9</td>
+<td>8.9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>DEU</td>
+<td>9.0</td>
+<td>8.4</td>
+<td>7.7</td>
+<td>8.1</td>
+<td>7.9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>NOR</td>
+<td>8.8</td>
+<td>8.5</td>
+<td>8.1</td>
+<td>8.2</td>
+<td>8.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>USA</td>
+<td>15.6</td>
+<td>15.0</td>
+<td>13.5</td>
+<td>14.3</td>
+<td>14.4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="les-api" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="les-api"><span class="header-section-number">3.5</span> Les API</h2>
+<p>Une API web est une adresse qui répond avec des données plutôt qu’avec une page. La requête précise une ressource (quels pays, quel indicateur), des paramètres (années, format) et parfois des en-têtes (qui demande, avec quelle clé). La réponse porte un <strong>code de statut</strong> — <code>200</code> pour un succès, <code>404</code> pour une ressource introuvable, <code>429</code> pour trop de requêtes — et, le plus souvent, du JSON : des listes et des dictionnaires imbriqués.</p>
+<div id="2d77773d" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.ZS"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>reponse <span class="op">=</span> requests.get(url, params<span class="op">=</span>{<span class="st">"format"</span>: <span class="st">"json"</span>, <span class="st">"date"</span>: <span class="st">"2015:2022"</span>, <span class="st">"per_page"</span>: <span class="dv">100</span>},</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                       timeout<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reponse.status_code)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>meta, observations <span class="op">=</span> reponse.json()</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(meta)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>200
+{'page': 1, 'pages': 1, 'per_page': 100, 'total': 40, 'sourceid': '2', 'lastupdated': '2026-10-08'}</code></pre>
+</div>
+</div>
+<p>La Banque mondiale renvoie une liste de deux éléments : les métadonnées, puis les observations. Une compréhension de liste les range dans un tableau :</p>
+<div id="59036425" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>elec <span class="op">=</span> pd.DataFrame([{<span class="st">"iso3"</span>: o[<span class="st">"countryiso3code"</span>], <span class="st">"annee"</span>: <span class="bu">int</span>(o[<span class="st">"date"</span>]),</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"renouv_pct"</span>: o[<span class="st">"value"</span>]} <span class="cf">for</span> o <span class="kw">in</span> observations])</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>elec.pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"iso3"</span>, values<span class="op">=</span><span class="st">"renouv_pct"</span>).<span class="bu">round</span>(<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">iso3</th>
+<th data-quarto-table-cell-role="th">CAN</th>
+<th data-quarto-table-cell-role="th">CHN</th>
+<th data-quarto-table-cell-role="th">NOR</th>
+<th data-quarto-table-cell-role="th">POL</th>
+<th data-quarto-table-cell-role="th">USA</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">annee</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015</td>
+<td>64.1</td>
+<td>23.9</td>
+<td>97.7</td>
+<td>14.2</td>
+<td>13.6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2016</td>
+<td>65.0</td>
+<td>25.1</td>
+<td>97.8</td>
+<td>14.0</td>
+<td>15.3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2017</td>
+<td>66.6</td>
+<td>25.0</td>
+<td>97.8</td>
+<td>14.4</td>
+<td>17.3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2018</td>
+<td>65.9</td>
+<td>25.8</td>
+<td>97.8</td>
+<td>13.0</td>
+<td>17.2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2019</td>
+<td>65.9</td>
+<td>26.9</td>
+<td>97.8</td>
+<td>16.0</td>
+<td>17.9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2020</td>
+<td>67.1</td>
+<td>28.1</td>
+<td>98.4</td>
+<td>18.4</td>
+<td>19.9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2021</td>
+<td>67.0</td>
+<td>28.4</td>
+<td>99.1</td>
+<td>17.5</td>
+<td>20.3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2022</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Le tableau répond à la troisième question de la séance 1 : une voiture électrique branchée au réseau norvégien ou canadien roule à l’électricité renouvelable bien plus qu’en Chine, en Pologne ou aux États-Unis. Il montre aussi une limite : la dernière ligne est vide, parce que la série publiée s’arrête en 2021. Une source a toujours un retard, et une analyse doit le dire.</p>
+<p>Quand une réponse dépasse une page, l’API l’indique dans ses métadonnées (<code>pages</code>) et il faut boucler. La SEC, elle, exige que chaque programme s’identifie par un <code>User-Agent</code> qui contient un nom et un courriel. On le lit dans une variable d’environnement, pour qu’il n’apparaisse jamais dans un code partagé :</p>
+<div id="e641a10d" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ua <span class="op">=</span> os.environ.get(<span class="st">"SEC_USER_AGENT"</span>, <span class="st">"HEC Montreal MGMT60XXX course"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> faits_tesla():</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> requests.get(<span class="st">"https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                     headers<span class="op">=</span>{<span class="st">"User-Agent"</span>: ua}, timeout<span class="op">=</span><span class="dv">60</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    r.raise_for_status()</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    ventes <span class="op">=</span> r.json()[<span class="st">"facts"</span>][<span class="st">"us-gaap"</span>][<span class="st">"RevenueFromContractWithCustomerExcludingAssessedTax"</span>]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.DataFrame(ventes[<span class="st">"units"</span>][<span class="st">"USD"</span>])</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>brut <span class="op">=</span> charger(<span class="st">"sec_tesla_ventes"</span>, faits_tesla)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>annuel <span class="op">=</span> brut[brut[<span class="st">"frame"</span>].fillna(<span class="st">""</span>).<span class="bu">str</span>.fullmatch(<span class="vs">r"CY</span><span class="dv">\d</span><span class="op">{4}</span><span class="vs">"</span>)]</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>annuel.assign(ventes_milliards<span class="op">=</span>annuel[<span class="st">"val"</span>] <span class="op">/</span> <span class="fl">1e9</span>)[[<span class="st">"frame"</span>, <span class="st">"ventes_milliards"</span>, <span class="st">"form"</span>]].tail(<span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">frame</th>
+<th data-quarto-table-cell-role="th">ventes_milliards</th>
+<th data-quarto-table-cell-role="th">form</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>CY2022</td>
+<td>81.462</td>
+<td>10-K</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">20</td>
+<td>CY2023</td>
+<td>96.773</td>
+<td>10-K</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">32</td>
+<td>CY2024</td>
+<td>97.690</td>
+<td>10-K</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">43</td>
+<td>CY2025</td>
+<td>94.827</td>
+<td>10-K</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Une même année de ventes figure dans plusieurs dépôts successifs ; le champ <code>frame</code> désigne la valeur retenue pour chaque année civile. C’est la logique de <code>scripts/build_course_data.py</code>, qui a construit <code>data/entreprises.csv</code>.</p>
+<p>Les clés d’API obéissent à la même règle que le courriel : elles vivent dans une variable d’environnement (<code>os.environ["FRED_API_KEY"]</code>), jamais dans un fichier versionné. Une clé publiée sur GitHub est repérée par des robots en quelques minutes ; il faut alors la révoquer.</p>
+</section>
+<section id="les-bases-de-données" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="les-bases-de-données"><span class="header-section-number">3.6</span> Les bases de données</h2>
+<p>Dans une entreprise, les données vivent rarement dans des fichiers : elles sont dans des bases, qu’on interroge en SQL. Le fichier <code>data/strategie.db</code> est une base SQLite qui contient les trois tables du cours. <code>pd.read_sql</code> envoie la requête et renvoie un DataFrame.</p>
+<div id="94b2b134" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> sqlite3.<span class="ex">connect</span>(<span class="st">"data/strategie.db"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>pd.read_sql(<span class="st">"""</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT secteur,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="st">       COUNT(DISTINCT ticker)                                   AS n,</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="st">       ROUND(SUM(chiffre_affaires) / 1000, 1)                   AS ventes_milliards,</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="st">       ROUND(AVG(resultat_net * 1.0 / chiffre_affaires) * 100, 1) AS marge_moy_pct</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="st">FROM entreprises</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="st">WHERE annee = 2023</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="st">GROUP BY secteur</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY ventes_milliards DESC</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>, con)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">secteur</th>
+<th data-quarto-table-cell-role="th">n</th>
+<th data-quarto-table-cell-role="th">ventes_milliards</th>
+<th data-quarto-table-cell-role="th">marge_moy_pct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Commerce de détail</td>
+<td>4</td>
+<td>1567.1</td>
+<td>3.5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Technologie</td>
+<td>7</td>
+<td>1214.5</td>
+<td>25.2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Énergie</td>
+<td>3</td>
+<td>590.0</td>
+<td>14.6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Automobile</td>
+<td>3</td>
+<td>430.6</td>
+<td>8.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Biens de consommation</td>
+<td>4</td>
+<td>270.6</td>
+<td>15.6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>Pharmaceutique</td>
+<td>4</td>
+<td>230.3</td>
+<td>15.4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Industrie</td>
+<td>4</td>
+<td>202.5</td>
+<td>0.3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>Restauration</td>
+<td>2</td>
+<td>61.5</td>
+<td>22.3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Médias et divertissement</td>
+<td>1</td>
+<td>33.7</td>
+<td>16.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Une jointure relie deux tables par leurs <strong>clés</strong> — ici le pays du siège et l’année :</p>
+<div id="0a64a078" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pd.read_sql(<span class="st">"""</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT e.entreprise, e.chiffre_affaires / 1000 AS ventes_milliards, p.pib_milliards_usd,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">       ROUND(e.chiffre_affaires / 1000 / p.pib_milliards_usd * 100, 2) AS pct_pib</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">FROM entreprises AS e</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">JOIN pays AS p ON p.iso3 = e.pays_siege AND p.annee = e.annee</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">WHERE e.ticker IN (?, ?, ?) AND e.annee = ?</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>, con, params<span class="op">=</span>(<span class="st">"TSLA"</span>, <span class="st">"AAPL"</span>, <span class="st">"WMT"</span>, <span class="dv">2023</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">entreprise</th>
+<th data-quarto-table-cell-role="th">ventes_milliards</th>
+<th data-quarto-table-cell-role="th">pib_milliards_usd</th>
+<th data-quarto-table-cell-role="th">pct_pib</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Tesla</td>
+<td>96.773</td>
+<td>27811.52</td>
+<td>0.35</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Apple</td>
+<td>383.285</td>
+<td>27811.52</td>
+<td>1.38</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Walmart</td>
+<td>642.637</td>
+<td>27811.52</td>
+<td>2.31</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Les valeurs filtrées passent par <code>params=</code> et des <code>?</code>, jamais par du texte collé dans la requête : un nom comme « McDonald’s » casserait la requête, et un texte malveillant pourrait la détourner.</p>
+<div id="ebedebb5" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>con.close()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>DuckDB va plus loin : il interroge un fichier CSV ou parquet <strong>comme une table</strong>, sans base à créer.</p>
+<div id="45723c47" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"""</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT ticker, chiffre_affaires, resultat_net</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="st">FROM 'data/entreprises.csv' WHERE annee = 2024</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY chiffre_affaires DESC LIMIT 5</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>).df()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">ticker</th>
+<th data-quarto-table-cell-role="th">chiffre_affaires</th>
+<th data-quarto-table-cell-role="th">resultat_net</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WMT</td>
+<td>674538.0</td>
+<td>19436.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>AMZN</td>
+<td>637959.0</td>
+<td>59248.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>AAPL</td>
+<td>391035.0</td>
+<td>93736.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>GOOGL</td>
+<td>350018.0</td>
+<td>100118.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>XOM</td>
+<td>349585.0</td>
+<td>33680.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="sauvegarder-et-documenter" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="sauvegarder-et-documenter"><span class="header-section-number">3.7</span> Sauvegarder et documenter</h2>
+<p>Le format parquet conserve les types et occupe moins de place ; le CSV reste lisible par tous. Le cours garde ses copies de travail en parquet et remet ses résultats en CSV.</p>
+<div id="bd5de19c" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">"sorties"</span>).mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>co2.to_csv(<span class="st">"sorties/co2.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>co2.to_parquet(<span class="st">"sorties/co2.parquet"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>{f: <span class="bu">round</span>(Path(f).stat().st_size <span class="op">/</span> <span class="fl">1e6</span>, <span class="dv">2</span>) <span class="cf">for</span> f <span class="kw">in</span> [<span class="st">"sorties/co2.csv"</span>, <span class="st">"sorties/co2.parquet"</span>]}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>{'sorties/co2.csv': 1.36, 'sorties/co2.parquet': 0.17}</code></pre>
+</div>
+</div>
+<p>Reste l’essentiel, qui ne s’écrit pas en Python : la <strong>fiche de provenance</strong>. Pour chaque source, le producteur, le mode d’accès, la date d’accès, l’unité, la licence et la dernière année disponible. Elle rend le travail vérifiable par un tiers, et par soi-même six semaines plus tard. La séance 4 assemblera ces sources en un seul tableau, ce qui suppose de savoir exactement ce que chacune mesure <span class="citation" data-cites="wickham2014">(<a href="#ref-wickham2014" role="doc-biblioref">Wickham 2014</a>)</span>.</p>
+</section>
+<section id="à-retenir" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="à-retenir"><span class="header-section-number">3.8</span> À retenir</h2>
+<ul>
+<li>Après chaque import, vérifier <code>.shape</code> et <code>.dtypes</code> : l’échec le plus grave est silencieux.</li>
+<li><code>sep</code>, <code>decimal</code>, <code>encoding</code> règlent presque tous les CSV ; <code>usecols</code>, <code>dtype</code>, <code>nrows</code> allègent.</li>
+<li>Télécharger une fois, relire en local : le cache rend le travail rapide et reproductible.</li>
+<li>Une API répond par un code de statut et du JSON ; on vérifie le premier avant de lire le second.</li>
+<li>Courriels et clés d’API vivent dans des variables d’environnement, jamais dans le code.</li>
+<li>SQL sélectionne, filtre, agrège et joint dans la base ; <code>params=</code> protège la requête.</li>
+<li>Chaque source a un producteur, une licence et un retard : la fiche de provenance les consigne.</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bosma2024" class="csl-entry" role="listitem">
+Bosma, Bas, et Arjen van Witteloostuijn. 2024. <span>«&nbsp;Machine Learning in International Business&nbsp;»</span>. <em>Journal of International Business Studies</em> 55 (6): 676‑702. <a href="https://doi.org/10.1057/s41267-024-00687-6">https://doi.org/10.1057/s41267-024-00687-6</a>.
+</div>
+<div id="ref-mckinney2022" class="csl-entry" role="listitem">
+McKinney, Wes. 2022. <em>Python for Data Analysis: Data Wrangling with pandas, NumPy, and Jupyter</em>. 3ᵉ éd. O’Reilly. <a href="https://wesmckinney.com/book/">https://wesmckinney.com/book/</a>.
+</div>
+<div id="ref-wickham2014" class="csl-entry" role="listitem">
+Wickham, Hadley. 2014. <span>«&nbsp;Tidy Data&nbsp;»</span>. <em>Journal of Statistical Software</em> 59 (10): 1‑23. <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./seance-02.html" class="pagination-link" aria-label="Le DataFrame, la table de l'analyste">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Le DataFrame, la table de l’analyste</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./seance-04.html" class="pagination-link" aria-label="Manipuler les données : nettoyer, joindre, remodeler, agréger">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Manipuler les données : nettoyer, joindre, remodeler, agréger</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>MGMT 60XXX · HEC Montréal</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/warint/MNGT60439/blob/main/book/seance-03.qmd" class="toc-action"><i class="bi bi-github"></i>Voir la source</a></li><li><a href="https://github.com/warint/MNGT60439/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Construit à partir du dépôt du cours</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

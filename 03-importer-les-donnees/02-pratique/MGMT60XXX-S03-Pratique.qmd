@@ -1,0 +1,224 @@
+---
+title: "Séance 3 : Pratique"
+subtitle: "Monter le dossier de données « Tesla et l'environnement »"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 03 pratique · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · L'atelier {.center .scrollable}
+
+1. Quatre-vingt-dix minutes
+2. Avant de commencer
+3. Cinq sources, une par étape
+4. Sauvegarder et documenter
+5. Ce qui fait perdre des points
+6. Rapport de deux minutes
+
+## À quoi sert la séance 3 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Traduire « Tesla est-elle bonne pour l'environnement ? » en **liste de données** à réunir
+- Savoir d'où vient chaque chiffre : producteur, unité, date, licence
+- Juger si une source est assez fiable pour une décision
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- `pd.read_csv` avec `sep`, `decimal`, `encoding`, `usecols`, `dtype`, `nrows`
+- `requests.get` : code de statut, JSON, paramètres, en-têtes
+- `pd.read_sql` sur SQLite, et DuckDB sur un fichier CSV
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Télécharger **une fois**, relire en local ensuite (le cache)
+- Ne jamais écrire une clé d'API ou un courriel dans le code
+- Tenir une **fiche de provenance** pour chaque source
+
+::::
+
+:::::
+
+# Pratique {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Monter le dossier de données « Tesla et l'environnement »
+:::
+
+## Quatre-vingt-dix minutes {.scrollable}
+
+| | | |
+|---|---|---|
+| **00–10** | Vérifier | certificats, `SEC_USER_AGENT`, cache |
+| **10–60** | Importer | cinq sources, cinq façons — étapes 1 à 5 du script |
+| **60–75** | Sauvegarder et documenter | le dossier, la fiche de provenance |
+| **75–90** | Écrire, et rapporter | 150 mots, puis deux minutes à la salle |
+
+::: {.warn}
+On travaille **en équipe de deux**, un seul clavier à la fois. Changez de clavier à chaque étape.
+:::
+
+## Avant de commencer {.scrollable}
+
+Ouvrez le dossier du cours dans VS Code, activez `.venv`, puis ouvrez :
+
+```text
+03-importer-les-donnees/02-pratique/starter/seance03_atelier.py
+```
+
+Exécutez le bloc `# %% 0` (Maj + Entrée). S'il échoue :
+
+| Message | Cause | Correctif |
+|---|---|---|
+| `ModuleNotFoundError` | Mauvais interpréteur | **Python: Select Interpreter** → `.venv` |
+| `CERTIFICATE_VERIFY_FAILED` | Certificats macOS | `Install Certificates.command` (pré-séance) |
+| `FileNotFoundError: data/…` | Mauvais dossier de travail | Ouvrez la **racine** du dépôt dans VS Code |
+
+## Étape 1 · Le CSV « à la française » — 10 min {.scrollable}
+
+`data/entreprises_fr.csv` contient les 32 entreprises du cours, enregistrées par un Excel en
+français.
+
+- Complétez `pd.read_csv(...)` : **trois** options sont nécessaires
+- Ajoutez la colonne `marge`
+- Les `assert` doivent passer sans message
+
+::: {.muted}
+Si vous êtes bloqué·e : ouvrez le fichier dans un éditeur de texte et regardez la première ligne.
+:::
+
+## Étape 2 · Une URL — 10 min {.scrollable}
+
+Our World in Data publie les émissions de CO₂ de tous les pays dans un seul fichier CSV.
+
+- Lisez-le **par la fonction `charger`** : le second appel doit être instantané
+- `usecols` : cinq colonnes seulement, sur 79
+- Gardez les cinq pays de `PAYS`, depuis 2015
+
+**Question à noter :** de combien les émissions par habitant de la Chine et des États-Unis
+diffèrent-elles en 2023 ? Qu'est-ce que cela implique pour une voiture électrique branchée sur
+chacun des deux réseaux ?
+
+## Étape 3 · L'API de la Banque mondiale — 15 min {.scrollable}
+
+Indicateur `EG.ELC.RNEW.ZS` : la part de l'électricité produite à partir de sources renouvelables.
+
+- Construisez la requête avec `params=` — pas en collant du texte dans l'URL
+- Vérifiez `r.status_code` avant de lire `r.json()`
+- `r.json()[1]` est la liste des observations : transformez-la en DataFrame
+
+::: {.warn}
+Quelle est la **dernière année disponible** ? Notez-la : une décision prise en 2026 sur des
+données qui s'arrêtent plusieurs années plus tôt doit le dire.
+:::
+
+## Étape 4 · Un paquet : `yfinance` — 10 min {.scrollable}
+
+- Cours de clôture **ajustés** de `TSLA`, `F`, `GM`, de 2020 à 2024
+- Le script calcule le rendement de chaque année civile
+
+**Question à noter :** le marché a-t-il récompensé Tesla plus que Ford et GM chaque année ?
+Une seule année contraire suffit à nuancer la manchette « le marché croit en Tesla ».
+
+## Étape 5 · SQL sur la base du cours — 15 min {.scrollable}
+
+Écrivez **une seule requête** sur `data/strategie.db` qui renvoie, pour l'automobile depuis 2019 :
+l'entreprise, l'année, la R-D, le chiffre d'affaires, et l'**intensité de R-D** en %.
+
+```sql
+SELECT ..., ROUND(rd * 100.0 / chiffre_affaires, 1) AS rd_pct
+FROM entreprises
+WHERE ... AND ...
+ORDER BY ...
+```
+
+**Question à noter :** pourquoi la R-D de General Motors est-elle manquante ? Une donnée
+manquante est-elle un zéro ?
+
+## Bonus · L'API de la SEC {.scrollable}
+
+Pour les équipes en avance : téléchargez les ventes annuelles de **Ford** (CIK `0000037996`)
+directement depuis la SEC, et comparez-les à `entreprises.csv` pour 2023.
+
+```python
+ua = os.environ["SEC_USER_AGENT"]      # votre identité, jamais écrite dans le script
+```
+
+Les deux sources donnent-elles le même chiffre ? Si oui, pourquoi n'est-ce pas une surprise ?
+
+## Sauvegarder et documenter — 15 min {.scrollable}
+
+Le bloc `# %% 7` écrit le dossier dans `sorties/dossier_tesla/`. Ajoutez-y **`PROVENANCE.md`** :
+
+| Donnée | Producteur | Accès | Date d'accès | Unité | Licence | Dernière année |
+|---|---|---|---|---|---|---|
+| … | … | … | … | … | … | … |
+
+Une ligne par source. « Internet » n'est pas un producteur ; « Yahoo » n'est pas une licence.
+
+## Écrire — 150 mots {.scrollable}
+
+Dans `sorties/dossier_tesla/NOTE.md`, répondez à la question :
+
+> **Avec ces cinq sources, que pouvez-vous affirmer — et ne pas affirmer — sur l'idée que
+> « Tesla est bonne pour l'environnement » ?**
+
+Une affirmation par source, au plus. Puis **une** donnée qui manque encore, et où la trouver.
+
+## Remettre {.scrollable}
+
+- Le dossier `sorties/dossier_tesla/` (CSV, `PROVENANCE.md`, `NOTE.md`) et votre script complété
+- Déposez une archive `.zip` sur ZoneCours **avant minuit**
+- Si l'IA vous a aidé·es : une ligne qui dit ce que vous lui avez demandé et ce que vous avez vérifié
+
+## Ce qui fait perdre des points {.scrollable}
+
+| | |
+|---|---|
+| Une clé d'API ou un courriel **écrit dans le script** | Même dans un commentaire |
+| Un import « réussi » à **une seule colonne** | Toujours vérifier `.shape` |
+| Un chiffre sans source dans la note | La fiche de provenance est là pour ça |
+| Un manquant traité comme un zéro | GM n'a pas une R-D nulle |
+| Un script qui ne s'exécute pas de haut en bas | Relancez-le en entier avant de remettre |
+
+## Rapport de deux minutes {.scrollable}
+
+Trois équipes, tirées au hasard :
+
+1. La source qui vous a résisté, et pourquoi
+2. **Une** affirmation que vos données permettent, **une** qu'elles ne permettent pas
+3. La donnée qui manque encore au dossier
+
+::: {.muted}
+À la séance 4, on assemble ces morceaux en un seul tableau : fusionner, remodeler, nettoyer.
+:::

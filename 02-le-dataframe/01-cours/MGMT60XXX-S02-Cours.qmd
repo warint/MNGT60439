@@ -1,0 +1,481 @@
+---
+title: "Séance 2 : Le DataFrame, la table de l'analyste"
+subtitle: "Quelles entreprises créent le plus de valeur ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+jupyter: mgmt60xxx
+execute:
+  echo: true
+  warning: false
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 02 · Thierry Warin, PhD · HEC Montréal"
+---
+
+```{python}
+#| include: false
+# Les exemples s'écrivent comme si on travaillait depuis la racine du dépôt.
+import os, sys
+os.chdir("../..")
+sys.path.insert(0, "slides")
+import pandas as pd
+pd.set_option("display.max_columns", 12)
+pd.set_option("display.width", 140)
+```
+
+## Plan · La séance {.center .scrollable}
+
+1. « Créer de la valeur » : quatre réponses possibles
+2. L'anatomie d'un DataFrame : Series, index, types
+3. Regarder avant de calculer : `shape`, `info`, `describe`
+4. Sélectionner des colonnes et des lignes
+5. Filtrer avec des conditions
+6. Trier et classer
+7. Créer des colonnes : marge, ROA, ROE, intensité R-D
+8. Résumer par groupe : `groupby`
+9. Les valeurs manquantes, première rencontre
+
+## À quoi sert la séance 2 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Distinguer **taille** (résultat net) et **performance** (marge, ROA, ROE)
+- Dire pourquoi un classement change quand on change de mesure
+- Comparer des entreprises **à l'intérieur** d'un secteur avant de comparer les secteurs
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- Lire un DataFrame : `shape`, `dtypes`, `info`, `describe`
+- Sélectionner avec `[]`, `[[ ]]`, `.loc`, `.iloc`, des masques booléens et `.query`
+- Créer des colonnes, trier, et résumer avec `groupby().agg()`
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Vérifier la **forme** d'un résultat (combien de lignes ?) après chaque opération
+- Lire une valeur manquante comme une information sur la source
+- Refuser un ratio dont le dénominateur n'a pas de sens
+
+::::
+
+:::::
+
+# « Créer de la valeur » {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Quatre réponses à une même question
+
+*Quelle entreprise crée le plus de valeur ?* Cela dépend de ce que l'on mesure.
+
+| Mesure | Formule | Elle répond à… |
+|---|---|---|
+| **Résultat net** | profit après impôts | Qui gagne le plus d'argent, en dollars ? |
+| **Marge nette** | résultat net / chiffre d'affaires | Combien reste-t-il de chaque dollar vendu ? |
+| **ROA** | résultat net / actifs totaux | Combien rapporte chaque dollar d'actifs ? |
+| **ROE** | résultat net / capitaux propres | Combien rapporte chaque dollar des actionnaires ? |
+
+::: {.warn}
+Aucune de ces mesures n'est « la » création de valeur. La finance la définit par rapport au coût
+du capital ; la stratégie, par rapport aux concurrents. Aujourd'hui, on apprend à **calculer**
+les quatre et à voir **pourquoi elles ne s'accordent pas**.
+:::
+
+## Le fichier de la séance
+
+```{python}
+import pandas as pd
+
+entreprises = pd.read_csv("data/entreprises.csv")
+entreprises.head()
+```
+
+Une ligne = **une entreprise × un exercice**. Montants en **millions de dollars US**, tirés des
+états financiers déposés à la SEC.
+
+# L'anatomie d'un DataFrame {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Un DataFrame, c'est des Series côte à côte
+
+```{python}
+ventes = entreprises["chiffre_affaires"]
+print(type(entreprises))
+print(type(ventes))
+ventes.head()
+```
+
+- Une **Series** : une colonne, avec un **index** (les numéros à gauche) et un **type**.
+- Un **DataFrame** : plusieurs Series qui partagent le même index.
+
+## L'index : l'étiquette de chaque ligne
+
+```{python}
+print(entreprises.index)
+print(entreprises.columns.tolist())
+```
+
+Par défaut, l'index est `0, 1, 2, …`. On peut le remplacer par une colonne qui a du sens :
+
+```{python}
+par_ticker = entreprises[entreprises["annee"] == 2023].set_index("ticker")
+par_ticker.loc["TSLA", ["entreprise", "chiffre_affaires", "resultat_net"]]
+```
+
+## Les types de colonnes
+
+```{python}
+entreprises.dtypes
+```
+
+| Type | Contient | Exemple ici |
+|---|---|---|
+| `int64` | des entiers | `annee`, `cik` |
+| `float64` | des nombres à virgule — **et les valeurs manquantes** | `rd`, `chiffre_affaires` |
+| `str` / `object` | du texte | `entreprise`, `secteur` |
+
+::: {.muted}
+Pourquoi `chiffre_affaires` est-il un `float` alors que ce sont des millions ronds ? Parce qu'il
+lui manque des valeurs : `NaN` est un nombre à virgule.
+:::
+
+# Regarder avant de calculer {background-color="#E3120B" style="color:#F7F4ED"}
+
+## `shape` et `info`
+
+```{python}
+print(entreprises.shape)       # (lignes, colonnes)
+entreprises.info()
+```
+
+`info()` dit, pour chaque colonne, **combien de valeurs ne sont pas manquantes**. Lisez cette
+colonne en premier.
+
+## `describe` : le résumé numérique
+
+```{python}
+entreprises[["chiffre_affaires", "resultat_net", "actifs_totaux", "rd"]].describe().round(0)
+```
+
+::: {.warn}
+Regardez `min` sur `resultat_net` : il est **négatif**. Une entreprise peut perdre de l'argent.
+Regardez aussi l'écart entre `mean` et `50%` (la médiane) : quelques géants tirent la moyenne.
+:::
+
+## Combien de quoi : `unique` et `value_counts`
+
+```{python}
+print(entreprises["secteur"].nunique(), "secteurs")
+entreprises["secteur"].value_counts()
+```
+
+::: {.muted}
+Technologie a 105 lignes : 7 entreprises × 15 exercices. Toujours vérifier que le compte a le
+sens attendu.
+:::
+
+# Sélectionner {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Une colonne ou plusieurs : `[ ]` et `[[ ]]`
+
+```{python}
+une = entreprises["entreprise"]                         # une Series
+plusieurs = entreprises[["entreprise", "annee", "chiffre_affaires"]]   # un DataFrame
+print(type(une).__name__, une.shape)
+print(type(plusieurs).__name__, plusieurs.shape)
+```
+
+::: {.step}
+Des crochets simples avec **un nom** : une Series. Des crochets doubles avec **une liste de
+noms** : un DataFrame. La liste intérieure est une liste Python ordinaire.
+:::
+
+## Des lignes par étiquette : `.loc`
+
+```{python}
+a23 = entreprises[entreprises["annee"] == 2023].set_index("ticker")
+a23.loc[["AAPL", "MSFT", "NVDA"], ["entreprise", "chiffre_affaires", "resultat_net"]]
+```
+
+`.loc[lignes, colonnes]` : les deux parties s'écrivent avec des **étiquettes**.
+
+## Des lignes par position : `.iloc`
+
+```{python}
+entreprises.iloc[0:3, 0:6]     # les 3 premières lignes, les 6 premières colonnes
+```
+
+| | `.loc` | `.iloc` |
+|---|---|---|
+| Sélectionne par | étiquette (nom, valeur d'index) | position (0, 1, 2…) |
+| `0:3` inclut | la borne de fin | **pas** la borne de fin |
+
+::: {.muted}
+En pratique, `.loc` sert dix fois plus que `.iloc`. Une position change dès qu'on trie ; une
+étiquette, non.
+:::
+
+# Filtrer avec des conditions {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Un masque booléen
+
+```{python}
+masque = entreprises["annee"] == 2023
+print(masque.head(16).tolist())
+print(masque.sum(), "lignes sont vraies")
+```
+
+Une comparaison sur une colonne produit une Series de `True`/`False`. Placée entre crochets, elle
+**garde les lignes vraies** :
+
+```{python}
+entreprises[masque].shape
+```
+
+## Combiner : `&`, `|`, `~`
+
+```{python}
+grosses_tech_2023 = entreprises[
+    (entreprises["annee"] == 2023)
+    & (entreprises["secteur"] == "Technologie")
+    & ~(entreprises["chiffre_affaires"] < 100_000)
+]
+grosses_tech_2023[["entreprise", "chiffre_affaires"]]
+```
+
+::: {.warn}
+`&` (et), `|` (ou), `~` (non) — **pas** `and`, `or`, `not`. Et des **parenthèses** autour de
+chaque condition : sans elles, Python lit `2023 & entreprises[...]` et lève une erreur.
+:::
+
+## `isin` et `between`
+
+```{python}
+auto_energie = entreprises[
+    entreprises["secteur"].isin(["Automobile", "Énergie"])
+    & entreprises["annee"].between(2020, 2022)
+]
+auto_energie[["entreprise", "annee", "resultat_net"]].head(9)
+```
+
+`between(2020, 2022)` inclut les deux bornes.
+
+## `query` : la même chose, en phrase
+
+```{python}
+entreprises.query("annee == 2023 and resultat_net < 0")[
+    ["entreprise", "secteur", "resultat_net"]
+]
+```
+
+Dans `query`, on écrit `and`/`or` et les noms de colonnes sans guillemets. Pratique pour lire ;
+moins pratique quand un nom contient des espaces.
+
+# Trier et classer {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Qui gagne le plus d'argent ?
+
+```{python}
+a23 = entreprises[entreprises["annee"] == 2023]
+a23.sort_values("resultat_net", ascending=False)[
+    ["entreprise", "secteur", "resultat_net"]
+].head(5)
+```
+
+## `nlargest` : plus court
+
+```{python}
+a23.nlargest(5, "chiffre_affaires")[["entreprise", "secteur", "chiffre_affaires"]]
+```
+
+Le classement par **ventes** n'est pas celui par **résultat**. Les détaillants vendent beaucoup
+et gardent peu.
+
+# Créer des colonnes {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Quatre ratios, une ligne chacun
+
+```{python}
+df = entreprises.copy()
+df["marge_nette"] = df["resultat_net"] / df["chiffre_affaires"]
+df["roa"] = df["resultat_net"] / df["actifs_totaux"]
+df["roe"] = df["resultat_net"] / df["capitaux_propres"]
+df["intensite_rd"] = df["rd"] / df["chiffre_affaires"]
+
+df.loc[df["annee"] == 2023, ["entreprise", "marge_nette", "roa", "roe", "intensite_rd"]].head(6).round(3)
+```
+
+L'opération est **vectorisée** : une division de colonnes divise les 480 lignes d'un coup, sans
+boucle.
+
+## Le classement change avec la mesure
+
+```{python}
+a23 = df[df["annee"] == 2023]
+cols = ["entreprise", "marge_nette", "roa"]
+print(a23.nlargest(5, "marge_nette")[cols].round(3).to_string(index=False))
+print()
+print(a23.nlargest(5, "roa")[cols].round(3).to_string(index=False))
+```
+
+## Un ratio peut mentir : le ROE
+
+```{python}
+a23[a23["capitaux_propres"] < 0][["entreprise", "resultat_net", "capitaux_propres", "roe"]]
+```
+
+::: {.warn}
+Des capitaux propres **négatifs** (rachats d'actions massifs, pertes accumulées) rendent le ROE
+absurde : McDonald's affiche un ROE négatif alors qu'elle est très rentable, et Boeing, qui
+**perd** de l'argent, un ROE **positif** — deux négatifs font un positif. Avant d'interpréter
+un ratio, regardez son **dénominateur**.
+:::
+
+## `assign` : créer sans modifier
+
+```{python}
+(entreprises
+    .query("annee == 2023")
+    .assign(marge_nette=lambda d: d["resultat_net"] / d["chiffre_affaires"])
+    .nlargest(3, "marge_nette")
+    [["entreprise", "marge_nette"]])
+```
+
+Un **enchaînement** de méthodes se lit de haut en bas, comme une recette. `assign` renvoie un
+nouveau DataFrame et laisse l'original intact.
+
+## pandas 3 : la copie à l'écriture
+
+```{python}
+tesla = entreprises[entreprises["ticker"] == "TSLA"]
+tesla["chiffre_affaires"] = 0              # modifie la sélection…
+print(entreprises.loc[entreprises["ticker"] == "TSLA", "chiffre_affaires"].head(3).tolist())
+```
+
+Depuis pandas 3.0, une sélection se comporte **toujours comme une copie** : modifier `tesla` ne
+touche jamais `entreprises`. Pour modifier l'original, on écrit dans l'original, avec `.loc` :
+
+```python
+entreprises.loc[entreprises["ticker"] == "TSLA", "colonne"] = valeur
+```
+
+::: {.muted}
+Le vieux message `SettingWithCopyWarning`, que l'IA mentionne encore souvent, n'existe plus.
+:::
+
+# Résumer par groupe {background-color="#E3120B" style="color:#F7F4ED"}
+
+## `groupby` : découper, appliquer, combiner
+
+```{python}
+a23.groupby("secteur")["marge_nette"].median().sort_values(ascending=False).round(3)
+```
+
+1. **Découper** les lignes par secteur
+2. **Appliquer** la médiane à chaque morceau
+3. **Combiner** les résultats en une Series
+
+## Plusieurs résumés : `.agg`
+
+```{python}
+(a23.groupby("secteur")
+    .agg(n=("ticker", "count"),
+         ventes_totales=("chiffre_affaires", "sum"),
+         marge_mediane=("marge_nette", "median"),
+         intensite_rd=("intensite_rd", "mean"))
+    .sort_values("marge_mediane", ascending=False)
+    .round(3))
+```
+
+::: {.warn}
+Médiane de **3 entreprises** pour l'automobile, **une seule** pour les médias : la colonne `n`
+n'est pas décorative. Un résumé sans son effectif ne se lit pas.
+:::
+
+## Par entreprise, sur quinze ans
+
+```{python}
+(df.groupby("entreprise")["marge_nette"]
+   .agg(["mean", "min", "max"])
+   .sort_values("mean", ascending=False)
+   .head(6)
+   .round(3))
+```
+
+Une moyenne sur quinze ans lisse les accidents d'une année. Laquelle est la « vraie » performance ?
+La question est **stratégique**, pas technique.
+
+# Les valeurs manquantes {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Combien, et où ?
+
+```{python}
+entreprises.isna().sum()
+```
+
+## Une absence qui a un sens
+
+```{python}
+(entreprises.groupby("secteur")["rd"]
+    .apply(lambda s: s.isna().mean())
+    .sort_values(ascending=False)
+    .round(2))
+```
+
+::: {.step}
+Les détaillants et les restaurants ne publient **pas** de ligne R-D : ils n'en déclarent pas
+séparément. Ce n'est pas une R-D nulle — c'est une R-D **non mesurée**. Remplacer ces `NaN`
+par 0 serait affirmer quelque chose que la source ne dit pas.
+:::
+
+## Ce que pandas fait des `NaN`
+
+```{python}
+rd = entreprises["rd"]
+print("moyenne (NaN ignorés) :", round(rd.mean(), 1))
+print("moyenne (NaN = 0)     :", round(rd.fillna(0).mean(), 1))
+print("lignes avec R-D       :", rd.notna().sum(), "sur", len(rd))
+```
+
+Par défaut, `mean`, `sum`, `median` **ignorent** les valeurs manquantes (`skipna=True`). C'est
+commode, et c'est une décision : votre moyenne porte sur un sous-ensemble.
+
+## À retenir
+
+| Je veux… | J'écris… |
+|---|---|
+| la taille du tableau | `df.shape`, `df.info()` |
+| une colonne / plusieurs | `df["x"]` / `df[["x", "y"]]` |
+| des lignes par condition | `df[(cond1) & (cond2)]`, `df.query("…")` |
+| par étiquette / position | `df.loc[…, …]` / `df.iloc[…, …]` |
+| trier, classer | `sort_values`, `nlargest` |
+| une nouvelle colonne | `df["z"] = df["x"] / df["y"]`, `assign` |
+| un résumé par groupe | `df.groupby("g").agg(nom=("x", "median"))` |
+| les manquants | `isna().sum()`, `notna()` |
+
+**Pratique :** *Quelles entreprises créent le plus de valeur — selon quelle mesure, et dans quel
+secteur ?*

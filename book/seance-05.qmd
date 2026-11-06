@@ -1,0 +1,275 @@
+---
+title: "Représenter les données"
+---
+
+```{python}
+#| include: false
+import os, sys
+os.chdir("..")
+sys.path.insert(0, "slides")
+import pandas as pd
+import numpy as np
+from plotstyle import setup, CL
+plt = setup()
+import seaborn as sns
+pays = pd.read_csv("data/pays.csv")
+ent = pd.read_csv("data/entreprises.csv")
+p23 = pays[pays["annee"] == 2023]
+```
+
+## Une manchette, plusieurs vérités
+
+« L'Amérique crée plus de valeur que tout autre pays. » La phrase circule, et elle est vraie —
+pour une certaine définition de *valeur*. Si la valeur est la production totale, les
+États-Unis dominent. Si elle est la production par habitant, ou la croissance, ou la capacité à
+attirer l'investissement étranger, le classement change du tout au tout.
+
+```{python}
+#| label: tbl-rangs
+#| tbl-cap: "Le rang des États-Unis en 2023 selon quatre mesures de la « valeur ». Source : Banque mondiale."
+mesures = {"pib_milliards_usd": "PIB total",
+           "pib_hab_usd": "PIB par habitant",
+           "croissance_pib": "Croissance du PIB",
+           "ide_entrants_pct_pib": "IDE entrants (% du PIB)"}
+rangs = pd.DataFrame({
+    "Mesure": list(mesures.values()),
+    "Rang des États-Unis": [int(p23[m].rank(ascending=False)[p23["iso3"] == "USA"].iloc[0]) for m in mesures],
+    "Pays mesurés": [int(p23[m].notna().sum()) for m in mesures],
+})
+rangs
+```
+
+Aucune de ces quatre lignes n'est fausse. Le choix de la mesure est un choix d'argument, et le
+graphique qui suit ce choix le rend visible — ou le cache. Ce chapitre traite de ce passage :
+de la donnée à l'image, et de l'image à la décision.
+
+## Pourquoi regarder plutôt que résumer
+
+En 1973, le statisticien Francis Anscombe publie quatre petits jeux de onze points
+[@anscombe1973]. Leurs moyennes, leurs variances et leur corrélation sont identiques à la
+deuxième décimale. Un tableau de statistiques résumées les déclare interchangeables.
+
+```{python}
+#| label: fig-anscombe
+#| fig-cap: "Le quartet d'Anscombe : quatre jeux de données aux statistiques résumées identiques, et la même droite de régression."
+#| fig-width: 8
+#| fig-height: 2.6
+x  = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
+x4 = [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8]
+ys = {"I":   [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68],
+      "II":  [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74],
+      "III": [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73],
+      "IV":  [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]}
+fig, axes = plt.subplots(1, 4, figsize=(8, 2.6), sharex=True, sharey=True)
+for ax, (jeu, y) in zip(axes, ys.items()):
+    xx = x4 if jeu == "IV" else x
+    ax.scatter(xx, y, color=CL.ink, s=12)
+    b, a = np.polyfit(xx, y, 1)
+    ax.plot([3, 20], [a + 3 * b, a + 20 * b], color=CL.accent, lw=1.2)
+    ax.set_title(f"Jeu {jeu}  ·  r = {np.corrcoef(xx, y)[0, 1]:.2f}", loc="left", fontsize=8)
+plt.show()
+```
+
+Le premier jeu est une relation linéaire bruitée ; le deuxième, une courbe ; le troisième, une
+droite parfaite déviée par un seul point ; le quatrième n'a **aucune** relation, sauf celle
+qu'un point isolé fabrique. La leçon est toujours valable : on regarde *avant* de résumer, et
+on résume *ce qu'on a vu*.
+
+## Ce que l'œil lit bien
+
+Un graphique transforme des nombres en propriétés visuelles : une position, une longueur, un
+angle, une surface, une couleur. Cleveland et McGill ont mesuré, par des expériences, la
+précision avec laquelle on lit chacune [@cleveland1984]. L'ordre qu'ils obtiennent est devenu
+la règle de base de la visualisation :
+
+1. la position sur une échelle commune ;
+2. la position sur des échelles non alignées ;
+3. la longueur ;
+4. l'angle et la pente ;
+5. l'aire ;
+6. le volume, la saturation et la teinte.
+
+La conséquence pratique est simple. La comparaison la plus importante doit être confiée à
+l'encodage le plus précis. Le diagramme circulaire encode par l'angle ; la barre, par la
+position. Les mêmes nombres, présentés des deux façons, ne se lisent pas avec la même
+précision (@fig-angle).
+
+```{python}
+#| label: fig-angle
+#| fig-cap: "Part du PIB mondial en 2023 : les mêmes six nombres, lus par l'angle et par la position. Source : Banque mondiale."
+#| fig-width: 8
+#| fig-height: 3
+top5 = p23.nlargest(5, "pib_milliards_usd").set_index("pays")["pib_milliards_usd"]
+total = p23["pib_milliards_usd"].sum()
+parts = pd.concat([top5, pd.Series({"Reste du monde": total - top5.sum()})]) / total
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 3))
+a1.pie(parts, labels=parts.index, colors=CL.ramp, textprops={"fontsize": 7})
+s = parts.sort_values() * 100
+a2.barh(s.index, s, color=CL.accent)
+for i, v in enumerate(s):
+    a2.text(v + 0.5, i, f"{v:.0f} %", va="center", fontsize=7)
+a2.set_xlabel("Part du PIB mondial (%)")
+plt.show()
+print(f"Part des États-Unis : {parts['United States']:.1%}")
+```
+
+## L'anatomie d'une figure
+
+En matplotlib, une figure se construit en deux objets : `fig`, la page, et `ax`, le système
+d'axes où l'on dessine. Écrire `fig, ax = plt.subplots()` puis appeler les méthodes de `ax`
+plutôt que les fonctions `plt.*` garde chaque instruction attachée à un panneau précis — ce qui
+devient indispensable dès qu'il y en a plusieurs.
+
+Cinq éléments séparent une figure de travail d'une figure que l'on remet :
+
+- un **titre qui énonce le message** (« L'écart entre les États-Unis et le Canada se creuse »),
+  plutôt que le sujet (« PIB par habitant ») ;
+- une **unité** sur chaque axe ;
+- la **source**, en petit, sous la figure ;
+- un **étiquetage direct** des séries, qui évite l'aller-retour vers une légende ;
+- un enregistrement à la bonne résolution : `fig.savefig("sorties/f.png", dpi=200)`, appelé
+  **avant** `plt.show()`.
+
+```{python}
+#| label: fig-voisins
+#| fig-cap: "PIB par habitant, en milliers de dollars US courants, 2000-2023. Source : Banque mondiale."
+#| fig-width: 7
+#| fig-height: 3.6
+choix = {"USA": CL.warn, "CAN": CL.accent, "JPN": CL.good, "MEX": CL.muted}
+fig, ax = plt.subplots(figsize=(7, 3.6))
+for iso, coul in choix.items():
+    d = pays[pays["iso3"] == iso].dropna(subset=["pib_hab_usd"])
+    ax.plot(d["annee"], d["pib_hab_usd"] / 1000, color=coul)
+    fin = d.iloc[-1]
+    ax.text(fin["annee"] + 0.4, fin["pib_hab_usd"] / 1000, fin["pays"], color=coul,
+            va="center", fontsize=8)
+ax.set_xlim(2000, 2027)
+ax.set_title("L'écart entre les États-Unis et le Canada se creuse depuis 2014", loc="left")
+ax.set_ylabel("milliers de $ US courants")
+plt.show()
+ecart = pays[pays["iso3"].isin(["USA", "CAN"]) & pays["annee"].isin([2014, 2023])] \
+    .pivot(index="annee", columns="iso3", values="pib_hab_usd")
+print((ecart["USA"] - ecart["CAN"]).round(0))
+```
+
+## Choisir le graphique selon la question
+
+Le bon graphique se choisit à partir de la question, jamais à partir du menu d'un logiciel.
+Cinq questions couvrent l'essentiel du travail d'un analyste en stratégie.
+
+| Question | Forme | En Python |
+|---|---|---|
+| Comparer des catégories | Barres horizontales triées | `ax.barh`, `sns.barplot` |
+| Suivre une évolution | Ligne | `ax.plot`, `sns.lineplot` |
+| Voir une distribution | Histogramme, boîte à moustaches | `sns.histplot`, `sns.boxplot` |
+| Voir une relation | Nuage de points, souvent en échelle log | `sns.scatterplot` |
+| Montrer une composition | Barres empilées | `df.plot.barh(stacked=True)` |
+
+La distribution du PIB par habitant illustre pourquoi l'échelle compte. Sur une échelle
+linéaire, presque tous les pays s'écrasent dans la première classe ; sur une échelle
+logarithmique, la forme apparaît (@fig-distribution).
+
+```{python}
+#| label: fig-distribution
+#| fig-cap: "Distribution du PIB par habitant en 2023, échelle linéaire et logarithmique. Source : Banque mondiale."
+#| fig-width: 8
+#| fig-height: 2.8
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 2.8))
+sns.histplot(p23["pib_hab_usd"] / 1000, bins=30, ax=a1, color=CL.accent)
+a1.set(xlabel="milliers de $", ylabel="pays")
+sns.histplot(p23["pib_hab_usd"], bins=30, log_scale=True, ax=a2, color=CL.accent)
+a2.set(xlabel="$ (échelle log)", ylabel="")
+usa = p23.loc[p23["iso3"] == "USA", "pib_hab_usd"].iloc[0]
+a2.axvline(usa, color=CL.warn)
+plt.show()
+print(f"moyenne {p23['pib_hab_usd'].mean():,.0f} $ · médiane {p23['pib_hab_usd'].median():,.0f} $ · "
+      f"pays devant les États-Unis : {(p23['pib_hab_usd'] > usa).sum()}")
+```
+
+L'écart entre la moyenne et la médiane est à lui seul un diagnostic : quelques économies très
+riches tirent la moyenne vers le haut. Et plusieurs des pays qui devancent les États-Unis sont
+de petits territoires — micro-États, places financières — dont le PIB par habitant dit peu de
+chose sur une stratégie d'implantation.
+
+## seaborn : la statistique en une ligne
+
+seaborn s'appuie sur matplotlib et parle directement le langage des DataFrames : on lui donne
+`data=`, puis les noms de colonnes pour `x`, `y`, `hue` (la couleur), `col` (les panneaux).
+La boîte à moustaches par secteur résume quinze ans de marges nettes pour les 32 entreprises
+du cours (@fig-boites).
+
+```{python}
+#| label: fig-boites
+#| fig-cap: "Marge nette (résultat net / chiffre d'affaires) par secteur, 32 entreprises, 2010-2024. Source : SEC EDGAR."
+#| fig-width: 7.5
+#| fig-height: 3.6
+ent["marge"] = ent["resultat_net"] / ent["chiffre_affaires"] * 100
+ordre = ent.groupby("secteur")["marge"].median().sort_values().index
+fig, ax = plt.subplots(figsize=(7.5, 3.6))
+sns.boxplot(data=ent, y="secteur", x="marge", order=ordre, color=CL.line, ax=ax, fliersize=2)
+ax.axvline(0, color=CL.warn, lw=1)
+ax.set(xlim=(-30, 60), xlabel="Marge nette (%)", ylabel="")
+plt.show()
+ent.groupby("secteur")["marge"].median().sort_values().round(1)
+```
+
+Le trait central est la médiane ; la boîte couvre la moitié centrale des observations ; les
+points isolés sont des années exceptionnelles. Le commerce de détail travaille sur des marges
+minces, la technologie et la pharmacie sur des marges épaisses : ce sont deux modèles
+d'affaires, pas deux niveaux de compétence.
+
+Les **petits multiples** — un panneau par groupe, avec `sns.relplot(..., col="secteur")` —
+permettent de comparer des formes d'évolution sans superposer trente lignes. Le choix
+`sharey=True` ou `False` change la lecture : une échelle commune compare les niveaux, une
+échelle libre compare les formes.
+
+## plotly : explorer avant de conclure
+
+Pour explorer, un graphique interactif vaut mieux qu'un graphique figé : on survole un point
+pour savoir quel pays il représente, on zoome sur un groupe. `plotly.express` produit ces
+figures avec la même syntaxe que seaborn.
+
+::: {.content-visible when-format="html"}
+```{python}
+import plotly.express as px
+d = p23.dropna(subset=["pib_hab_usd", "ide_entrants_pct_pib", "population"])
+d = d[d["ide_entrants_pct_pib"].between(-10, 40)]
+fig = px.scatter(d, x="pib_hab_usd", y="ide_entrants_pct_pib", size="population",
+                 color="region", hover_name="pays", log_x=True, size_max=40,
+                 labels={"pib_hab_usd": "PIB par habitant ($, log)",
+                         "ide_entrants_pct_pib": "IDE entrants (% du PIB)"})
+fig.show()
+```
+:::
+
+En survolant les points les plus hauts, on découvre que l'IDE rapporté au PIB est souvent le
+plus élevé dans de petites économies ou des places financières : la mesure capte autant les
+flux de passage que l'attractivité productive. C'est une conclusion que l'exploration
+interactive fait apparaître, et qu'un graphique statique destiné à un rapport devra ensuite
+énoncer clairement.
+
+## Les graphiques qui trompent sans mentir
+
+Trois procédés reviennent dans la presse comme dans les présentations d'entreprise.
+
+**L'axe tronqué.** Une barre encode une longueur ; si l'axe commence à 80 plutôt qu'à 0, un
+écart de dix pour cent paraît un écart du simple au triple. Les lignes, qui encodent une
+position, peuvent zoomer sans tromper.
+
+**Le double axe.** Deux séries d'unités différentes sur deux échelles verticales : comme
+chaque échelle se choisit librement, l'auteur décide où les courbes se croisent. Deux
+panneaux disent la même chose sans ce pouvoir arbitraire.
+
+**Le camembert en trois dimensions.** Il cumule l'encodage le moins précis (l'angle) et une
+perspective qui grossit la part du premier plan. Des barres horizontales triées le remplacent
+toujours avec profit.
+
+## À retenir
+
+- Une affirmation sur la « valeur » n'est vérifiable qu'une fois la **mesure** choisie, et le
+  graphique rend ce choix visible.
+- On **regarde** les données avant de les résumer (Anscombe), et on confie la comparaison
+  principale à la **position** (Cleveland et McGill).
+- Une figure remise a un titre-message, des unités, une source et, si possible, un
+  étiquetage direct.
+- matplotlib pour le contrôle, seaborn pour la statistique, plotly pour l'exploration.

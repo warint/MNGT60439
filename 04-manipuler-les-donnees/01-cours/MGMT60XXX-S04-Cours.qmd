@@ -1,0 +1,552 @@
+---
+title: "Séance 4 : Manipuler les données"
+subtitle: "Nettoyer, joindre, remodeler, agréger — avant de conclure quoi que ce soit"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+jupyter: mgmt60xxx
+execute:
+  echo: true
+  warning: false
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 04 · Thierry Warin, PhD · HEC Montréal"
+---
+
+```{python}
+#| include: false
+# Les exemples s'écrivent comme si on travaillait depuis la racine du dépôt.
+import os, sys
+os.chdir("../..")
+sys.path.insert(0, "slides")
+import pandas as pd
+import numpy as np
+pd.set_option("display.width", 120)
+pd.set_option("display.max_columns", 12)
+```
+
+## Plan · La séance {.center .scrollable}
+
+1. Deux questions de stratégie
+2. Nettoyer : types, texte, doublons, valeurs manquantes
+3. Joindre : `merge` et `concat`
+4. Remodeler : format long, format large
+5. Agréger : `groupby`, `agg`, `transform`
+6. Le temps : décaler, croître, lisser
+7. Les fusions-acquisitions créent-elles de la valeur ? Un premier regard
+
+## À quoi sert la séance 4 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Comparer une entreprise à **son** secteur plutôt qu'à la moyenne de tout le monde
+- Lire la réaction de la Bourse à une annonce d'acquisition
+- Savoir pourquoi un premier regard n'est **pas** une étude d'événement
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- Corriger les types avec `astype`, `pd.to_numeric` et `.str`
+- Joindre deux tables avec `merge(..., validate=, indicator=)`
+- Passer du long au large avec `pivot` et `melt`
+- Agréger avec `groupby().agg()` et `groupby().transform()`
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Compter les lignes **avant et après** chaque jointure
+- Ne jamais remplir une valeur manquante sans le signaler
+- Garder les données « rangées » : une ligne par observation
+
+::::
+
+:::::
+
+# Deux questions de stratégie {background-color="#E3120B" style="color:#F7F4ED"}
+
+## « Qui sont mes vrais concurrents ? »
+
+Dire « Tesla a un rendement des actifs de 14 % » ne veut rien dire tant qu'on ne sait pas
+**à qui** la comparer.
+
+| Comparer à | Ce qu'il faut savoir faire |
+|---|---|
+| La moyenne de toutes les entreprises | `mean()` — facile, mais trompeur |
+| La moyenne de **son secteur, la même année** | `groupby(["secteur", "annee"]).transform("mean")` |
+| Les entreprises du même pays | `merge` avec une table de pays |
+
+## « Les fusions-acquisitions créent-elles de la valeur ? »
+
+Le 18 janvier 2022, Microsoft annonce l'acquisition d'Activision Blizzard. Le 13 mars 2023,
+Pfizer annonce celle de Seagen.
+
+Pour regarder ce qu'en pense la Bourse, il faut :
+
+1. **importer** des cours quotidiens (séance 3),
+2. **calculer** des rendements, entreprise par entreprise,
+3. **aligner** l'entreprise et le marché sur les mêmes dates,
+4. **découper** une fenêtre autour de l'annonce, et **cumuler**.
+
+::: {.muted}
+Ce sont quatre opérations de manipulation. La méthode statistique complète — l'étude
+d'événement — viendra avec mes collègues (MacKinlay, 1997).
+:::
+
+# Nettoyer {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Des données comme on les reçoit
+
+```{python}
+brut = pd.DataFrame({
+    "Entreprise ": [" Tesla", "Ford", "ford", "General Motors", "Ford"],
+    "Annee":       ["2023", "2023", "2023", "2023", "2023"],
+    "Ventes (M$)": ["96 773", "176 191", "176 191", "157 658", "176 191"],
+    "R&D":         ["3 969", "8 200", "8 200", "n.d.", "8 200"],
+})
+brut
+```
+
+```{python}
+brut.dtypes
+```
+
+Tout est du texte (`object` ou `str`). On ne peut **rien** additionner.
+
+## Étape 1 · Des noms de colonnes utilisables
+
+```{python}
+propre = brut.rename(columns={
+    "Entreprise ": "entreprise",
+    "Annee": "annee",
+    "Ventes (M$)": "ventes",
+    "R&D": "rd",
+})
+propre.columns.tolist()
+```
+
+::: {.step}
+Règle du cours : noms en **minuscules**, sans accents, sans espaces ni symboles. `df.ventes`
+et `df["ventes"]` fonctionnent alors tous les deux, et personne ne cherche une espace invisible.
+:::
+
+## Étape 2 · Le texte : `.str`
+
+```{python}
+propre["entreprise"] = propre["entreprise"].str.strip().str.title()
+propre["entreprise"].tolist()
+```
+
+`.str` applique une méthode de texte à **chaque** cellule : `strip` retire les espaces aux
+extrémités, `title` met une majuscule à chaque mot, `lower`, `replace`, `contains`…
+
+## Étape 3 · Les nombres : `astype` et `pd.to_numeric`
+
+```{python}
+propre["annee"] = propre["annee"].astype(int)
+propre["ventes"] = propre["ventes"].str.replace(" ", "").astype(float)
+propre["rd"] = pd.to_numeric(propre["rd"].str.replace(" ", ""), errors="coerce")
+propre
+```
+
+::: {.warn}
+`astype(float)` **échoue** sur `"n.d."`. `pd.to_numeric(..., errors="coerce")` le transforme en
+`NaN`. C'est voulu : vous **voyez** ensuite combien de valeurs ont été perdues.
+:::
+
+## Étape 4 · Les doublons
+
+```{python}
+print(propre.duplicated().sum(), "ligne(s) en double")
+propre = propre.drop_duplicates()
+propre
+```
+
+Sans l'étape 2, `"ford"` et `"Ford"` auraient été deux entreprises différentes. **L'ordre des
+étapes compte** : on normalise le texte, *puis* on cherche les doublons.
+
+## Et dans les données du cours ?
+
+```{python}
+entreprises = pd.read_csv("data/entreprises.csv")
+print(entreprises.duplicated(["ticker", "annee"]).sum(), "doublon entreprise × année")
+entreprises.isna().sum()
+```
+
+## Valeurs manquantes : trois stratégies
+
+| Stratégie | Code | Quand |
+|---|---|---|
+| **Retirer** | `dropna(subset=["rd"])` | La variable est indispensable à l'analyse |
+| **Remplir** | `fillna(0)` | Vous **savez** que l'absence signifie zéro |
+| **Signaler** | `df["rd_manquant"] = df["rd"].isna()` | Toujours, avant de retirer ou de remplir |
+
+::: {.warn}
+Amazon ne publie pas de ligne « R-D » ; elle dépense pourtant des dizaines de milliards en
+technologie. Remplir par zéro ferait d'Amazon l'entreprise la **moins** innovante du
+commerce de détail. **Ne remplissez jamais à l'aveugle.**
+:::
+
+## Qui ne publie pas de R-D ?
+
+```{python}
+entreprises["rd_manquant"] = entreprises["rd"].isna()
+(entreprises.groupby("entreprise")["rd_manquant"].mean()
+    .loc[lambda s: s > 0].sort_values(ascending=False).round(2))
+```
+
+Une valeur manquante est souvent une **information** : ici, sur la manière dont chaque
+entreprise présente ses comptes.
+
+# Joindre {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Deux tables, une clé
+
+```{python}
+secteurs = pd.read_csv("data/secteurs.csv")
+secteurs
+```
+
+`entreprises` a une colonne `secteur` ; `secteurs` aussi. C'est la **clé** de la jointure.
+
+## `merge` : la jointure
+
+```{python}
+avant = len(entreprises)
+ent_sect = entreprises.merge(secteurs, on="secteur", how="left", validate="m:1")
+print(avant, "→", len(ent_sect), "lignes")
+ent_sect[["entreprise", "annee", "secteur", "description"]].head(3)
+```
+
+- `how="left"` : on garde **toutes** les lignes de la table de gauche.
+- `validate="m:1"` : plusieurs entreprises par secteur, **un seul** secteur par ligne de
+  `secteurs`. Si ce n'est pas vrai, pandas **s'arrête** au lieu de dupliquer en silence.
+
+## Les quatre façons de joindre
+
+| `how=` | Garde | Usage typique |
+|---|---|---|
+| `"inner"` | Les clés présentes **des deux côtés** | Analyse sur l'échantillon commun |
+| `"left"` | Toutes les lignes de gauche | Ajouter des attributs à vos observations |
+| `"right"` | Toutes les lignes de droite | Rare — inversez plutôt les tables |
+| `"outer"` | Tout, des deux côtés | Diagnostiquer ce qui ne correspond pas |
+
+::: {.step}
+**Comptez les lignes avant et après chaque jointure.** Un `merge` qui ajoute des lignes
+sans que vous l'ayez voulu est l'erreur la plus coûteuse — et la plus silencieuse — de
+l'analyse de données.
+:::
+
+## Joindre les entreprises à leur pays
+
+`pays_siege` contient `"USA"` ; `pays.csv` a une colonne `iso3`. Les noms diffèrent : on le dit.
+
+```{python}
+pays = pd.read_csv("data/pays.csv")
+ent_pays = entreprises.merge(
+    pays[["iso3", "annee", "pib_hab_usd", "croissance_pib"]],
+    left_on=["pays_siege", "annee"], right_on=["iso3", "annee"],
+    how="left", validate="m:1", indicator=True,
+)
+ent_pays["_merge"].value_counts()
+```
+
+## `indicator=True` : qui n'a pas trouvé de partenaire ?
+
+```{python}
+ent_pays.loc[ent_pays["_merge"] == "left_only", "annee"].value_counts()
+```
+
+Les 32 lignes orphelines sont toutes en **2024** : la Banque mondiale s'arrête en 2023
+dans notre fichier. Ce n'est pas une erreur de code, c'est une **limite des données** — et
+`how="inner"` l'aurait cachée en supprimant une année entière.
+
+## `concat` : empiler des tables
+
+```{python}
+tesla = entreprises[entreprises["ticker"] == "TSLA"]
+ford = entreprises[entreprises["ticker"] == "F"]
+auto = pd.concat([tesla, ford], ignore_index=True)
+print(len(tesla), "+", len(ford), "=", len(auto))
+```
+
+| | `merge` | `concat` |
+|---|---|---|
+| Ajoute | des **colonnes** (côte à côte) | des **lignes** (les unes sous les autres) |
+| Aligne sur | une clé | les noms de colonnes |
+
+# Remodeler {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Des données « rangées »
+
+Wickham (2014) : des données sont **rangées** (*tidy*) quand
+
+1. chaque **variable** est une colonne,
+2. chaque **observation** est une ligne,
+3. chaque **type d'unité** est une table.
+
+`entreprises.csv` est rangé : une ligne = une entreprise × une année. Mais beaucoup de
+sources — la Banque mondiale, Excel, les rapports annuels — publient un format **large** :
+une colonne par année.
+
+## Du long au large : `pivot`
+
+```{python}
+large = (pays[pays["iso3"].isin(["CAN", "USA", "MEX", "CHN"]) & (pays["annee"] >= 2019)]
+         .pivot(index="pays", columns="annee", values="pib_hab_usd")
+         .round(0))
+large
+```
+
+C'est le format de la Banque mondiale : lisible pour un humain, **inutilisable** pour un
+`groupby` ou un graphique par année.
+
+## Du large au long : `melt`
+
+```{python}
+long = (large.reset_index()
+        .melt(id_vars="pays", var_name="annee", value_name="pib_hab_usd"))
+print(long.shape)
+long.head(6)
+```
+
+`melt` est l'opération que vous ferez **le plus souvent** sur une donnée téléchargée.
+
+## `pivot_table` : remodeler **et** agréger
+
+```{python}
+(entreprises
+ .assign(marge=entreprises["resultat_net"] / entreprises["chiffre_affaires"])
+ .pivot_table(index="secteur", columns="annee", values="marge", aggfunc="median")
+ .loc[:, [2019, 2020, 2021, 2022, 2023]]
+ .round(3))
+```
+
+`pivot` refuse les doublons ; `pivot_table` les **agrège** (ici, la médiane des entreprises du
+secteur).
+
+# Agréger {background-color="#E3120B" style="color:#F7F4ED"}
+
+## `groupby` + `agg` : un tableau par secteur
+
+```{python}
+(entreprises[entreprises["annee"] == 2023]
+ .groupby("secteur")
+ .agg(n=("ticker", "nunique"),
+      ventes_mediane=("chiffre_affaires", "median"),
+      rd_totale=("rd", "sum"),
+      rd_publiee=("rd", "count"))
+ .sort_values("ventes_mediane", ascending=False))
+```
+
+L'**agrégation nommée** — `nom=(colonne, fonction)` — donne des colonnes lisibles d'un coup.
+
+## `agg` réduit, `transform` conserve
+
+| | `agg` | `transform` |
+|---|---|---|
+| Sortie | **une ligne par groupe** | **autant de lignes qu'au départ** |
+| Usage | Un tableau de synthèse | Comparer chaque ligne à son groupe |
+
+```{python}
+entreprises["roa"] = entreprises["resultat_net"] / entreprises["actifs_totaux"]
+entreprises["roa_secteur"] = (entreprises
+                              .groupby(["secteur", "annee"])["roa"]
+                              .transform("mean"))
+entreprises["ecart_secteur"] = entreprises["roa"] - entreprises["roa_secteur"]
+```
+
+## Les vrais concurrents : l'écart au secteur
+
+```{python}
+(entreprises[entreprises["annee"] == 2023]
+ [["entreprise", "secteur", "roa", "roa_secteur", "ecart_secteur"]]
+ .sort_values("ecart_secteur", ascending=False)
+ .round(3).head(8))
+```
+
+## … et au bas du classement
+
+```{python}
+(entreprises[entreprises["annee"] == 2023]
+ [["entreprise", "secteur", "roa", "roa_secteur", "ecart_secteur"]]
+ .sort_values("ecart_secteur")
+ .round(3).head(6))
+```
+
+::: {.warn}
+Microsoft a un rendement des actifs supérieur à celui de la plupart des 32 entreprises,
+mais **inférieur** à celui de son secteur en 2023. Le choix du groupe de comparaison
+change le diagnostic.
+:::
+
+## Une limite à garder en tête
+
+```{python}
+entreprises.groupby("secteur")["ticker"].nunique().sort_values()
+```
+
+Netflix est **seule** dans son secteur : son écart au secteur vaut zéro par construction.
+Une moyenne de groupe calculée sur une ou deux entreprises ne dit presque rien.
+
+# Le temps {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Trier d'abord, décaler ensuite
+
+```{python}
+entreprises = entreprises.sort_values(["ticker", "annee"])
+entreprises["ventes_an_prec"] = entreprises.groupby("ticker")["chiffre_affaires"].shift(1)
+entreprises["croissance"] = entreprises.groupby("ticker")["chiffre_affaires"].pct_change()
+(entreprises[entreprises["ticker"] == "TSLA"]
+ [["annee", "chiffre_affaires", "ventes_an_prec", "croissance"]].tail(6).round(3))
+```
+
+::: {.warn}
+Sans `groupby("ticker")`, `shift` prendrait l'année 2024 de *Tesla* comme « année
+précédente » de 2010 pour l'entreprise suivante. Dans un panel, on décale **toujours par
+entité**.
+:::
+
+## Lisser : la moyenne mobile
+
+```{python}
+entreprises["croissance_3ans"] = (entreprises.groupby("ticker")["croissance"]
+                                  .transform(lambda s: s.rolling(3).mean()))
+(entreprises[entreprises["secteur"] == "Automobile"]
+ .pivot(index="annee", columns="entreprise", values="croissance_3ans")
+ .loc[2018:].round(3))
+```
+
+# Les F&A créent-elles de la valeur ? {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Importer les cours, une seule fois
+
+```{python}
+from pathlib import Path
+import yfinance as yf
+
+def cours(ticker, debut="2021-06-01", fin="2023-12-31"):
+    """Cours de clôture ajustés, mis en cache dans data/cache/ au premier appel."""
+    fichier = Path("data/cache") / f"{ticker}.parquet"
+    if not fichier.exists():
+        fichier.parent.mkdir(parents=True, exist_ok=True)
+        d = yf.download(ticker, start=debut, end=fin, progress=False, auto_adjust=True)
+        d.columns = [c[0] if isinstance(c, tuple) else c for c in d.columns]
+        d.to_parquet(fichier)
+    return pd.read_parquet(fichier)["Close"]
+
+prix = pd.DataFrame({t: cours(t) for t in ["MSFT", "PFE", "SPY"]})
+prix.tail(3).round(2)
+```
+
+## Des prix aux rendements
+
+```{python}
+rendements = prix.pct_change().dropna()
+rendements.describe().loc[["mean", "std", "min", "max"]].round(4)
+```
+
+`SPY` est un fonds indiciel qui réplique le S&P 500 : on l'utilise comme **le marché**.
+
+## Rendement anormal, version naïve
+
+$$\text{rendement anormal}_t = r_{\text{entreprise},t} - r_{\text{marché},t}$$
+
+```{python}
+def fenetre(ticker, annonce, avant=5, apres=5):
+    r = rendements[[ticker, "SPY"]].copy()
+    r["anormal"] = r[ticker] - r["SPY"]
+    i = r.index.get_loc(pd.Timestamp(annonce))       # position du jour de l'annonce
+    w = r.iloc[i - avant : i + apres + 1].copy()
+    w["jour"] = range(-avant, apres + 1)
+    w["cumul"] = w["anormal"].cumsum()
+    return w
+
+msft = fenetre("MSFT", "2022-01-18")
+msft[["jour", "MSFT", "SPY", "anormal", "cumul"]].round(4)
+```
+
+## Pfizer et Seagen
+
+```{python}
+pfe = fenetre("PFE", "2023-03-13")
+pfe[["jour", "PFE", "SPY", "anormal", "cumul"]].round(4)
+```
+
+## Les deux fenêtres côte à côte
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.2
+from plotstyle import setup, CL
+plt = setup()
+
+fig, ax = plt.subplots()
+ax.plot(msft["jour"], msft["cumul"] * 100, marker="o",
+        color=CL.accent, label="Microsoft · Activision")
+ax.plot(pfe["jour"], pfe["cumul"] * 100, marker="o",
+        color=CL.warn, label="Pfizer · Seagen")
+ax.axvline(0, color=CL.muted, lw=1)
+ax.axhline(0, color=CL.muted, lw=0.8)
+ax.set_xlabel("jours de Bourse autour de l'annonce")
+ax.set_title("Rendement anormal cumulé (%)")
+ax.legend(frameon=False)
+plt.show()
+```
+
+## Ce que ce calcul n'est **pas**
+
+| Ce premier regard | Une étude d'événement (MacKinlay, 1997) |
+|---|---|
+| Marché = SPY, bêta implicite de 1 | Modèle de marché estimé sur une **période d'estimation** |
+| Deux annonces | Des centaines d'annonces, puis une moyenne |
+| Aucun test | Un test statistique de l'anormalité |
+| Fenêtre choisie à l'œil | Fenêtre justifiée, robustesse vérifiée |
+| Ignore les fuites avant l'annonce | Les cherche explicitement |
+
+::: {.warn}
+Avec deux annonces et un écart-type quotidien de l'ordre du pour cent, aucun de ces deux
+cumuls ne permet de conclure que l'acquisition a créé ou détruit de la valeur. **Le code est
+juste ; la conclusion serait fausse.**
+:::
+
+## Ce que vous savez faire maintenant
+
+| Opération | pandas |
+|---|---|
+| Corriger un type | `astype`, `pd.to_numeric(errors="coerce")` |
+| Nettoyer du texte | `.str.strip()`, `.str.title()`, `.str.replace()` |
+| Retirer des doublons | `drop_duplicates()` |
+| Joindre | `merge(how=, validate=, indicator=)` |
+| Empiler | `pd.concat` |
+| Remodeler | `pivot`, `pivot_table`, `melt` |
+| Agréger / comparer au groupe | `groupby().agg()`, `groupby().transform()` |
+| Le temps, par entité | `groupby().shift()`, `pct_change()`, `rolling()` |
+
+**Pratique :** *Qui sont les vrais concurrents de votre entreprise — et que dit la Bourse de
+sa dernière acquisition ?*

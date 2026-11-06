@@ -1,0 +1,147 @@
+---
+title: "Séance 5 : Pratique"
+subtitle: "Le graphique qui défend, le graphique qui réfute"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 05 pratique · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · L'atelier {.center .scrollable}
+
+1. Quatre-vingt-dix minutes
+2. Avant de commencer
+3. Défendre la manchette — 20 min
+4. La réfuter — 25 min
+5. Les entreprises : où se crée la marge ? — 20 min
+6. Explorer, puis rédiger — 25 min
+7. Ce qui coûte des points
+
+# Pratique {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### « L'Amérique crée plus de valeur que tout autre pays. » Vrai ou faux — selon quel graphique ?
+:::
+
+## Quatre-vingt-dix minutes
+
+| | | |
+|---|---|---|
+| **00–20** | Défendre | le graphique qui donne raison à la manchette |
+| **20–45** | Réfuter | deux graphiques qui lui donnent tort |
+| **45–65** | Entreprises | la marge nette par secteur, en petits multiples |
+| **65–80** | Explorer | une figure plotly interactive |
+| **80–90** | Rédiger | 200 mots, puis deux minutes devant la salle |
+
+::: {.warn}
+Travail en équipe de deux. La personne qui présente est tirée **au hasard** : préparez-vous tous les deux.
+:::
+
+## Avant de commencer
+
+Ouvrez le dossier du dépôt dans VS Code, activez `.venv`, puis copiez le fichier de départ :
+
+```bash
+cp 05-representer-les-donnees/02-pratique/starter/seance05_atelier.py sorties/
+```
+
+Travaillez dans **votre copie**, cellule par cellule (`# %%`, puis `Maj + Entrée`). Chaque
+figure est enregistrée dans `sorties/` : c'est ce que vous remettrez.
+
+```python
+import pandas as pd, matplotlib.pyplot as plt, seaborn as sns, plotly.express as px
+pays = pd.read_csv("data/pays.csv")
+ent = pd.read_csv("data/entreprises.csv")
+p23 = pays[pays["annee"] == 2023]
+```
+
+## 1 · Défendre — 20 min
+
+**Figure 1.** Les quinze plus grandes économies en 2023, en **barres horizontales triées**,
+PIB total en milliers de milliards de dollars.
+
+- Les États-Unis en couleur d'accent, les autres en gris
+- Une étiquette de valeur au bout de chaque barre
+- Un titre qui énonce le message ; la source en bas
+
+::: {.step}
+Ajoutez une ligne de texte : la **part** des États-Unis dans le PIB mondial en 2023, calculée,
+pas recopiée.
+:::
+
+## 2 · Réfuter — 25 min
+
+**Figure 2.** La **distribution** du PIB par habitant (histogramme, échelle log), avec une ligne
+verticale pour les États-Unis. Combien de pays sont au-dessus ?
+
+**Figure 3.** Une **relation** : PIB par habitant (log) contre croissance moyenne 2014-2023,
+une bulle par pays. Où sont les États-Unis ?
+
+::: {.muted}
+Pour la croissance moyenne : `pays[pays["annee"].between(2014, 2023)].groupby("iso3")["croissance_pib"].mean()`,
+puis `merge` avec `p23`.
+:::
+
+## 3 · Les entreprises — 20 min
+
+**Figure 4.** Avec `sns.relplot(..., col="secteur", col_wrap=3, kind="line")`, la marge nette
+médiane par secteur de 2010 à 2024.
+
+- Une échelle commune (`sharey=True`), puis une échelle libre : **laquelle choisiriez-vous pour un
+  conseil d'administration ?** Écrivez pourquoi en une phrase.
+- Repérez une année où un secteur entier passe sous zéro, et proposez une explication.
+
+## 4 · Explorer — 15 min
+
+**Figure 5.** Avec `px.scatter`, PIB par habitant contre IDE entrants (% du PIB), taille =
+population, couleur = région, `hover_name="pays"`. Enregistrez-la avec
+`fig.write_html("sorties/fig5.html")`.
+
+Survolez les points extrêmes. **Lesquels sont des paradis fiscaux ou des places financières ?**
+Que dit cela de l'IDE comme mesure d'« attractivité » ?
+
+## 5 · Rédiger — 10 min
+
+Dans `sorties/note_seance05.md`, **200 mots** :
+
+1. La manchette est-elle vraie ? Selon **quelle** mesure ?
+2. La figure que vous montreriez à un comité de direction, et pourquoi celle-là
+3. Une figure **trompeuse** que vous auriez pu faire avec les mêmes données
+
+## Ce qui coûte des points
+
+| | |
+|---|---|
+| Un titre qui décrit (« PIB par pays ») au lieu d'affirmer | |
+| Un axe sans unité, une figure sans source | |
+| Des barres non triées, ou qui ne partent pas de zéro | |
+| Une légende de quinze couleurs | |
+| Un chiffre dans le texte qui ne sort pas du code | |
+
+## Remettre
+
+- `sorties/fig1.png` à `fig4.png`, `sorties/fig5.html`
+- `sorties/note_seance05.md`
+- Votre copie de `seance05_atelier.py`, qui reproduit tout **en une exécution**
+
+::: {.step}
+Ces figures sont la matière première du travail « Les premiers pas — travail 2 ».
+:::

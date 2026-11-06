@@ -1,0 +1,167 @@
+---
+title: "Séance 4 : Avant la séance"
+subtitle: "Des données utilisables ne tombent pas du ciel : elles se fabriquent"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    footer: "MGMT 60XXX · Séance 04 pré-séance · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · Avant le cours {.center .scrollable}
+
+1. Ce qu'il faut faire, et combien de temps cela prend
+2. Lire Wickham (2014)
+3. Les notions à revoir
+4. Mettre les cours boursiers en cache
+5. L'autovérification
+6. L'IA générative pour se préparer
+
+## À quoi sert la séance 4 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Comparer une entreprise à **son** secteur, la même année
+- Lire la réaction de la Bourse à une annonce d'acquisition
+- Savoir pourquoi un premier regard n'est **pas** une étude d'événement
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- `astype`, `pd.to_numeric`, `.str`, `drop_duplicates`
+- `merge` avec `validate=` et `indicator=` ; `concat`
+- `pivot`, `pivot_table`, `melt`
+- `groupby().agg()`, `groupby().transform()`, `shift`, `pct_change`
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Compter les lignes avant et après chaque jointure
+- Ne jamais remplir une valeur manquante sans la signaler
+- Une ligne par observation, une colonne par variable
+
+::::
+
+:::::
+
+# Avant la séance {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Des données utilisables ne tombent pas du ciel : elles se fabriquent
+:::
+
+## Ce qu'il faut faire, et combien de temps cela prend
+
+| | | |
+|---|---|---|
+| **1** | Lire Wickham (2014), sections 1 à 3 | 45 min |
+| **2** | Revoir quatre notions | 15 min |
+| **3** | Mettre les cours boursiers en cache | 10 min |
+| **4** | Faire l'autovérification | 20 min |
+
+::: {.warn}
+Le cours suppose les quatre étapes faites. La pratique suppose les cours boursiers déjà sur
+votre machine : le réseau de la salle ne suffit pas toujours à trente téléchargements
+simultanés.
+:::
+
+## 1 · Lire
+
+**Wickham, H. (2014). *Tidy Data*.** *Journal of Statistical Software*, 59(10), 1–23.
+
+::: {.muted}
+<https://doi.org/10.18637/jss.v059.i10> — en accès libre.
+:::
+
+Lisez pour l'**argument**, pas pour la syntaxe (les exemples sont en R). Annotez :
+
+| | |
+|---|---|
+| **1** | Les trois règles des données « rangées » |
+| **2** | Les cinq problèmes les plus courants des données « en désordre » |
+| **3** | Un tableau que vous avez déjà vu (rapport annuel, Excel, Statistique Canada) qui viole une règle |
+| **4** | Pourquoi ranger les données *avant* d'analyser fait gagner du temps |
+
+## 2 · Les notions à revoir
+
+- **Une clé** : la ou les colonnes qui identifient une ligne de façon unique. Dans
+  `entreprises.csv`, c'est (`ticker`, `annee`).
+- **Une jointure** : associer deux tables par leur clé. Que se passe-t-il quand une clé
+  apparaît **deux fois** d'un côté ?
+- **Format long et format large** : une ligne par entreprise × année, ou une colonne par année ?
+- **Un rendement** : $r_t = P_t / P_{t-1} - 1$. Pourquoi ne peut-on pas le calculer pour le
+  premier jour ?
+
+## 3 · Mettre les cours boursiers en cache
+
+Depuis la racine du dépôt, `.venv` activé :
+
+```python
+from pathlib import Path
+import pandas as pd
+import yfinance as yf
+
+Path("data/cache").mkdir(parents=True, exist_ok=True)
+for t in ["SPY", "MSFT", "PFE", "JNJ", "XOM", "CVX", "AMZN", "INTC", "MRK"]:
+    d = yf.download(t, start="2021-06-01", end="2023-12-31", progress=False, auto_adjust=True)
+    d.columns = [c[0] if isinstance(c, tuple) else c for c in d.columns]
+    d.to_parquet(f"data/cache/{t}.parquet")
+    print(t, d.shape)
+```
+
+Chaque ligne doit afficher environ **650** jours de Bourse. `data/cache/` n'est jamais versionné.
+
+::: {.muted}
+`CERTIFICATE_VERIFY_FAILED` sur macOS ? Voir la séance 1 : `Install Certificates.command`.
+:::
+
+## 4 · Autovérification
+
+Par écrit, avant le cours. Vous ne la remettez pas, mais le cours suppose que vous l'avez tentée.
+
+1. `pd.to_numeric(["12", "n.d.", "3,5"], errors="coerce")` : que renvoie-t-il, et pourquoi
+   `"3,5"` pose-t-il problème ?
+2. Une table de 480 lignes est jointe (`how="left"`) à une table où une clé apparaît deux fois.
+   Combien de lignes peut-on obtenir ? Comment `validate="m:1"` vous protège-t-il ?
+3. Un tableau a une colonne par année de 2000 à 2023 et une ligne par pays (217 pays). Combien
+   de lignes après `melt` ?
+4. Pourquoi `df["chiffre_affaires"].pct_change()` sur tout le panel donne-t-il une croissance
+   absurde pour la première année de chaque entreprise ?
+
+## 5 · L'IA générative pour se préparer
+
+Un partenaire d'étude, pas un corrigé. Des requêtes qui fonctionnent :
+
+- « Explique la différence entre `groupby().agg()` et `groupby().transform()` avec un exemple
+  de six lignes, sans utiliser de données réelles. »
+- « Donne-moi trois façons dont un `merge` pandas peut multiplier les lignes sans erreur, et
+  comment les détecter. »
+- « Pose-moi cinq questions pour vérifier que je comprends `melt` et `pivot`. »
+
+> **Règle permanente du cours.** Chaque usage de l'IA dans un travail remis est déclaré : ce que
+> vous avez demandé, ce que vous avez vérifié, et comment.

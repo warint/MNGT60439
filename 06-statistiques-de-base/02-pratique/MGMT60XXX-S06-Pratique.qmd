@@ -1,0 +1,200 @@
+---
+title: "Séance 6 : Pratique"
+subtitle: "Les entreprises qui investissent en R-D sont-elles plus rentables ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 06 pratique · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · L'atelier {.center .scrollable}
+
+1. Quatre-vingt-dix minutes
+2. Avant de commencer
+3. Décrire — 15 min
+4. Comparer — 20 min
+5. Relier — 20 min
+6. Casser une hypothèse — 15 min
+7. Écrire — 20 min
+8. Ce qui coûte des points
+9. Après le cours : les premiers pas, travail 2
+
+# Pratique {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Les entreprises qui investissent en R-D sont-elles plus rentables ?
+:::
+
+## Quatre-vingt-dix minutes {.scrollable}
+
+| | | |
+|---|---|---|
+| **00–15** | Décrire | le ROA, et qui publie sa R-D |
+| **15–35** | Comparer | forte R-D contre faible R-D : écart, test, intervalle |
+| **35–55** | Relier | corrélations, régression, avec et sans secteur |
+| **55–70** | Casser | une hypothèse, délibérément |
+| **70–90** | Écrire, et présenter | 200 mots, puis deux minutes à la classe |
+
+::: {.warn}
+On travaille en équipes de deux — les mêmes que pour les premiers pas. La personne qui
+présente est tirée **au hasard** : préparez-vous tous les deux.
+:::
+
+## Avant de commencer {.scrollable}
+
+Ouvrez le dossier du dépôt dans VS Code, vérifiez que l'interpréteur `.venv` est sélectionné,
+puis ouvrez le fichier de départ :
+
+```text
+06-statistiques-de-base/02-pratique/starter/seance06_atelier.py
+```
+
+```bash
+python 06-statistiques-de-base/02-pratique/starter/seance06_atelier.py
+```
+
+::: {.muted}
+Le fichier ne s'exécute pas tant que les `...` ne sont pas remplacés : c'est voulu. Avancez
+cellule par cellule (`# %%`, puis `Maj + Entrée`).
+:::
+
+## 1 · Décrire — 15 min {.scrollable}
+
+```python
+ANNEE = 2023      # fixée AVANT de regarder les résultats
+coupe = entreprises[entreprises["annee"] == ANNEE].copy()
+coupe["roa"].agg(["mean", "median", "std"])
+```
+
+::: {.step}
+Fixez l'année **avant** de calculer quoi que ce soit, et écrivez pourquoi en commentaire. Changer
+d'année jusqu'à obtenir un résultat qui vous plaît s'appelle du *p-hacking*.
+:::
+
+::: {.check}
+Neuf entreprises ne publient pas de R-D. Lesquelles ? Est-ce le hasard, ou une **différence de
+modèle d'affaires** ? Votre réponse sur la R-D ne porte que sur celles qui la publient.
+:::
+
+## 2 · Comparer — 20 min {.scrollable}
+
+Coupez les entreprises qui publient leur R-D en deux groupes autour de la **médiane** de
+l'intensité de R-D.
+
+```python
+test = stats.ttest_ind(groupe_fort, groupe_faible, equal_var=False)
+```
+
+Rapportez, dans cet ordre :
+
+::: {.tight}
+1. L'écart de ROA, **en points**
+2. Son intervalle de confiance à 95 % (bootstrap, 5 000 tirages)
+3. La valeur p du test de Welch
+:::
+
+::: {.warn}
+Un groupe de onze entreprises, c'est peu. Si l'intervalle contient zéro, dites-le : c'est la
+réponse.
+:::
+
+## 3 · Relier — 20 min {.scrollable}
+
+```python
+stats.pearsonr(x["intensite_rd"], x["roa"])
+stats.spearmanr(x["intensite_rd"], x["roa"])
+
+m1 = smf.ols("roa ~ intensite_rd", data=x).fit()
+m2 = smf.ols("roa ~ intensite_rd + C(secteur)", data=x).fit()
+```
+
+::: {.step}
+Faites le **nuage de points** avant de lire un seul coefficient. Nommez les deux entreprises les
+plus éloignées de la tendance.
+:::
+
+::: {.check}
+Le coefficient change-t-il quand on ajoute le secteur ? Si oui, le secteur confondait la relation —
+dites dans quel sens.
+:::
+
+## 4 · Casser une hypothèse — 15 min {.scrollable}
+
+Choisissez **une** expérience :
+
+| | Expérience | Ce qu'elle teste |
+|---|---|---|
+| **a** | Retirez l'entreprise la plus extrême, refaites la section 3 | La robustesse aux valeurs extrêmes |
+| **b** | Empilez **toutes** les années, d'abord naïvement, puis avec `cov_type="cluster"` | L'indépendance des observations |
+
+::: {.check}
+C'est la partie qui compte le plus. Une équipe qui montre comment son résultat s'effondre le
+comprend ; une équipe qui ne montre que sa solidité ne le sait pas encore.
+:::
+
+## 5 · Écrire — 20 min {.scrollable}
+
+200 mots dans `reponse.md`, déposé sur ZoneCours avec votre script :
+
+::: {.tight}
+- L'écart, **en unités**, et son intervalle
+- L'hypothèse que vous avez cassée, et ce qu'elle a fait à votre réponse
+- Ce que ce résultat **ne vous autorise pas** à recommander à un dirigeant
+:::
+
+::: {.muted}
+Et la règle permanente : une sortie de l'IA que vous avez vérifiée, et comment.
+:::
+
+## Ce qui coûte des points {.scrollable}
+
+::: {.tight}
+- Un `describe()` collé sans interprétation
+- « Significatif » sans l'écart en unités ni l'intervalle
+- « Pas significatif, donc aucun effet »
+- Un panel de quinze années traité comme 343 entreprises indépendantes
+- « La R-D cause la rentabilité » — ou l'inverse — à partir d'une corrélation
+- Une année choisie après avoir vu les résultats
+:::
+
+## Deux minutes à la classe {.scrollable}
+
+Une équipe tirée au hasard répond, sans diapositive :
+
+> En 2023, les entreprises à forte intensité de R-D ont un ROA de **___ points** plus élevé / plus
+> faible, avec un intervalle de **[___ ; ___]**. Quand on **___**, la réponse **___**. Nous ne
+> pouvons pas conclure que **___**.
+
+## Après le cours : les premiers pas, travail 2 {.scrollable}
+
+Vous avez maintenant tous les outils des séances 1 à 6 : **importer, nettoyer, décrire,
+représenter, tester**.
+
+::: {.get}
+**Livrable (5 %, équipes de deux).** Une question de stratégie, vos propres données, deux
+graphiques, un test interprété honnêtement, un fichier `.py` qui s'exécute de bout en bout.
+Consigne et grille : `06-statistiques-de-base/PREMIERS-PAS-TRAVAIL-2.md`.
+:::
+
+::: {.muted}
+Les séances 7 à 11 passent aux articles et aux études de cas. Votre code Python reste l'outil
+du projet final.
+:::

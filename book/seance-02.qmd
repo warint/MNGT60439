@@ -1,0 +1,246 @@
+---
+title: "Le DataFrame, la table de l'analyste"
+---
+
+```{python}
+#| include: false
+import os, sys
+os.chdir("..")
+sys.path.insert(0, "slides")
+import pandas as pd
+pd.set_option("display.max_columns", 12)
+entreprises = pd.read_csv("data/entreprises.csv")
+df = entreprises.copy()
+df["marge_nette"] = df["resultat_net"] / df["chiffre_affaires"]
+df["roa"] = df["resultat_net"] / df["actifs_totaux"]
+df["roe"] = df["resultat_net"] / df["capitaux_propres"]
+df["intensite_rd"] = df["rd"] / df["chiffre_affaires"]
+a23 = df[df["annee"] == 2023]
+n_lignes, n_cols = entreprises.shape
+n_ent = entreprises["ticker"].nunique()
+n_rd = int(entreprises["rd"].isna().sum())
+neg = a23[a23["capitaux_propres"] < 0]
+```
+
+## Une question qui n'a pas une réponse
+
+« Quelle entreprise crée le plus de valeur ? » La question paraît simple, et un gestionnaire
+pressé y répondra par le chiffre le plus visible : le profit. Mais le profit mesure la **taille**
+d'une réussite, pas son **efficacité**. Une entreprise qui gagne deux fois plus qu'une autre avec
+cinq fois plus d'actifs n'a pas mieux utilisé ce qu'on lui a confié. La stratégie s'intéresse à
+l'avantage concurrentiel, c'est-à-dire à la capacité de faire *mieux que les concurrents avec les
+ressources dont on dispose* — et cela exige des ratios.
+
+Ce chapitre en retient quatre :
+
+| Mesure | Formule | Elle répond à… |
+|---|---|---|
+| Résultat net | profit après impôts | Qui gagne le plus d'argent, en dollars ? |
+| Marge nette | résultat net / chiffre d'affaires | Que reste-t-il de chaque dollar vendu ? |
+| ROA | résultat net / actifs totaux | Que rapporte chaque dollar d'actifs ? |
+| ROE | résultat net / capitaux propres | Que rapporte chaque dollar des actionnaires ? |
+
+Aucune n'est « la » création de valeur — la finance la définit par rapport au coût du capital,
+ce que nous ne mesurons pas ici. L'objectif est plus modeste et plus utile : apprendre à calculer
+ces mesures sur des données réelles, et voir **pourquoi elles ne s'accordent pas**. L'outil qui
+le permet est le DataFrame de pandas, conçu précisément pour ce genre de tableau
+[@mckinney2010; @mckinney2022].
+
+## Le fichier
+
+```{python}
+entreprises = pd.read_csv("data/entreprises.csv")
+entreprises.head()
+```
+
+Le fichier compte `{python} n_lignes` lignes et `{python} n_cols` colonnes : `{python} n_ent`
+entreprises cotées aux États-Unis, chacune observée sur quinze exercices (2010-2024). Une ligne
+n'est donc pas une entreprise, mais **une entreprise une année donnée**. Les montants sont en
+millions de dollars US, tirés des états financiers déposés à la SEC. Savoir ce que représente une
+ligne est la première chose à établir devant un tableau ; presque toutes les erreurs de la suite
+viennent d'une réponse floue à cette question.
+
+## L'anatomie d'un DataFrame
+
+Un DataFrame est un ensemble de **Series** — des colonnes — qui partagent un même **index**,
+l'étiquette de chaque ligne. Chaque Series a un **type**.
+
+```{python}
+entreprises.dtypes
+```
+
+Les montants sont des `float64`, même lorsqu'ils sont ronds : il leur manque des valeurs, et la
+valeur manquante de pandas, `NaN`, est un nombre à virgule. Le texte (`entreprise`, `secteur`) est
+de type chaîne. Un type inattendu — un montant lu comme du texte, par exemple — est le symptôme le
+plus fréquent d'une importation ratée ; la séance 3 y reviendra.
+
+L'index par défaut numérote les lignes. On peut le remplacer par une colonne qui a du sens, ce qui
+permet ensuite de désigner une ligne par son nom :
+
+```{python}
+a23_idx = entreprises[entreprises["annee"] == 2023].set_index("ticker")
+a23_idx.loc[["TSLA", "F", "GM"], ["entreprise", "chiffre_affaires", "resultat_net"]]
+```
+
+## Regarder avant de calculer
+
+Trois commandes donnent l'essentiel : `shape` (la taille), `info()` (les types et le nombre de
+valeurs présentes par colonne) et `describe()` (le résumé numérique).
+
+```{python}
+entreprises[["chiffre_affaires", "resultat_net", "actifs_totaux", "rd"]].describe().round(0)
+```
+
+Deux lectures s'imposent. Le minimum de `resultat_net` est négatif : des entreprises perdent de
+l'argent certaines années. Et la moyenne dépasse largement la médiane (la ligne `50%`) : quelques
+géants tirent la moyenne vers le haut. Sur des données d'entreprises, la médiane est souvent le
+meilleur résumé du « cas typique ».
+
+## Sélectionner et filtrer
+
+Les crochets simples avec un nom renvoient une Series ; les crochets doubles avec une liste de
+noms renvoient un DataFrame. Pour les lignes, `.loc` sélectionne par étiquette et `.iloc` par
+position. Mais l'outil le plus utilisé est le **masque booléen** : une condition sur une colonne
+produit une Series de vrais et de faux, qui garde les lignes vraies.
+
+```{python}
+entreprises[
+    (entreprises["annee"] == 2023)
+    & entreprises["secteur"].isin(["Automobile", "Énergie"])
+][["entreprise", "secteur", "chiffre_affaires", "resultat_net"]]
+```
+
+Les conditions se combinent avec `&` (et), `|` (ou) et `~` (non), chacune entre parenthèses. La
+méthode `query` exprime la même chose sous forme de phrase :
+
+```{python}
+entreprises.query("annee == 2023 and resultat_net < 0")[["entreprise", "resultat_net"]]
+```
+
+## Quatre mesures, quatre classements
+
+Créer une colonne revient à écrire une formule sur des colonnes entières ; pandas l'applique à
+toutes les lignes d'un coup.
+
+```{python}
+df = entreprises.copy()
+df["marge_nette"] = df["resultat_net"] / df["chiffre_affaires"]
+df["roa"] = df["resultat_net"] / df["actifs_totaux"]
+df["roe"] = df["resultat_net"] / df["capitaux_propres"]
+df["intensite_rd"] = df["rd"] / df["chiffre_affaires"]
+a23 = df[df["annee"] == 2023]
+```
+
+Classons maintenant les entreprises de 2023 selon chaque mesure.
+
+```{python}
+#| label: tbl-classements
+#| tbl-cap: "Les cinq premières entreprises de 2023 selon quatre mesures."
+classements = pd.DataFrame({
+    m: a23.nlargest(5, m)["entreprise"].tolist()
+    for m in ["resultat_net", "marge_nette", "roa", "roe"]
+}, index=range(1, 6))
+classements
+```
+
+```{python}
+#| include: false
+communs = set.intersection(*[set(classements[c]) for c in classements.columns])
+```
+
+Combien d'entreprises figurent dans les quatre classements à la fois ? `{python} len(communs)`. Les géants de la technologie dominent en dollars ; d'autres
+entreprises, plus petites ou plus légères en actifs, dominent en efficacité. La question « qui crée
+le plus de valeur ? » n'a de réponse qu'une fois la mesure choisie — et le choix de la mesure est
+une décision stratégique, qu'il faut justifier.
+
+## Quand un ratio ment
+
+Un ratio n'a de sens que si son dénominateur en a un. Les capitaux propres peuvent devenir
+négatifs, lorsqu'une entreprise a racheté massivement ses actions ou accumulé des pertes.
+
+```{python}
+neg[["entreprise", "resultat_net", "capitaux_propres", "roe"]].round(3)
+```
+
+`{python} len(neg)` entreprises sont dans ce cas en 2023. Une entreprise rentable y affiche un ROE
+négatif ; Boeing, qui perd de l'argent, affiche un ROE positif, parce que deux nombres négatifs
+donnent un quotient positif. Aucun de ces chiffres ne mesure quoi que ce soit. La bonne réponse
+n'est pas de les « corriger », mais de les exclure du classement par ROE, et de le dire.
+
+## Comparer à l'intérieur des secteurs
+
+Un taux de marge n'a pas la même signification d'un secteur à l'autre : un détaillant vit de
+volumes et de marges minces, un éditeur de logiciels de marges épaisses. `groupby` découpe le
+tableau par secteur, applique un résumé à chaque morceau et combine les résultats.
+
+```{python}
+#| label: tbl-secteurs
+#| tbl-cap: "Résumé par secteur, exercice 2023."
+(a23.groupby("secteur")
+    .agg(n=("ticker", "count"),
+         marge_mediane=("marge_nette", "median"),
+         roa_median=("roa", "median"),
+         intensite_rd=("intensite_rd", "mean"))
+    .sort_values("roa_median", ascending=False)
+    .round(3))
+```
+
+La colonne `n` n'est pas décorative : une médiane calculée sur trois entreprises, ou sur une
+seule, ne décrit pas un secteur. Un résumé sans son effectif ne se lit pas.
+
+## Une figure : taille contre efficacité
+
+```{python}
+#| label: fig-taille-efficacite
+#| fig-cap: "Chiffre d'affaires et ROA en 2023. La taille et l'efficacité ne vont pas ensemble."
+from plotstyle import setup, CL
+plt = setup()
+
+fig, ax = plt.subplots(figsize=(7.2, 4.2))
+ax.scatter(a23["chiffre_affaires"] / 1000, a23["roa"] * 100, color=CL.accent)
+for _, r in a23.nlargest(4, "roa").iterrows():
+    ax.annotate(r["entreprise"], (r["chiffre_affaires"] / 1000, r["roa"] * 100),
+                xytext=(5, 3), textcoords="offset points", fontsize=8)
+ax.axhline(0, color=CL.muted, lw=0.8)
+ax.set_xlabel("Chiffre d'affaires (milliards $ US)")
+ax.set_ylabel("ROA (%)")
+plt.show()
+```
+
+## Les valeurs manquantes
+
+La colonne `rd` contient `{python} n_rd` valeurs manquantes. Elles ne sont pas réparties au
+hasard :
+
+```{python}
+(entreprises.groupby("secteur")["rd"]
+    .apply(lambda s: s.isna().mean())
+    .sort_values(ascending=False)
+    .round(2))
+```
+
+Les détaillants et les restaurants ne déclarent pas de ligne de recherche et développement dans
+leurs états financiers. Ce n'est pas une R-D nulle ; c'est une R-D **non mesurée**. Remplacer ces
+valeurs par zéro affirmerait quelque chose que la source ne dit pas. Par défaut, pandas ignore
+les valeurs manquantes dans `mean`, `median` ou `sum` — ce qui est commode, mais signifie que la
+moyenne porte sur un sous-ensemble, qu'il faut nommer.
+
+## Une note sur pandas 3
+
+Depuis pandas 3.0, toute sélection se comporte comme une copie (*copy-on-write*) : modifier un
+sous-tableau ne modifie jamais le tableau d'origine. Pour changer l'original, on écrit dans
+l'original avec `.loc[lignes, colonne] = valeur`. Le vieil avertissement
+`SettingWithCopyWarning`, que l'on trouve encore dans beaucoup de réponses en ligne et de code
+généré par l'IA, a disparu.
+
+## À retenir
+
+- Une ligne de `entreprises.csv` est une entreprise **une année** ; établissez toujours ce que
+  représente une ligne.
+- `[]` donne une Series, `[[ ]]` un DataFrame ; `.loc` sélectionne par étiquette, `.iloc` par
+  position ; les masques se combinent avec `&`, `|`, `~`.
+- La taille et la performance donnent des classements différents ; le choix de la mesure se
+  justifie.
+- Regardez le dénominateur avant d'interpréter un ratio.
+- Comparez d'abord à l'intérieur des secteurs, et donnez toujours l'effectif d'un résumé.
+- Une valeur manquante est une information sur la source.

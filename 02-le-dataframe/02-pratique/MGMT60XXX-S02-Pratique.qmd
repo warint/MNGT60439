@@ -1,0 +1,202 @@
+---
+title: "Séance 2 : Pratique"
+subtitle: "Quelles entreprises créent le plus de valeur — selon quelle mesure ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 02 pratique · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · L'atelier {.center .scrollable}
+
+1. Quatre-vingt-dix minutes
+2. Avant de commencer
+3. Regarder — 10 min
+4. Mesurer — 15 min
+5. Classer — 15 min
+6. Le piège du dénominateur — 10 min
+7. À l'intérieur des secteurs — 20 min
+8. Une année ou quinze ? — 10 min
+9. Écrire — 10 min
+10. Ce qui coûte des points
+
+# Pratique {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Quelles entreprises créent le plus de valeur — selon quelle mesure ?
+:::
+
+## Quatre-vingt-dix minutes
+
+| | | |
+|---|---|---|
+| **00–10** | Regarder | types, manquants, effectifs |
+| **10–40** | Mesurer et classer | quatre ratios, quatre classements |
+| **40–50** | Casser | le ROE, quand le dénominateur est négatif |
+| **50–80** | Comparer | à l'intérieur des secteurs, sur une année et sur quinze |
+| **80–90** | Écrire | 200 mots, puis deux minutes devant la classe |
+
+::: {.warn}
+On travaille **en équipe de deux**, sur un seul écran à la fois, et on change de clavier à chaque
+étape. La personne qui présente est tirée **au hasard**.
+:::
+
+## Avant de commencer
+
+Ouvrez le dossier du dépôt dans VS Code, `.venv` sélectionné, puis :
+
+```text
+02-le-dataframe/02-pratique/starter/seance02_atelier.py
+```
+
+Copiez-le dans votre propre dossier de travail et exécutez-le **cellule par cellule**
+(`Maj + Entrée` sur chaque `# %%`). Chaque `...` et chaque `TODO` est à remplacer.
+
+::: {.check}
+Après **chaque** cellule, regardez la forme du résultat : `print(x.shape)`. Un filtre qui
+renvoie 0 ligne ne lève pas d'erreur — il se tait.
+:::
+
+## 1 · Regarder — 10 min
+
+```python
+entreprises = pd.read_csv("data/entreprises.csv")
+entreprises.dtypes
+entreprises.isna().sum()
+entreprises.query("annee == 2023")["secteur"].value_counts()
+```
+
+::: {.step}
+Avant de calculer : combien d'entreprises par secteur ? Un secteur qui n'en compte qu'**une** ne
+se compare à rien.
+:::
+
+## 2 · Mesurer — 15 min
+
+Créez quatre colonnes :
+
+| Colonne | Formule |
+|---|---|
+| `marge_nette` | `resultat_net / chiffre_affaires` |
+| `roa` | `resultat_net / actifs_totaux` |
+| `roe` | `resultat_net / capitaux_propres` |
+| `intensite_rd` | `rd / chiffre_affaires` |
+
+::: {.muted}
+Une ligne de code chacune. Pas de boucle : la division porte sur la colonne entière.
+:::
+
+## 3 · Classer — 15 min
+
+Pour **2023**, le top 5 selon chacune des quatre mesures : `resultat_net`, `marge_nette`, `roa`,
+`roe`.
+
+```python
+a23.nlargest(5, "roa")[["entreprise", "secteur", "roa"]]
+```
+
+::: {.check}
+Combien d'entreprises figurent dans **les quatre** classements ? Une réponse surprenante est une
+réponse. Écrivez pourquoi.
+:::
+
+## 4 · Le piège du dénominateur — 10 min
+
+Affichez les entreprises dont les **capitaux propres sont négatifs** en 2023, avec leur résultat
+net et leur ROE.
+
+::: {.warn}
+C'est l'étape qui compte. Que vaut le ROE quand le dénominateur est négatif ? Et quand **les deux**
+le sont ? Décidez — et écrivez — ce que vous faites de ces entreprises dans votre classement.
+:::
+
+## 5 · À l'intérieur des secteurs — 20 min
+
+```python
+(a23.groupby("secteur")
+    .agg(n=("ticker", "count"),
+         marge_mediane=("marge_nette", "median"),
+         roa_median=("roa", "median"),
+         intensite_rd=("intensite_rd", "mean"))
+    .sort_values("roa_median", ascending=False))
+```
+
+Puis choisissez **un secteur** et classez ses entreprises par ROA.
+
+::: {.step}
+Une marge de 3 % est faible pour un éditeur de logiciels et normale pour un détaillant. La
+création de valeur se juge d'abord **contre les concurrents directs**.
+:::
+
+## 6 · Une année ou quinze ? — 10 min
+
+```python
+df.groupby("entreprise")["marge_nette"].agg(["mean", "min", "max"])
+```
+
+- Le classement sur 2010-2024 est-il celui de 2023 ?
+- Quelle entreprise a la plus grande **amplitude** entre son pire et son meilleur exercice ?
+
+## 7 · Les manquants — 5 min
+
+Quelle part de `rd` manque, **par secteur** ?
+
+::: {.warn}
+Remplacer ces valeurs par 0 affirmerait que Walmart ne dépense rien en R-D. La source ne dit pas
+cela : elle ne **déclare pas** de ligne R-D. Une moyenne calculée sans elles porte sur un
+sous-ensemble — dites lequel.
+:::
+
+## 8 · Écrire — 10 min
+
+200 mots, dans un fichier `note_seance02.md` à côté de votre script :
+
+::: {.tight}
+- Votre réponse : **quelle entreprise crée le plus de valeur**, selon quelle mesure, et pourquoi
+  cette mesure plutôt qu'une autre
+- Ce que vous avez fait des capitaux propres négatifs
+- Ce que votre classement **ne permet pas** d'affirmer
+- Règle permanente : une réponse de l'IA que vous avez vérifiée, et comment
+:::
+
+::: {.get}
+**À remettre :** votre script complété et votre note, selon les consignes du plan de cours.
+:::
+
+## Ce qui coûte des points
+
+::: {.tight}
+- Un classement sans dire **quelle mesure** et **quelle année**
+- Un ROE interprété alors que les capitaux propres sont négatifs
+- Des `NaN` remplacés par 0 sans justification
+- Une médiane de secteur présentée sans son **effectif**
+- Un script qui ne s'exécute pas de haut en bas
+:::
+
+## Deux minutes devant la classe
+
+Une diapositive, ou rien : **votre** entreprise gagnante, la mesure qui la fait gagner, et la
+mesure qui la ferait perdre.
+
+::: {.muted}
+Séance 3 : on quitte le fichier fourni. On importe des données depuis un CSV, une URL, un
+paquet, une API et une base de données.
+:::

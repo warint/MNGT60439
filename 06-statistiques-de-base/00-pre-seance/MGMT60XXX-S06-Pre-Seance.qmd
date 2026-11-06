@@ -1,0 +1,166 @@
+---
+title: "Séance 6 : Avant la séance"
+subtitle: "Ce que l'on voit est-il assez solide pour être affirmé ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    footer: "MGMT 60XXX · Séance 06 pré-séance · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · Avant le cours {.center .scrollable}
+
+1. Ce qu'il faut faire, et combien de temps cela prend
+2. Lire : la déclaration de l'ASA sur les valeurs p
+3. Revoir cinq notions
+4. Préparer les données
+5. Autovérification
+6. L'IA générative pour préparer la séance
+
+## À quoi sert la séance 6 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Passer d'une différence **observée** à une différence que l'on peut **affirmer**
+- Dire ce qu'une corrélation entre R-D et rentabilité ne permet pas de recommander
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- `describe`, `quantile`, `skew`
+- `scipy.stats` : intervalles de confiance, tests t, corrélations
+- `statsmodels` : une première régression
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Choisir moyenne ou médiane
+- Lire une valeur p sans lui faire dire ce qu'elle ne dit pas
+- Repérer la variable confondante et les observations non indépendantes
+
+::::
+
+:::::
+
+# Avant la séance {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Ce que l'on voit est-il assez solide pour être affirmé ?
+:::
+
+## Ce qu'il faut faire, et combien de temps cela prend {.scrollable}
+
+| | | |
+|---|---|---|
+| **1** | Lire la déclaration de l'ASA | 30 min |
+| **2** | Revoir cinq notions | 30 min |
+| **3** | Préparer les données et exécuter le script de vérification | 15 min |
+| **4** | Répondre à l'autovérification | 15 min |
+
+::: {.warn}
+Le cours suppose les quatre étapes faites. La pratique suppose que votre `.venv` contient `scipy`
+et `statsmodels` — c'est le cas si vous avez installé `requirements.txt` à la séance 1.
+:::
+
+## 1 · Lire {.scrollable}
+
+**Wasserstein, R. L. et Lazar, N. A. (2016), *The ASA Statement on p-Values: Context, Process,
+and Purpose*, The American Statistician, 70(2), 129-133.**
+[doi.org/10.1080/00031305.2016.1154108](https://doi.org/10.1080/00031305.2016.1154108) — en libre accès.
+
+Annotez quatre choses :
+
+| | |
+|---|---|
+| **1** | Les six principes, chacun en une phrase **à vous** |
+| **2** | Le principe le plus souvent violé dans la presse d'affaires, selon vous |
+| **3** | Ce que les auteurs recommandent de rapporter **à la place**, ou **en plus**, d'une valeur p |
+| **4** | Un exemple de manchette qui viole l'un des principes |
+
+::: {.muted}
+Lecture complémentaire, facultative : Miller et Bamberger (2016), sur la valeur des résultats nuls
+et des réplications, *Academy of Management Discoveries*, [10.5465/amd.2016.0115](https://doi.org/10.5465/amd.2016.0115).
+:::
+
+## 2 · Revoir cinq notions {.scrollable}
+
+On s'en servira sans les redémontrer.
+
+- **Moyenne et médiane.** La moyenne est le point d'équilibre ; la médiane, le milieu du classement.
+- **Écart type.** $s = \sqrt{\frac{1}{n-1}\sum_i (x_i - \bar x)^2}$ — notez le $n-1$.
+- **Quantiles.** Le quartile Q1 laisse 25 % des observations en dessous.
+- **Corrélation.** Un nombre entre −1 et +1 qui mesure une relation linéaire.
+- **Une droite.** $y = \beta_0 + \beta_1 x$ : ce que veulent dire l'ordonnée à l'origine et la pente.
+
+::: {.step}
+Si l'une de ces notions vous échappe, travaillez-la **avant** le cours avec votre IA, en lui
+demandant de vous interroger plutôt que de vous expliquer.
+:::
+
+## 3 · Préparer les données {.scrollable}
+
+Depuis la racine du dépôt, `.venv` activé :
+
+```python
+import pandas as pd
+
+entreprises = pd.read_csv("data/entreprises.csv")
+entreprises["roa"] = entreprises["resultat_net"] / entreprises["actifs_totaux"]
+entreprises["marge"] = entreprises["resultat_net"] / entreprises["chiffre_affaires"]
+entreprises["intensite_rd"] = entreprises["rd"] / entreprises["chiffre_affaires"]
+
+e23 = entreprises[entreprises["annee"] == 2023]
+print(e23[["roa", "marge", "intensite_rd"]].describe().round(3))
+```
+
+::: {.muted}
+Combien d'entreprises ont une `intensite_rd` manquante en 2023 ? Lesquelles ? Notez-le : c'est
+la première limite de toute analyse de la R-D sur ces données.
+:::
+
+## 4 · Autovérification {.scrollable}
+
+Répondez **par écrit**. Rien n'est remis, mais le cours suppose que vous avez essayé.
+
+1. Pourquoi la moyenne des chiffres d'affaires est-elle bien plus grande que leur médiane ?
+2. Une valeur p de 0,11 : que **pouvez**-vous en conclure, et que **ne pouvez**-vous pas en conclure ?
+3. Si l'on quadruple la taille d'un échantillon, que devient l'erreur type de la moyenne ?
+4. Les entreprises qui font beaucoup de R-D sont plus rentables. Proposez **deux** explications
+   qui ne passent pas par « la R-D cause la rentabilité ».
+
+## L'IA générative pour préparer la séance {.scrollable}
+
+Un partenaire d'étude, pas un corrigé. Requêtes qui fonctionnent :
+
+- « Pose-moi cinq questions pour vérifier que je sais ce qu'est un intervalle de confiance. Ne me
+  donne pas les réponses avant que j'aie répondu. »
+- « Explique la différence entre le test t de Student et celui de Welch, avec un exemple chiffré. »
+- « Donne-moi une phrase fausse, mais plausible, sur une valeur p, et laisse-moi trouver l'erreur. »
+
+> **Règle permanente du cours.** Chaque fois que l'IA intervient dans un travail remis, vous
+> indiquez ce que vous lui avez demandé et ce que vous avez vérifié, et comment.

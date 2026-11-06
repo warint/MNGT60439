@@ -1,0 +1,170 @@
+---
+title: "Séance 1 : Pratique"
+subtitle: "Tesla est-elle plus rentable que Ford — et depuis quand ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    footer: "MGMT 60XXX · Séance 01 pratique · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · L'atelier {.center .scrollable}
+
+1. Quatre-vingt-dix minutes
+2. Avant de commencer
+3. Lire les données
+4. Une fonction
+5. Les trois constructeurs
+6. Depuis quand ?
+7. Ce que les données ne disent pas
+8. Remettre
+9. Ce qui coûte des points
+
+# Pratique {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Tesla est-elle plus rentable que Ford — et depuis quand ?
+:::
+
+## Quatre-vingt-dix minutes
+
+| | | |
+|---|---|---|
+| **00–15** | Vérifier | `verifier_environnement.py` : tout en **OK** |
+| **15–30** | Lire | `data/entreprises.csv` : forme, colonnes, valeurs manquantes |
+| **30–40** | Écrire | une fonction `marge_nette` |
+| **40–60** | Comparer | Tesla, Ford, GM en 2023 |
+| **60–75** | Tracer | quinze ans de marges, un graphique |
+| **75–90** | Écrire, et dire | ce que les données ne disent pas — deux minutes devant la classe |
+
+::: {.warn}
+On travaille **à deux**, sur **un seul** clavier, et l'on change de clavier à chaque section.
+Celui ou celle qui ne tape pas lit le code à voix haute avant chaque exécution.
+:::
+
+## Avant de commencer
+
+Ouvrez le dossier du cours dans VS Code, activez `.venv`, puis :
+
+```bash
+python 01-installer-la-plateforme/00-pre-seance/verifier_environnement.py
+mkdir -p sorties        # Windows : mkdir sorties
+```
+
+Ouvrez ensuite le fichier de départ :
+
+```text
+01-installer-la-plateforme/02-pratique/starter/seance01_atelier.py
+```
+
+::: {.step}
+Chaque bloc `# %%` s'exécute avec **Maj + Entrée** : le résultat apparaît dans la fenêtre
+interactive à droite. À la fin, le fichier entier doit s'exécuter **de haut en bas**, sans
+erreur, avec `python seance01_atelier.py`.
+:::
+
+## 1 · Lire les données — 15 min
+
+```python
+entreprises = pd.read_csv("data/entreprises.csv")
+```
+
+Répondez, avec du code :
+
+| | |
+|---|---|
+| **a** | Combien de lignes, combien de colonnes ? Que représente **une** ligne ? |
+| **b** | Quelles colonnes ont des valeurs manquantes ? Laquelle en a le plus ? |
+| **c** | Dans quelle unité sont les montants ? (lisez `data/README.md`) |
+
+::: {.muted}
+`.shape`, `.head()`, `.info()` suffisent. Si `FileNotFoundError` apparaît, votre terminal n'est
+pas à la racine du dossier du cours.
+:::
+
+## 2 · Une fonction — 10 min
+
+```python
+def marge_nette(resultat, ventes):
+    """Part de chaque dollar de ventes qui reste en profit."""
+    return ...
+```
+
+Testez-la sur Tesla 2023 : **14 974** M\$ de résultat net pour **96 773** M\$ de ventes. Vous
+devez obtenir environ **15,5 %**.
+
+::: {.warn}
+Une fonction qui affiche (`print`) au lieu de retourner (`return`) ne peut pas servir à
+remplir une colonne. Si votre colonne se remplit de `None`, c'est cela.
+:::
+
+## 3 · Les trois constructeurs — 20 min
+
+1. Gardez les lignes du secteur `"Automobile"`.
+2. Ajoutez une colonne `marge` calculée avec votre fonction.
+3. Affichez, pour **2023**, `entreprise`, `chiffre_affaires`, `resultat_net`, `marge`, triés par
+   marge décroissante.
+
+**Question :** le plus gros vendeur est-il le plus rentable ? Écrivez la réponse en commentaire,
+avec les chiffres.
+
+## 4 · Depuis quand ? — 20 min
+
+Tracez la marge de Tesla, Ford et GM de 2010 à 2024 : une ligne par entreprise, un titre, une
+légende, une ligne horizontale à zéro.
+
+Enregistrez la figure dans `sorties/seance01_marges.png`.
+
+**Question :** à partir de quelle année la marge de Tesla dépasse-t-elle **durablement** celle
+de Ford ? Que s'est-il passé chez Tesla avant ?
+
+::: {.muted}
+Une boucle `for nom, groupe in auto.groupby("entreprise"):` donne une ligne par entreprise.
+:::
+
+## 5 · Ce que les données ne disent pas — 15 min
+
+En **trois lignes**, expliquez pourquoi votre graphique **ne permet pas** de conclure que « Tesla
+est bonne pour l'environnement ». Quelles données faudrait-il, et où les trouver ?
+
+Puis demandez à votre assistant d'IA d'expliquer la section 3 ligne par ligne. Copiez **la
+requête**, et **une chose** que vous avez vérifiée vous-même dans sa réponse.
+
+**Deux minutes devant la classe** : la personne qui présente est tirée au sort.
+
+## Remettre
+
+Déposez sur ZoneCours, avant la fin de la journée :
+
+- `seance01_atelier.py`, qui **s'exécute de haut en bas sans erreur** ;
+- `seance01_marges.png`.
+
+Cette pratique n'est pas notée : elle compte pour la **participation**.
+
+## Ce qui coûte des points (dès la séance 2)
+
+| | |
+|---|---|
+| Un script qui ne s'exécute pas de haut en bas | Le résultat n'existe pas s'il ne se reproduit pas |
+| Un chiffre sans unité | « 15 » : pour cent ? millions ? milliards ? |
+| Un graphique sans titre ni légende | Le lecteur ne doit rien deviner |
+| Une conclusion qui dépasse les données | La rentabilité n'est pas l'impact environnemental |
+| Un usage de l'IA non déclaré | Voir la règle permanente du cours |
+
+**Séance 2 :** le DataFrame, en profondeur — sélectionner, filtrer, créer, résumer.

@@ -1,0 +1,53 @@
+# Avant-propos {.unnumbered}
+
+Chaque semaine, la presse d'affaires publie des phrases qui ressemblent à des faits. *Tesla est
+bonne pour l'environnement.* *L'Amérique crée plus de valeur que tout autre pays.* *Les
+entreprises qui investissent en recherche sont plus rentables.* *Les fusions détruisent de la
+valeur.* Chacune contient une part de vérité, et aucune n'est une question à laquelle des données
+peuvent répondre telle quelle. Avant de les accepter ou de les rejeter, il faut les réécrire :
+bonne *par rapport à quoi*, plus de valeur *selon quelle mesure*, plus rentables *en moyenne,
+dans quel secteur, à quel horizon* ?
+
+Ce livre accompagne le cours MGMT 60XXX, *Données et stratégie : enjeux locaux et mondiaux*, à
+HEC Montréal. Il couvre les six séances qui donnent les outils : installer une plateforme de
+travail, comprendre le tableau de données, importer des données depuis un fichier, une adresse
+web, un paquet, une API ou une base de données, les transformer, les représenter et les tester.
+Les séances suivantes, données par mes collègues, mobilisent ces outils au service de questions de
+recherche en stratégie, à partir d'articles et d'études de cas.
+
+Le parti pris du livre tient en trois principes.
+
+**Des données réelles, dès la première page.** Les entreprises du livre sont Tesla, Ford,
+Microsoft, Pfizer, Walmart ; leurs chiffres viennent des états financiers déposés à la SEC. Les
+pays viennent de la Banque mondiale. Ces données ont des trous, des ruptures, des valeurs
+extrêmes : on les garde, parce que c'est ce que vous rencontrerez. Un jeu de données
+pédagogique trop propre enseigne une compétence qui n'existe pas.
+
+**Regarder avant de théoriser — et le dire.** En stratégie, la recherche guidée exclusivement par
+une théorie préalable passe parfois à côté de ce que les données montrent [@miller2007]. Observer,
+décrire et comparer avec soin n'est pas une étape préliminaire : c'est souvent là que se trouve le
+résultat, y compris lorsqu'il est nul [@millerbamberger2016]. La condition est la transparence :
+dire ce que l'on a cherché, et comment.
+
+**Le code est la méthode.** Chaque tableau et chaque graphique du livre est produit par du code
+Python exécuté au moment de la construction du livre. Si un chiffre change, c'est que les données
+ont changé. Le projet final du cours demande la même chose : un rapport, et le fichier de code qui
+le reproduit.
+
+## Comment lire ce livre {.unnumbered}
+
+Chaque chapitre correspond à une séance et suit la même structure qu'elle : une question de
+stratégie, les concepts, le code, et ce que les données ne permettent pas de conclure. Le code
+s'exécute depuis la racine du dépôt du cours : `pd.read_csv("data/entreprises.csv")` suppose que
+le terminal est ouvert dans le dossier qui contient `data/`.
+
+Les annexes rassemblent l'installation pas à pas, la description des sources de données et un
+aide-mémoire des fonctions Python utilisées.
+
+## L'IA générative {.unnumbered}
+
+Les assistants d'IA générative écrivent du Python correct la plupart du temps — et du Python
+faux avec la même assurance le reste du temps. Ils sont utiles pour expliquer un message
+d'erreur, commenter un bloc de code ou vous interroger sur un concept. Ils ne remplacent pas la
+vérification. La règle du cours est simple : tout usage dans un travail remis est déclaré, avec
+ce que vous avez vérifié et comment.

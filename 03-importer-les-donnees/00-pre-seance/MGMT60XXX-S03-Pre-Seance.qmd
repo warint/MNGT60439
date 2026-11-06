@@ -1,0 +1,231 @@
+---
+title: "Séance 3 : Avant la séance"
+subtitle: "D'où viennent les données — et comment les faire venir jusqu'à vous ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 03 pré-séance · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · Avant le cours {.center .scrollable}
+
+1. Ce qu'il faut faire, et combien de temps cela prend
+2. Lire l'article
+3. Préparer votre identité pour la SEC
+4. (Facultatif) Obtenir une clé d'API FRED
+5. Régler les certificats (macOS)
+6. Tester l'accès aux sources
+7. Autovérification, et l'IA comme partenaire
+
+## À quoi sert la séance 3 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Traduire « Tesla est-elle bonne pour l'environnement ? » en **liste de données** à réunir
+- Savoir d'où vient chaque chiffre : producteur, unité, date, licence
+- Juger si une source est assez fiable pour une décision
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- `pd.read_csv` avec `sep`, `decimal`, `encoding`, `usecols`, `dtype`, `nrows`
+- `requests.get` : code de statut, JSON, paramètres, en-têtes
+- `pd.read_sql` sur SQLite, et DuckDB sur un fichier CSV
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Télécharger **une fois**, relire en local ensuite (le cache)
+- Ne jamais écrire une clé d'API ou un courriel dans le code
+- Tenir une **fiche de provenance** pour chaque source
+
+::::
+
+:::::
+
+# Avant la séance {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### D'où viennent les données — et comment les faire venir jusqu'à vous ?
+:::
+
+## Ce qu'il faut faire, et combien de temps cela prend {.scrollable}
+
+| | | |
+|---|---|---|
+| **1** | Lire l'article | 45 min |
+| **2** | Définir votre `SEC_USER_AGENT` | 5 min |
+| **3** | (Facultatif) Clé d'API FRED | 5 min |
+| **4** | Régler les certificats (macOS seulement) | 2 min |
+| **5** | Exécuter le test d'accès aux sources | 10 min |
+| **6** | Autovérification | 15 min |
+
+::: {.warn}
+La pratique suppose que **chaque source répond** sur votre machine. Un certificat manquant ou une
+SEC qui refuse votre requête, cela se règle à la maison, pas pendant l'atelier.
+:::
+
+## 1 · Lire l'article {.scrollable}
+
+**Bosma et van Witteloostuijn (2024), *Machine learning in international business***,
+*Journal of International Business Studies*, 55(6), 676–702.
+
+::: {.muted}
+[Lire l'article](https://doi.org/10.1057/s41267-024-00687-6) — accès par la bibliothèque de HEC Montréal
+:::
+
+Lisez pour l'**argument**, pas pour la technique. Notez quatre choses :
+
+| | |
+|---|---|
+| **1** | La question de recherche, en une phrase |
+| **2** | Les **sources de données** que les auteurs citent : lesquelles sont nouvelles ? |
+| **3** | L'élément de preuve le plus fort |
+| **4** | Une limite que vous soulèveriez comme évaluateur·rice |
+
+## 2 · Votre identité pour la SEC {.scrollable}
+
+La SEC (le régulateur boursier américain) sert gratuitement tous les états financiers déposés.
+Elle exige que chaque programme qui l'interroge **s'identifie** : votre nom et **votre** courriel.
+
+```bash
+# macOS / Linux : ajoutez cette ligne à ~/.zshrc, puis rouvrez le terminal
+export SEC_USER_AGENT="Prénom Nom prenom.nom@hec.ca"
+
+# Windows (PowerShell), puis rouvrez le terminal
+setx SEC_USER_AGENT "Prénom Nom prenom.nom@hec.ca"
+```
+
+Vérifiez : `echo $SEC_USER_AGENT` (macOS) ou `echo $env:SEC_USER_AGENT` (Windows).
+
+::: {.warn}
+Votre courriel va dans une **variable d'environnement**, jamais dans un script que vous
+partagez ou que vous remettez. Le code le lira avec `os.environ["SEC_USER_AGENT"]`.
+:::
+
+## 3 · (Facultatif) Une clé d'API FRED {.scrollable}
+
+FRED, la base de la Réserve fédérale de St. Louis, sert plus de 800 000 séries économiques :
+prix du pétrole, taux d'intérêt, production industrielle. L'accès demande une **clé gratuite**.
+
+1. Créez un compte sur <https://fred.stlouisfed.org/>
+2. Demandez une clé : <https://fred.stlouisfed.org/docs/api/api_key.html>
+3. Rangez-la dans une variable d'environnement, comme pour la SEC :
+
+```bash
+export FRED_API_KEY="votre-cle"        # macOS / Linux, dans ~/.zshrc
+setx FRED_API_KEY "votre-cle"          # Windows
+```
+
+::: {.muted}
+Le cours montrera l'appel ; la pratique ne l'exige pas. Si vous l'avez, vous pourrez ajouter le
+prix du pétrole à votre dossier.
+:::
+
+## 4 · Les certificats (macOS seulement) {.scrollable}
+
+Avec le Python de python.org, `pd.read_csv("https://…")` peut échouer avec :
+
+```text
+[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate
+```
+
+**Correctif durable**, une fois pour toutes :
+
+Finder → **Applications** → **Python 3.x** → double-cliquez **`Install Certificates.command`**
+
+**Correctif d'un soir**, dans le terminal où vous lancez Python :
+
+```bash
+export SSL_CERT_FILE=$(python -c "import certifi; print(certifi.where())")
+```
+
+Si `verifier_environnement.py` (séance 1) affichait **ÉCHEC** sur la ligne « CSV en ligne »,
+c'est ce problème.
+
+## 5 · Tester l'accès aux sources {.scrollable}
+
+Depuis la racine du dépôt, `.venv` activé, exécutez ce bloc (un fichier `test_sources.py`) :
+
+```python
+import os, requests, pandas as pd
+
+ua = os.environ.get("SEC_USER_AGENT")
+print("SEC_USER_AGENT défini :", ua is not None)
+
+r = requests.get("https://api.worldbank.org/v2/country/CAN?format=json", timeout=15)
+print("Banque mondiale :", r.status_code)
+
+r = requests.get("https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json",
+                 headers={"User-Agent": ua or "test"}, timeout=30)
+print("SEC EDGAR :", r.status_code)
+
+co2 = pd.read_csv("https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv",
+                  nrows=5)
+print("Our World in Data :", co2.shape)
+```
+
+Attendu : `True`, `200`, `200`, `(5, 79)` ou un nombre de colonnes voisin.
+
+## 6 · Concepts à revoir {.scrollable}
+
+- **Un fichier texte n'est qu'une suite d'octets.** L'*encodage* (UTF-8, Windows-1252) dit quel
+  octet représente quel caractère. Un `é` devenu `Ã©` est un problème d'encodage.
+- **Liste et dictionnaire** (séance 1) : le JSON d'une API n'est rien d'autre que des listes et
+  des dictionnaires imbriqués.
+- **Une clé** est une colonne qui identifie une ligne : `ticker` + `annee` dans
+  `entreprises.csv`, `iso3` + `annee` dans `pays.csv`.
+
+## Autovérification {.scrollable}
+
+Répondez **par écrit** avant le cours. Vous ne les remettez pas, mais le cours suppose que vous
+les avez tentées.
+
+1. Ouvrez `data/entreprises_fr.csv` dans un éditeur de texte (pas Excel). Quel est le séparateur
+   de colonnes ? Le séparateur décimal ?
+2. Que veut dire un code de statut `404` ? `429` ? `200` ?
+3. Pourquoi ne faut-il **jamais** écrire une clé d'API dans un script versionné sur GitHub ?
+4. Dans `data/strategie.db`, quelles colonnes permettent de relier la table `entreprises` à la
+   table `pays` ?
+
+## L'IA comme partenaire de préparation {.scrollable}
+
+Demandez-lui d'**expliquer**, de vous **interroger**, de **vous contredire**. Vérifiez tout ce
+qu'elle dit contre la documentation.
+
+- « Explique-moi ce qu'est une API REST avec une analogie de restaurant, puis donne-moi les
+  limites de l'analogie. »
+- « Voici le JSON renvoyé par une API (je colle les 20 premières lignes). Décris sa structure :
+  où sont les données, où sont les métadonnées ? »
+- « Quelle est la différence entre UTF-8 et Windows-1252, et pourquoi Excel produit-il encore
+  des fichiers en Windows-1252 ? »
+
+> **Règle permanente du cours.** Chaque fois que l'IA intervient dans un travail remis, vous
+> indiquez ce que vous lui avez demandé et **ce que vous avez vérifié, et comment**.

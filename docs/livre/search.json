@@ -1,0 +1,813 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Données et stratégie avec Python",
+    "section": "",
+    "text": "Avant-propos\nChaque semaine, la presse d’affaires publie des phrases qui ressemblent à des faits. Tesla est bonne pour l’environnement. L’Amérique crée plus de valeur que tout autre pays. Les entreprises qui investissent en recherche sont plus rentables. Les fusions détruisent de la valeur. Chacune contient une part de vérité, et aucune n’est une question à laquelle des données peuvent répondre telle quelle. Avant de les accepter ou de les rejeter, il faut les réécrire : bonne par rapport à quoi, plus de valeur selon quelle mesure, plus rentables en moyenne, dans quel secteur, à quel horizon ?\nCe livre accompagne le cours MGMT 60XXX, Données et stratégie : enjeux locaux et mondiaux, à HEC Montréal. Il couvre les six séances qui donnent les outils : installer une plateforme de travail, comprendre le tableau de données, importer des données depuis un fichier, une adresse web, un paquet, une API ou une base de données, les transformer, les représenter et les tester. Les séances suivantes, données par mes collègues, mobilisent ces outils au service de questions de recherche en stratégie, à partir d’articles et d’études de cas.\nLe parti pris du livre tient en trois principes.\nDes données réelles, dès la première page. Les entreprises du livre sont Tesla, Ford, Microsoft, Pfizer, Walmart ; leurs chiffres viennent des états financiers déposés à la SEC. Les pays viennent de la Banque mondiale. Ces données ont des trous, des ruptures, des valeurs extrêmes : on les garde, parce que c’est ce que vous rencontrerez. Un jeu de données pédagogique trop propre enseigne une compétence qui n’existe pas.\nRegarder avant de théoriser — et le dire. En stratégie, la recherche guidée exclusivement par une théorie préalable passe parfois à côté de ce que les données montrent (D. Miller 2007). Observer, décrire et comparer avec soin n’est pas une étape préliminaire : c’est souvent là que se trouve le résultat, y compris lorsqu’il est nul (C. C. Miller et Bamberger 2016). La condition est la transparence : dire ce que l’on a cherché, et comment.\nLe code est la méthode. Chaque tableau et chaque graphique du livre est produit par du code Python exécuté au moment de la construction du livre. Si un chiffre change, c’est que les données ont changé. Le projet final du cours demande la même chose : un rapport, et le fichier de code qui le reproduit.",
+    "crumbs": [
+      "Avant-propos"
+    ]
+  },
+  {
+    "objectID": "index.html#comment-lire-ce-livre",
+    "href": "index.html#comment-lire-ce-livre",
+    "title": "Données et stratégie avec Python",
+    "section": "Comment lire ce livre",
+    "text": "Comment lire ce livre\nChaque chapitre correspond à une séance et suit la même structure qu’elle : une question de stratégie, les concepts, le code, et ce que les données ne permettent pas de conclure. Le code s’exécute depuis la racine du dépôt du cours : pd.read_csv(\"data/entreprises.csv\") suppose que le terminal est ouvert dans le dossier qui contient data/.\nLes annexes rassemblent l’installation pas à pas, la description des sources de données et un aide-mémoire des fonctions Python utilisées.",
+    "crumbs": [
+      "Avant-propos"
+    ]
+  },
+  {
+    "objectID": "index.html#lia-générative",
+    "href": "index.html#lia-générative",
+    "title": "Données et stratégie avec Python",
+    "section": "L’IA générative",
+    "text": "L’IA générative\nLes assistants d’IA générative écrivent du Python correct la plupart du temps — et du Python faux avec la même assurance le reste du temps. Ils sont utiles pour expliquer un message d’erreur, commenter un bloc de code ou vous interroger sur un concept. Ils ne remplacent pas la vérification. La règle du cours est simple : tout usage dans un travail remis est déclaré, avec ce que vous avez vérifié et comment.\n\n\n\n\nMiller, C. Chet, et Peter Bamberger. 2016. « Exploring Emergent and Poorly Understood Phenomena in the Strangest of Places: The Footprint of Discovery in Replications, Meta-Analyses, and Null Findings ». Academy of Management Discoveries 2 (4): 313‑19. https://doi.org/10.5465/amd.2016.0115.\n\n\nMiller, Danny. 2007. « Paradigm Prison, or In Praise of Atheoretic Research ». Strategic Organization 5 (2): 177‑84. https://doi.org/10.1177/1476127007077558.",
+    "crumbs": [
+      "Avant-propos"
+    ]
+  },
+  {
+    "objectID": "seance-01.html",
+    "href": "seance-01.html",
+    "title": "1  Installer la plateforme",
+    "section": "",
+    "text": "1.1 D’une manchette à une question\n« Tesla est vraiment bonne pour l’environnement. » La phrase circule, elle est plausible, et elle ne peut être ni confirmée ni infirmée telle quelle. Pour qu’une donnée puisse lui répondre, il faut d’abord préciser trois choses.\nPar rapport à quoi ? Un véhicule électrique se compare à un véhicule thermique de même catégorie, à la moyenne du parc, au transport en commun — et la réponse change selon le comparateur. Selon quelle mesure ? Les émissions à l’usage, à la fabrication (la batterie pèse lourd) ou sur l’ensemble du cycle de vie ne racontent pas la même histoire. Pour qui, et où ? Une voiture électrique rechargée au Québec, où l’électricité est presque entièrement hydraulique, n’a pas le même bilan qu’en Pologne, où le charbon domine encore.\nCe travail de réécriture est la première compétence du cours. Il ne demande aucun code. Mais dès qu’une question est précise, il faut des données, et un outil pour les lire. Ce chapitre installe cet outil.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installer la plateforme</span>"
+    ]
+  },
+  {
+    "objectID": "seance-01.html#la-plateforme-quatre-pièces",
+    "href": "seance-01.html#la-plateforme-quatre-pièces",
+    "title": "1  Installer la plateforme",
+    "section": "1.2 La plateforme : quatre pièces",
+    "text": "1.2 La plateforme : quatre pièces\nTravailler avec des données en Python mobilise quatre éléments qu’il est utile de distinguer, parce que la plupart des problèmes d’installation viennent de leur confusion.\n\n\n\n\n\n\n\nPièce\nCe que c’est\n\n\n\n\nPython\nLe langage, et l’interpréteur qui exécute le code\n\n\nLes paquets\nDu code écrit par d’autres (pandas, matplotlib…), que l’on importe\n\n\nL’environnement virtuel\nUne installation de Python propre à un projet, avec ses paquets et leurs versions\n\n\nL’éditeur (VS Code)\nLe logiciel où l’on écrit et exécute le code\n\n\n\nL’environnement virtuel est la pièce la moins intuitive. Sans lui, tous les projets d’un ordinateur partagent les mêmes paquets ; le jour où deux projets exigent des versions incompatibles, l’un des deux cesse de fonctionner. Avec lui, chaque projet a son dossier .venv, et la liste de ses paquets tient dans un fichier, requirements.txt, que n’importe qui peut réinstaller à l’identique :\npython3 -m venv .venv                       # Windows : py -m venv .venv\nsource .venv/bin/activate                   # Windows : .venv\\Scripts\\activate\npython -m pip install -r requirements.txt\n\nLe piège des certificats sous macOS. L’installateur de python.org n’installe pas les certificats racines utilisés par le module ssl. Tant que le script Install Certificates.command (dans Applications/Python 3.x) n’a pas été exécuté, une instruction comme pd.read_csv(\"https://…\") échoue avec CERTIFICATE_VERIFY_FAILED, alors même que le navigateur accède sans difficulté à la même adresse. Le script verifier_environnement.py de la séance 1 teste précisément ce cas.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installer la plateforme</span>"
+    ]
+  },
+  {
+    "objectID": "seance-01.html#python-en-quelques-lignes",
+    "href": "seance-01.html#python-en-quelques-lignes",
+    "title": "1  Installer la plateforme",
+    "section": "1.3 Python en quelques lignes",
+    "text": "1.3 Python en quelques lignes\nPython se lit presque comme de l’anglais. Le signe = range une valeur dans un nom :\n\nchiffre_affaires = 96_773   # Tesla, 2023, millions de $ US\nresultat_net = 14_974\nmarge_nette = resultat_net / chiffre_affaires\nprint(f\"Marge nette de Tesla en 2023 : {marge_nette:.1%}\")\n\nMarge nette de Tesla en 2023 : 15.5%\n\n\nChaque valeur a un type. Les plus courants sont l’entier (int), le nombre à virgule (float), le texte (str) et le booléen (bool). La confusion entre un nombre et du texte qui ressemble à un nombre est l’erreur la plus fréquente lors de l’importation de données :\n\nprint(2023 + 1, \"2023\" + \"1\")\n\n2024 20231\n\n\nDeux structures suffisent pour commencer. La liste range des valeurs dans un ordre ; le dictionnaire associe des clés à des valeurs :\n\nconstructeurs = [\"Tesla\", \"Ford\", \"General Motors\"]\nventes_2023 = {\"Tesla\": 96_773, \"Ford\": 176_191, \"General Motors\": 157_658}\nfor nom in constructeurs:\n    print(f\"{nom:15s} {ventes_2023[nom]:&gt;9,} M$\")\n\nTesla              96,773 M$\nFord              176,191 M$\nGeneral Motors    157,658 M$\n\n\nEnfin, une fonction donne un nom à un calcul que l’on répétera. Si la définition change, on la corrige à un seul endroit :\n\ndef marge(resultat, ventes):\n    \"\"\"Part de chaque dollar de ventes qui reste en profit.\"\"\"\n    return resultat / ventes\n\nprint(f\"Ford : {marge(4_347, 176_191):.1%}\")\n\nFord : 2.5%",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installer la plateforme</span>"
+    ]
+  },
+  {
+    "objectID": "seance-01.html#le-premier-tableau-de-données",
+    "href": "seance-01.html#le-premier-tableau-de-données",
+    "title": "1  Installer la plateforme",
+    "section": "1.4 Le premier tableau de données",
+    "text": "1.4 Le premier tableau de données\nUn dictionnaire de listes a déjà la forme d’un tableau : chaque clé est une colonne. Le paquet pandas (McKinney 2010) transforme cette structure en DataFrame, l’objet central de tout le cours :\n\ndf = pd.DataFrame({\n    \"entreprise\": [\"Tesla\", \"Ford\", \"General Motors\"],\n    \"ventes\":     [96_773, 176_191, 157_658],\n    \"resultat\":   [14_974, 4_347, 9_840],\n})\ndf[\"marge\"] = df[\"resultat\"] / df[\"ventes\"]\ndf\n\n\n\n\n\n\n\n\nentreprise\nventes\nresultat\nmarge\n\n\n\n\n0\nTesla\n96773\n14974\n0.154733\n\n\n1\nFord\n176191\n4347\n0.024672\n\n\n2\nGeneral Motors\n157658\n9840\n0.062414\n\n\n\n\n\n\n\nUne opération écrite sur une colonne s’applique à toutes les lignes à la fois : c’est ce qui rend pandas rapide à écrire et rapide à exécuter.\nLes données du cours sont plus riches. Le fichier data/entreprises.csv réunit 32 grandes entreprises cotées aux États-Unis, de 2010 à 2024, à partir des états financiers qu’elles déposent auprès de la SEC :\n\nentreprises = pd.read_csv(\"data/entreprises.csv\")\nprint(entreprises.shape)\nentreprises.head()\n\n(480, 12)\n\n\n\n\n\n\n\n\n\nticker\nentreprise\ncik\nsecteur\npays_siege\nannee\nchiffre_affaires\nresultat_net\nactifs_totaux\ncapitaux_propres\nrd\ninvestissements\n\n\n\n\n0\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2010\n116.7\n-154.3\n386.1\n207.0\n93.0\n40.2\n\n\n1\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2011\n204.2\n-254.4\n713.4\n224.0\n209.0\n184.2\n\n\n2\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2012\n413.3\n-396.2\n1114.2\n124.7\n274.0\n239.2\n\n\n3\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2013\n2013.5\n-74.0\n2416.9\n667.1\n232.0\n264.2\n\n\n4\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2014\n3198.4\n-294.0\n5830.7\n911.7\n464.7\n969.9\n\n\n\n\n\n\n\n\nentreprises.isna().mean().round(2).sort_values(ascending=False).head(4)\n\nrd                  0.28\ninvestissements     0.25\nresultat_net        0.02\nchiffre_affaires    0.01\ndtype: float64\n\n\nLa dépense de R-D manque pour plus d’un quart des lignes. Ce n’est pas un défaut de téléchargement : Walmart, Costco ou McDonald’s ne publient pas de poste « recherche et développement », et Amazon range la sienne sous un autre intitulé. Une valeur manquante est souvent une information sur l’entreprise ; la remplacer par zéro serait une erreur.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installer la plateforme</span>"
+    ]
+  },
+  {
+    "objectID": "seance-01.html#une-première-réponse-et-ses-limites",
+    "href": "seance-01.html#une-première-réponse-et-ses-limites",
+    "title": "1  Installer la plateforme",
+    "section": "1.5 Une première réponse, et ses limites",
+    "text": "1.5 Une première réponse, et ses limites\nQuel constructeur automobile était le plus rentable en 2023 ?\n\nauto = entreprises[entreprises[\"secteur\"] == \"Automobile\"].copy()\nauto[\"marge\"] = auto[\"resultat_net\"] / auto[\"chiffre_affaires\"]\n(auto[auto[\"annee\"] == 2023]\n     [[\"entreprise\", \"chiffre_affaires\", \"resultat_net\", \"marge\"]]\n     .sort_values(\"marge\", ascending=False))\n\n\n\n\n\n\n\n\nentreprise\nchiffre_affaires\nresultat_net\nmarge\n\n\n\n\n13\nTesla\n96773.0\n14974.0\n0.154733\n\n\n43\nGeneral Motors\n157658.0\n9840.0\n0.062414\n\n\n28\nFord\n176191.0\n4347.0\n0.024672\n\n\n\n\n\n\n\nEt depuis quand ?\n\nfrom plotstyle import setup\nplt = setup()\n\nfig, ax = plt.subplots()\nfor nom, groupe in auto.groupby(\"entreprise\"):\n    ax.plot(groupe[\"annee\"], groupe[\"marge\"] * 100, marker=\"o\", label=nom)\nax.axhline(0, color=\"grey\", linewidth=0.8)\nax.set_ylim(-30, 20)\nax.set_ylabel(\"Marge nette (%)\")\nax.legend(frameon=False)\nplt.show()\n\n\n\n\n\n\n\nFigure 1.1: Marge nette des trois constructeurs, 2010–2024. Source : SEC EDGAR.\n\n\n\n\n\nTesla perd de l’argent chaque année jusqu’en 2019 — en 2010, ses pertes représentent 132% de ses ventes, hors du cadre de la figure Figure 1.1. Elle devient rentable en 2020 et dépasse Ford et GM à partir de 2022.\nCes chiffres répondent à une question de rentabilité. Ils ne disent rien de l’impact environnemental de Tesla : il faudrait pour cela des données d’émissions, de mix électrique et de ventes par motorisation, qui ne figurent pas dans des états financiers. Les importer est l’objet du chapitre 3. Le réflexe à acquérir dès maintenant est de toujours écrire, à côté d’un résultat, la question à laquelle il répond — et celle à laquelle il ne répond pas.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installer la plateforme</span>"
+    ]
+  },
+  {
+    "objectID": "seance-01.html#lia-générative-comme-partenaire-détude",
+    "href": "seance-01.html#lia-générative-comme-partenaire-détude",
+    "title": "1  Installer la plateforme",
+    "section": "1.6 L’IA générative comme partenaire d’étude",
+    "text": "1.6 L’IA générative comme partenaire d’étude\nUn assistant d’IA générative est utile à trois moments : pour expliquer un message d’erreur, pour commenter un bloc de code ligne par ligne, et pour vous interroger sur un concept. Il est dangereux à un quatrième : lorsqu’il produit un résultat que vous ne savez pas vérifier. Les modèles écrivent souvent du code destiné à d’anciennes versions des paquets — DataFrame.append, par exemple, n’existe plus depuis pandas 2.0. Exécuter, lire l’erreur, corriger : la boucle est la même que pour votre propre code.\n\nÀ retenir. Une question précise avant les données ; un environnement virtuel par projet ; un script qui s’exécute de haut en bas ; et, à côté de chaque résultat, ce qu’il ne permet pas de conclure.\n\n\n\n\n\nMcKinney, Wes. 2010. « Data Structures for Statistical Computing in Python ». In Proceedings of the 9th Python in Science Conference, 56‑61. https://doi.org/10.25080/Majora-92bf1922-00a.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installer la plateforme</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html",
+    "href": "seance-02.html",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "",
+    "text": "2.1 Une question qui n’a pas une réponse\n« Quelle entreprise crée le plus de valeur ? » La question paraît simple, et un gestionnaire pressé y répondra par le chiffre le plus visible : le profit. Mais le profit mesure la taille d’une réussite, pas son efficacité. Une entreprise qui gagne deux fois plus qu’une autre avec cinq fois plus d’actifs n’a pas mieux utilisé ce qu’on lui a confié. La stratégie s’intéresse à l’avantage concurrentiel, c’est-à-dire à la capacité de faire mieux que les concurrents avec les ressources dont on dispose — et cela exige des ratios.\nCe chapitre en retient quatre :\nAucune n’est « la » création de valeur — la finance la définit par rapport au coût du capital, ce que nous ne mesurons pas ici. L’objectif est plus modeste et plus utile : apprendre à calculer ces mesures sur des données réelles, et voir pourquoi elles ne s’accordent pas. L’outil qui le permet est le DataFrame de pandas, conçu précisément pour ce genre de tableau (McKinney 2010, 2022).",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#une-question-qui-na-pas-une-réponse",
+    "href": "seance-02.html#une-question-qui-na-pas-une-réponse",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "",
+    "text": "Mesure\nFormule\nElle répond à…\n\n\n\n\nRésultat net\nprofit après impôts\nQui gagne le plus d’argent, en dollars ?\n\n\nMarge nette\nrésultat net / chiffre d’affaires\nQue reste-t-il de chaque dollar vendu ?\n\n\nROA\nrésultat net / actifs totaux\nQue rapporte chaque dollar d’actifs ?\n\n\nROE\nrésultat net / capitaux propres\nQue rapporte chaque dollar des actionnaires ?",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#le-fichier",
+    "href": "seance-02.html#le-fichier",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.2 Le fichier",
+    "text": "2.2 Le fichier\n\nentreprises = pd.read_csv(\"data/entreprises.csv\")\nentreprises.head()\n\n\n\n\n\n\n\n\nticker\nentreprise\ncik\nsecteur\npays_siege\nannee\nchiffre_affaires\nresultat_net\nactifs_totaux\ncapitaux_propres\nrd\ninvestissements\n\n\n\n\n0\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2010\n116.7\n-154.3\n386.1\n207.0\n93.0\n40.2\n\n\n1\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2011\n204.2\n-254.4\n713.4\n224.0\n209.0\n184.2\n\n\n2\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2012\n413.3\n-396.2\n1114.2\n124.7\n274.0\n239.2\n\n\n3\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2013\n2013.5\n-74.0\n2416.9\n667.1\n232.0\n264.2\n\n\n4\nTSLA\nTesla\n1318605\nAutomobile\nUSA\n2014\n3198.4\n-294.0\n5830.7\n911.7\n464.7\n969.9\n\n\n\n\n\n\n\nLe fichier compte 480 lignes et 12 colonnes : 32 entreprises cotées aux États-Unis, chacune observée sur quinze exercices (2010-2024). Une ligne n’est donc pas une entreprise, mais une entreprise une année donnée. Les montants sont en millions de dollars US, tirés des états financiers déposés à la SEC. Savoir ce que représente une ligne est la première chose à établir devant un tableau ; presque toutes les erreurs de la suite viennent d’une réponse floue à cette question.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#lanatomie-dun-dataframe",
+    "href": "seance-02.html#lanatomie-dun-dataframe",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.3 L’anatomie d’un DataFrame",
+    "text": "2.3 L’anatomie d’un DataFrame\nUn DataFrame est un ensemble de Series — des colonnes — qui partagent un même index, l’étiquette de chaque ligne. Chaque Series a un type.\n\nentreprises.dtypes\n\nticker                  str\nentreprise              str\ncik                   int64\nsecteur                 str\npays_siege              str\nannee                 int64\nchiffre_affaires    float64\nresultat_net        float64\nactifs_totaux       float64\ncapitaux_propres    float64\nrd                  float64\ninvestissements     float64\ndtype: object\n\n\nLes montants sont des float64, même lorsqu’ils sont ronds : il leur manque des valeurs, et la valeur manquante de pandas, NaN, est un nombre à virgule. Le texte (entreprise, secteur) est de type chaîne. Un type inattendu — un montant lu comme du texte, par exemple — est le symptôme le plus fréquent d’une importation ratée ; la séance 3 y reviendra.\nL’index par défaut numérote les lignes. On peut le remplacer par une colonne qui a du sens, ce qui permet ensuite de désigner une ligne par son nom :\n\na23_idx = entreprises[entreprises[\"annee\"] == 2023].set_index(\"ticker\")\na23_idx.loc[[\"TSLA\", \"F\", \"GM\"], [\"entreprise\", \"chiffre_affaires\", \"resultat_net\"]]\n\n\n\n\n\n\n\n\nentreprise\nchiffre_affaires\nresultat_net\n\n\nticker\n\n\n\n\n\n\n\nTSLA\nTesla\n96773.0\n14974.0\n\n\nF\nFord\n176191.0\n4347.0\n\n\nGM\nGeneral Motors\n157658.0\n9840.0",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#regarder-avant-de-calculer",
+    "href": "seance-02.html#regarder-avant-de-calculer",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.4 Regarder avant de calculer",
+    "text": "2.4 Regarder avant de calculer\nTrois commandes donnent l’essentiel : shape (la taille), info() (les types et le nombre de valeurs présentes par colonne) et describe() (le résumé numérique).\n\nentreprises[[\"chiffre_affaires\", \"resultat_net\", \"actifs_totaux\", \"rd\"]].describe().round(0)\n\n\n\n\n\n\n\n\nchiffre_affaires\nresultat_net\nactifs_totaux\nrd\n\n\n\n\ncount\n477.0\n469.0\n475.0\n345.0\n\n\nmean\n103363.0\n11698.0\n126668.0\n6412.0\n\n\nstd\n118947.0\n16369.0\n105906.0\n7898.0\n\n\nmin\n117.0\n-22440.0\n386.0\n62.0\n\n\n25%\n34204.0\n3273.0\n44370.0\n1150.0\n\n\n50%\n63627.0\n6513.0\n92918.0\n3298.0\n\n\n75%\n116609.0\n14136.0\n180443.0\n8494.0\n\n\nmax\n674538.0\n100118.0\n624894.0\n49326.0\n\n\n\n\n\n\n\nDeux lectures s’imposent. Le minimum de resultat_net est négatif : des entreprises perdent de l’argent certaines années. Et la moyenne dépasse largement la médiane (la ligne 50%) : quelques géants tirent la moyenne vers le haut. Sur des données d’entreprises, la médiane est souvent le meilleur résumé du « cas typique ».",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#sélectionner-et-filtrer",
+    "href": "seance-02.html#sélectionner-et-filtrer",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.5 Sélectionner et filtrer",
+    "text": "2.5 Sélectionner et filtrer\nLes crochets simples avec un nom renvoient une Series ; les crochets doubles avec une liste de noms renvoient un DataFrame. Pour les lignes, .loc sélectionne par étiquette et .iloc par position. Mais l’outil le plus utilisé est le masque booléen : une condition sur une colonne produit une Series de vrais et de faux, qui garde les lignes vraies.\n\nentreprises[\n    (entreprises[\"annee\"] == 2023)\n    & entreprises[\"secteur\"].isin([\"Automobile\", \"Énergie\"])\n][[\"entreprise\", \"secteur\", \"chiffre_affaires\", \"resultat_net\"]]\n\n\n\n\n\n\n\n\nentreprise\nsecteur\nchiffre_affaires\nresultat_net\n\n\n\n\n13\nTesla\nAutomobile\n96773.0\n14974.0\n\n\n28\nFord\nAutomobile\n176191.0\n4347.0\n\n\n43\nGeneral Motors\nAutomobile\n157658.0\n9840.0\n\n\n283\nExxonMobil\nÉnergie\n344582.0\n36010.0\n\n\n298\nChevron\nÉnergie\n196913.0\n21400.0\n\n\n313\nConocoPhillips\nÉnergie\n48522.0\n10957.0\n\n\n\n\n\n\n\nLes conditions se combinent avec & (et), | (ou) et ~ (non), chacune entre parenthèses. La méthode query exprime la même chose sous forme de phrase :\n\nentreprises.query(\"annee == 2023 and resultat_net &lt; 0\")[[\"entreprise\", \"resultat_net\"]]\n\n\n\n\n\n\n\n\nentreprise\nresultat_net\n\n\n\n\n418\nBoeing\n-2222.0\n\n\n448\n3M\n-6995.0",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#quatre-mesures-quatre-classements",
+    "href": "seance-02.html#quatre-mesures-quatre-classements",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.6 Quatre mesures, quatre classements",
+    "text": "2.6 Quatre mesures, quatre classements\nCréer une colonne revient à écrire une formule sur des colonnes entières ; pandas l’applique à toutes les lignes d’un coup.\n\ndf = entreprises.copy()\ndf[\"marge_nette\"] = df[\"resultat_net\"] / df[\"chiffre_affaires\"]\ndf[\"roa\"] = df[\"resultat_net\"] / df[\"actifs_totaux\"]\ndf[\"roe\"] = df[\"resultat_net\"] / df[\"capitaux_propres\"]\ndf[\"intensite_rd\"] = df[\"rd\"] / df[\"chiffre_affaires\"]\na23 = df[df[\"annee\"] == 2023]\n\nClassons maintenant les entreprises de 2023 selon chaque mesure.\n\nclassements = pd.DataFrame({\n    m: a23.nlargest(5, m)[\"entreprise\"].tolist()\n    for m in [\"resultat_net\", \"marge_nette\", \"roa\", \"roe\"]\n}, index=range(1, 6))\nclassements\n\n\n\nTable 2.1: Les cinq premières entreprises de 2023 selon quatre mesures.\n\n\n\n\n\n\n\n\n\n\nresultat_net\nmarge_nette\nroa\nroe\n\n\n\n\n1\nApple\nNvidia\nNvidia\nApple\n\n\n2\nAlphabet\nJohnson & Johnson\nApple\nNvidia\n\n\n3\nMicrosoft\nMicrosoft\nJohnson & Johnson\nCaterpillar\n\n\n4\nMeta Platforms\nMcDonald's\nAlphabet\nJohnson & Johnson\n\n\n5\nExxonMobil\nMeta Platforms\nMeta Platforms\nPepsiCo\n\n\n\n\n\n\n\n\n\n\nCombien d’entreprises figurent dans les quatre classements à la fois ? 0. Les géants de la technologie dominent en dollars ; d’autres entreprises, plus petites ou plus légères en actifs, dominent en efficacité. La question « qui crée le plus de valeur ? » n’a de réponse qu’une fois la mesure choisie — et le choix de la mesure est une décision stratégique, qu’il faut justifier.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#quand-un-ratio-ment",
+    "href": "seance-02.html#quand-un-ratio-ment",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.7 Quand un ratio ment",
+    "text": "2.7 Quand un ratio ment\nUn ratio n’a de sens que si son dénominateur en a un. Les capitaux propres peuvent devenir négatifs, lorsqu’une entreprise a racheté massivement ses actions ou accumulé des pertes.\n\nneg[[\"entreprise\", \"resultat_net\", \"capitaux_propres\", \"roe\"]].round(3)\n\n\n\n\n\n\n\n\nentreprise\nresultat_net\ncapitaux_propres\nroe\n\n\n\n\n388\nMcDonald's\n8469.0\n-4707.0\n-1.799\n\n\n403\nStarbucks\n4124.5\n-8616.0\n-0.479\n\n\n418\nBoeing\n-2222.0\n-17233.0\n0.129\n\n\n\n\n\n\n\n3 entreprises sont dans ce cas en 2023. Une entreprise rentable y affiche un ROE négatif ; Boeing, qui perd de l’argent, affiche un ROE positif, parce que deux nombres négatifs donnent un quotient positif. Aucun de ces chiffres ne mesure quoi que ce soit. La bonne réponse n’est pas de les « corriger », mais de les exclure du classement par ROE, et de le dire.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#comparer-à-lintérieur-des-secteurs",
+    "href": "seance-02.html#comparer-à-lintérieur-des-secteurs",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.8 Comparer à l’intérieur des secteurs",
+    "text": "2.8 Comparer à l’intérieur des secteurs\nUn taux de marge n’a pas la même signification d’un secteur à l’autre : un détaillant vit de volumes et de marges minces, un éditeur de logiciels de marges épaisses. groupby découpe le tableau par secteur, applique un résumé à chaque morceau et combine les résultats.\n\n(a23.groupby(\"secteur\")\n    .agg(n=(\"ticker\", \"count\"),\n         marge_mediane=(\"marge_nette\", \"median\"),\n         roa_median=(\"roa\", \"median\"),\n         intensite_rd=(\"intensite_rd\", \"mean\"))\n    .sort_values(\"roa_median\", ascending=False)\n    .round(3))\n\n\n\nTable 2.2: Résumé par secteur, exercice 2023.\n\n\n\n\n\n\n\n\n\n\nn\nmarge_mediane\nroa_median\nintensite_rd\n\n\nsecteur\n\n\n\n\n\n\n\n\nTechnologie\n7\n0.253\n0.170\n0.170\n\n\nRestauration\n2\n0.223\n0.146\nNaN\n\n\nBiens de consommation\n4\n0.145\n0.116\n0.017\n\n\nMédias et divertissement\n1\n0.160\n0.111\n0.079\n\n\nÉnergie\n3\n0.109\n0.096\n0.002\n\n\nCommerce de détail\n4\n0.032\n0.068\nNaN\n\n\nPharmaceutique\n4\n0.098\n0.046\n0.292\n\n\nIndustrie\n4\n0.063\n0.038\n0.036\n\n\nAutomobile\n3\n0.062\n0.036\n0.044\n\n\n\n\n\n\n\n\n\n\nLa colonne n n’est pas décorative : une médiane calculée sur trois entreprises, ou sur une seule, ne décrit pas un secteur. Un résumé sans son effectif ne se lit pas.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#une-figure-taille-contre-efficacité",
+    "href": "seance-02.html#une-figure-taille-contre-efficacité",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.9 Une figure : taille contre efficacité",
+    "text": "2.9 Une figure : taille contre efficacité\n\nfrom plotstyle import setup, CL\nplt = setup()\n\nfig, ax = plt.subplots(figsize=(7.2, 4.2))\nax.scatter(a23[\"chiffre_affaires\"] / 1000, a23[\"roa\"] * 100, color=CL.accent)\nfor _, r in a23.nlargest(4, \"roa\").iterrows():\n    ax.annotate(r[\"entreprise\"], (r[\"chiffre_affaires\"] / 1000, r[\"roa\"] * 100),\n                xytext=(5, 3), textcoords=\"offset points\", fontsize=8)\nax.axhline(0, color=CL.muted, lw=0.8)\nax.set_xlabel(\"Chiffre d'affaires (milliards $ US)\")\nax.set_ylabel(\"ROA (%)\")\nplt.show()\n\n\n\n\n\n\n\nFigure 2.1: Chiffre d’affaires et ROA en 2023. La taille et l’efficacité ne vont pas ensemble.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#les-valeurs-manquantes",
+    "href": "seance-02.html#les-valeurs-manquantes",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.10 Les valeurs manquantes",
+    "text": "2.10 Les valeurs manquantes\nLa colonne rd contient 135 valeurs manquantes. Elles ne sont pas réparties au hasard :\n\n(entreprises.groupby(\"secteur\")[\"rd\"]\n    .apply(lambda s: s.isna().mean())\n    .sort_values(ascending=False)\n    .round(2))\n\nsecteur\nCommerce de détail          1.00\nRestauration                1.00\nBiens de consommation       0.52\nAutomobile                  0.24\nTechnologie                 0.03\nIndustrie                   0.00\nMédias et divertissement    0.00\nPharmaceutique              0.00\nÉnergie                     0.00\nName: rd, dtype: float64\n\n\nLes détaillants et les restaurants ne déclarent pas de ligne de recherche et développement dans leurs états financiers. Ce n’est pas une R-D nulle ; c’est une R-D non mesurée. Remplacer ces valeurs par zéro affirmerait quelque chose que la source ne dit pas. Par défaut, pandas ignore les valeurs manquantes dans mean, median ou sum — ce qui est commode, mais signifie que la moyenne porte sur un sous-ensemble, qu’il faut nommer.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#une-note-sur-pandas-3",
+    "href": "seance-02.html#une-note-sur-pandas-3",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.11 Une note sur pandas 3",
+    "text": "2.11 Une note sur pandas 3\nDepuis pandas 3.0, toute sélection se comporte comme une copie (copy-on-write) : modifier un sous-tableau ne modifie jamais le tableau d’origine. Pour changer l’original, on écrit dans l’original avec .loc[lignes, colonne] = valeur. Le vieil avertissement SettingWithCopyWarning, que l’on trouve encore dans beaucoup de réponses en ligne et de code généré par l’IA, a disparu.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-02.html#à-retenir",
+    "href": "seance-02.html#à-retenir",
+    "title": "2  Le DataFrame, la table de l’analyste",
+    "section": "2.12 À retenir",
+    "text": "2.12 À retenir\n\nUne ligne de entreprises.csv est une entreprise une année ; établissez toujours ce que représente une ligne.\n[] donne une Series, [[ ]] un DataFrame ; .loc sélectionne par étiquette, .iloc par position ; les masques se combinent avec &, |, ~.\nLa taille et la performance donnent des classements différents ; le choix de la mesure se justifie.\nRegardez le dénominateur avant d’interpréter un ratio.\nComparez d’abord à l’intérieur des secteurs, et donnez toujours l’effectif d’un résumé.\nUne valeur manquante est une information sur la source.\n\n\n\n\n\nMcKinney, Wes. 2010. « Data Structures for Statistical Computing in Python ». In Proceedings of the 9th Python in Science Conference, 56‑61. https://doi.org/10.25080/Majora-92bf1922-00a.\n\n\n———. 2022. Python for Data Analysis: Data Wrangling with pandas, NumPy, and Jupyter. 3ᵉ éd. O’Reilly. https://wesmckinney.com/book/.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Le DataFrame, la table de l'analyste</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html",
+    "href": "seance-03.html",
+    "title": "3  Importer des données",
+    "section": "",
+    "text": "3.1 Une question, plusieurs sources\nÀ la séance 1, la manchette « Tesla est vraiment bonne pour l’environnement » est devenue trois questions : bonne par rapport à quoi, selon quelle mesure, et pour qui, où. Aucune des trois ne se tranche avec un seul fichier. La taille et la rentabilité de Tesla viennent de ses états financiers ; le contenu en carbone de l’électricité qui recharge ses voitures vient de statistiques nationales ; ce que les investisseurs pensent de son avenir se lit dans les cours boursiers. Chaque source est produite par une organisation différente, et servie d’une façon différente.\nC’est la condition ordinaire de la recherche en gestion internationale. Bosma et van Witteloostuijn montrent que l’essor de l’apprentissage automatique dans le domaine tient moins à de nouveaux algorithmes qu’à l’arrivée de nouvelles sources de données — textes, données administratives, données en ligne — qu’il faut d’abord savoir faire entrer dans un tableau (Bosma et Witteloostuijn 2024). Ce chapitre traite de cette étape : faire venir les données jusqu’à soi, sans les abîmer en chemin, et en sachant d’où elles viennent.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#une-question-plusieurs-sources",
+    "href": "seance-03.html#une-question-plusieurs-sources",
+    "title": "3  Importer des données",
+    "section": "",
+    "text": "Ce qu’on veut savoir\nSource\nMode d’accès\n\n\n\n\nTaille et rentabilité de Tesla, Ford, GM\nSEC, via data/entreprises.csv\nfichier CSV local\n\n\nCO₂ par habitant, par pays\nOur World in Data\nURL d’un fichier\n\n\nCe que le marché pense de Tesla\nYahoo Finance\npaquet yfinance\n\n\nPart de l’électricité renouvelable\nBanque mondiale\nAPI web, paquet wbgapi\n\n\nÉtats financiers détaillés\nSEC EDGAR\nAPI avec en-tête obligatoire\n\n\nLes données du cours, réunies\ndata/strategie.db\nbase de données SQL",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#le-fichier-csv-et-ce-quil-ne-dit-pas",
+    "href": "seance-03.html#le-fichier-csv-et-ce-quil-ne-dit-pas",
+    "title": "3  Importer des données",
+    "section": "3.2 Le fichier CSV, et ce qu’il ne dit pas",
+    "text": "3.2 Le fichier CSV, et ce qu’il ne dit pas\nUn fichier CSV est du texte : une ligne par observation, un séparateur entre les colonnes. Rien dans le fichier n’indique quel est ce séparateur, quel caractère marque la décimale, ni comment les lettres accentuées sont codées. pd.read_csv fait des hypothèses raisonnables — virgule, point, UTF-8 — qui conviennent au fichier du cours :\n\nentreprises = pd.read_csv(\"data/entreprises.csv\")\nentreprises.shape\n\n(480, 12)\n\n\nUn Excel configuré en français fait d’autres choix : point-virgule entre les colonnes, virgule décimale, encodage Windows-1252. Le fichier data/entreprises_fr.csv contient exactement les mêmes données, enregistrées ainsi. Lu avec les hypothèses par défaut, il ne provoque aucune erreur :\n\nmal = pd.read_csv(\"data/entreprises_fr.csv\", encoding=\"cp1252\")\nmal.shape\n\n(480, 1)\n\n\nUne seule colonne au lieu de douze. pandas n’a trouvé aucune virgule séparatrice et a tout rangé dans la même case. C’est le piège le plus dangereux de l’importation : un échec silencieux. La parade est un réflexe — vérifier .shape et .dtypes après chaque lecture. Les bons paramètres règlent tout :\n\nbon = pd.read_csv(\"data/entreprises_fr.csv\", sep=\";\", decimal=\",\", encoding=\"cp1252\")\nprint(bon.shape)\nprint(bon[[\"chiffre_affaires\", \"resultat_net\"]].dtypes)\n\n(480, 12)\nchiffre_affaires    float64\nresultat_net        float64\ndtype: object\n\n\nTrois autres options servent à lire moins : nrows pour un aperçu, usecols pour ne garder que certaines colonnes, dtype pour imposer un type plutôt que de le laisser deviner. Sur les 480 lignes du cours, l’enjeu est nul ; sur un fichier de transactions de plusieurs gigaoctets, c’est la différence entre une analyse et un ordinateur figé (McKinney 2022, ch. 6).\n\nleger = pd.read_csv(\"data/entreprises.csv\",\n                    usecols=[\"ticker\", \"annee\", \"chiffre_affaires\"],\n                    dtype={\"ticker\": \"category\", \"annee\": \"int16\"})\nleger.dtypes\n\nticker              category\nannee                  int16\nchiffre_affaires     float64\ndtype: object",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#lire-en-ligne-une-fois",
+    "href": "seance-03.html#lire-en-ligne-une-fois",
+    "title": "3  Importer des données",
+    "section": "3.3 Lire en ligne, une fois",
+    "text": "3.3 Lire en ligne, une fois\npd.read_csv accepte une URL comme un nom de fichier. Mais lire en ligne à chaque exécution est une mauvaise habitude : le réseau est lent, le fichier distant peut changer sans prévenir, et certains serveurs limitent les requêtes. La règle du cours est de télécharger une fois et de relire une copie locale. Une petite fonction suffit :\n\nfrom pathlib import Path\n\nCACHE = Path(\"data/cache\")\nCACHE.mkdir(parents=True, exist_ok=True)\n\ndef charger(nom, telecharger):\n    \"\"\"Relit data/cache/&lt;nom&gt;.parquet s'il existe ; sinon télécharge, enregistre, renvoie.\"\"\"\n    fichier = CACHE / f\"{nom}.parquet\"\n    if fichier.exists():\n        return pd.read_parquet(fichier)\n    df = telecharger()\n    df.to_parquet(fichier)\n    return df\n\nL’argument telecharger est une fonction, qui ne s’exécute que si la copie locale manque. Our World in Data publie les émissions de CO₂ de tous les pays dans un seul fichier de 79 colonnes ; on n’en garde que cinq :\n\nURL_CO2 = \"https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv\"\nco2 = charger(\"owid_co2\", lambda: pd.read_csv(\n    URL_CO2, usecols=[\"country\", \"year\", \"iso_code\", \"co2_per_capita\", \"share_global_co2\"]))\n\npays = [\"USA\", \"CAN\", \"CHN\", \"DEU\", \"NOR\", \"POL\"]\nco2[co2[\"iso_code\"].isin(pays) & (co2[\"year\"] == 2023)]\n\n\n\n\n\n\n\n\ncountry\nyear\niso_code\nco2_per_capita\nshare_global_co2\n\n\n\n\n8876\nCanada\n2023\nCAN\n13.880\n1.432\n\n\n9932\nChina\n2023\nCHN\n8.556\n31.953\n\n\n18318\nGermany\n2023\nDEU\n7.023\n1.559\n\n\n34909\nNorway\n2023\nNOR\n7.043\n0.102\n\n\n37609\nPoland\n2023\nPOL\n7.307\n0.744\n\n\n48006\nUnited States\n2023\nUSA\n14.319\n12.911\n\n\n\n\n\n\n\n\nLe piège des certificats sur macOS. Avec le Python de python.org, pd.read_csv(url) peut échouer avec CERTIFICATE_VERIFY_FAILED alors que requests.get(url) fonctionne : requests apporte ses propres certificats, pandas utilise ceux du système. Le correctif est d’exécuter une fois Install Certificates.command, dans le dossier Applications/Python 3.x.\n\nLes pages web contiennent aussi des tableaux. pd.read_html les renvoie tous, sous forme de liste ; il faut un User-Agent pour que Wikipédia accepte la requête :\n\nURL_WIKI = \"https://en.wikipedia.org/wiki/List_of_largest_automotive_companies_by_revenue\"\nconstructeurs = charger(\"wiki_constructeurs\", lambda: pd.read_html(\n    URL_WIKI, storage_options={\"User-Agent\": \"Mozilla/5.0\"})[0])\nconstructeurs.head(5)\n\n\n\n\n\n\n\n\nNo.\nCompany\nIndustry\nRevenue (in billion US$)\nHeadquarters\n\n\n\n\n0\n1\nApple\nElectronics\n391.035\nUnited States\n\n\n1\n2\nVolkswagen Group\nAutomotive\n351.093\nGermany\n\n\n2\n3\nToyota\nAutomotive\n315.110\nJapan\n\n\n3\n4\nSamsung Electronics\nElectronics\n220.637\nSouth Korea\n\n\n4\n5\nFoxconn\nElectronics\n213.699\nTaiwan\n\n\n\n\n\n\n\nWikipédia sert à trouver une source, non à la citer : ces chiffres recopient des rapports annuels, et c’est le rapport annuel qu’un travail sérieux doit citer.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#les-paquets-qui-parlent-aux-sources",
+    "href": "seance-03.html#les-paquets-qui-parlent-aux-sources",
+    "title": "3  Importer des données",
+    "section": "3.4 Les paquets qui parlent aux sources",
+    "text": "3.4 Les paquets qui parlent aux sources\nCertaines sources ont un paquet Python qui cache les détails de l’accès. yfinance lit les cours boursiers de Yahoo Finance ; auto_adjust=True corrige les cours pour les dividendes et les fractionnements d’actions.\n\nimport yfinance as yf\nfrom plotstyle import setup\nplt = setup()\n\nprix = charger(\"cours_auto\", lambda: yf.download(\n    [\"TSLA\", \"F\", \"GM\"], start=\"2020-01-01\", end=\"2025-01-01\",\n    auto_adjust=True, progress=False)[\"Close\"])\n\nbase100 = prix / prix.iloc[0] * 100\nfig, ax = plt.subplots()\nfor t in base100.columns:\n    ax.plot(base100.index, base100[t], label=t)\nax.set_yscale(\"log\")\nax.legend(frameon=False)\nplt.show()\n\n\n\n\n\n\n\nFigure 3.1: Cours ajustés de Tesla, Ford et General Motors, base 100 au premier jour de cotation de 2020, échelle logarithmique. Source : Yahoo Finance via yfinance.\n\n\n\n\n\n\nrendements = prix.resample(\"YE\").last().pct_change().dropna()\nrendements.round(2)\n\n\n\n\n\n\n\nTicker\nF\nGM\nTSLA\n\n\nDate\n\n\n\n\n\n\n\n2021-12-31\n1.37\n0.41\n0.50\n\n\n2022-12-31\n-0.42\n-0.42\n-0.65\n\n\n2023-12-31\n0.16\n0.08\n1.02\n\n\n2024-12-31\n-0.13\n0.50\n0.63\n\n\n\n\n\n\n\nLe rendement annuel nuance déjà la manchette « le marché croit en Tesla » : en 2021, l’action de Ford a progressé davantage que celle de Tesla. yfinance n’est pas un produit officiel, et les conditions de Yahoo interdisent de redistribuer ces données ; pour une recherche publiée, les bases de référence sont CRSP et Compustat.\nLe paquet wbgapi fait de même pour la Banque mondiale :\n\nimport wbgapi as wb\nco2_hab = charger(\"wb_co2_hab\", lambda: wb.data.DataFrame(\n    \"EN.GHG.CO2.PC.CE.AR5\", [\"USA\", \"CAN\", \"CHN\", \"NOR\", \"DEU\"],\n    time=range(2018, 2023)).reset_index())\nco2_hab.round(1)\n\n\n\n\n\n\n\n\neconomy\nYR2018\nYR2019\nYR2020\nYR2021\nYR2022\n\n\n\n\n0\nCAN\n16.5\n16.2\n14.4\n14.7\n14.8\n\n\n1\nCHN\n8.2\n8.4\n8.5\n8.9\n8.9\n\n\n2\nDEU\n9.0\n8.4\n7.7\n8.1\n7.9\n\n\n3\nNOR\n8.8\n8.5\n8.1\n8.2\n8.0\n\n\n4\nUSA\n15.6\n15.0\n13.5\n14.3\n14.4",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#les-api",
+    "href": "seance-03.html#les-api",
+    "title": "3  Importer des données",
+    "section": "3.5 Les API",
+    "text": "3.5 Les API\nUne API web est une adresse qui répond avec des données plutôt qu’avec une page. La requête précise une ressource (quels pays, quel indicateur), des paramètres (années, format) et parfois des en-têtes (qui demande, avec quelle clé). La réponse porte un code de statut — 200 pour un succès, 404 pour une ressource introuvable, 429 pour trop de requêtes — et, le plus souvent, du JSON : des listes et des dictionnaires imbriqués.\n\nimport requests\n\nurl = \"https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.ZS\"\nreponse = requests.get(url, params={\"format\": \"json\", \"date\": \"2015:2022\", \"per_page\": 100},\n                       timeout=30)\nprint(reponse.status_code)\nmeta, observations = reponse.json()\nprint(meta)\n\n200\n{'page': 1, 'pages': 1, 'per_page': 100, 'total': 40, 'sourceid': '2', 'lastupdated': '2026-10-08'}\n\n\nLa Banque mondiale renvoie une liste de deux éléments : les métadonnées, puis les observations. Une compréhension de liste les range dans un tableau :\n\nelec = pd.DataFrame([{\"iso3\": o[\"countryiso3code\"], \"annee\": int(o[\"date\"]),\n                      \"renouv_pct\": o[\"value\"]} for o in observations])\nelec.pivot(index=\"annee\", columns=\"iso3\", values=\"renouv_pct\").round(1)\n\n\n\n\n\n\n\niso3\nCAN\nCHN\nNOR\nPOL\nUSA\n\n\nannee\n\n\n\n\n\n\n\n\n\n2015\n64.1\n23.9\n97.7\n14.2\n13.6\n\n\n2016\n65.0\n25.1\n97.8\n14.0\n15.3\n\n\n2017\n66.6\n25.0\n97.8\n14.4\n17.3\n\n\n2018\n65.9\n25.8\n97.8\n13.0\n17.2\n\n\n2019\n65.9\n26.9\n97.8\n16.0\n17.9\n\n\n2020\n67.1\n28.1\n98.4\n18.4\n19.9\n\n\n2021\n67.0\n28.4\n99.1\n17.5\n20.3\n\n\n2022\nNaN\nNaN\nNaN\nNaN\nNaN\n\n\n\n\n\n\n\nLe tableau répond à la troisième question de la séance 1 : une voiture électrique branchée au réseau norvégien ou canadien roule à l’électricité renouvelable bien plus qu’en Chine, en Pologne ou aux États-Unis. Il montre aussi une limite : la dernière ligne est vide, parce que la série publiée s’arrête en 2021. Une source a toujours un retard, et une analyse doit le dire.\nQuand une réponse dépasse une page, l’API l’indique dans ses métadonnées (pages) et il faut boucler. La SEC, elle, exige que chaque programme s’identifie par un User-Agent qui contient un nom et un courriel. On le lit dans une variable d’environnement, pour qu’il n’apparaisse jamais dans un code partagé :\n\nua = os.environ.get(\"SEC_USER_AGENT\", \"HEC Montreal MGMT60XXX course\")\n\ndef faits_tesla():\n    r = requests.get(\"https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json\",\n                     headers={\"User-Agent\": ua}, timeout=60)\n    r.raise_for_status()\n    ventes = r.json()[\"facts\"][\"us-gaap\"][\"RevenueFromContractWithCustomerExcludingAssessedTax\"]\n    return pd.DataFrame(ventes[\"units\"][\"USD\"])\n\nbrut = charger(\"sec_tesla_ventes\", faits_tesla)\nannuel = brut[brut[\"frame\"].fillna(\"\").str.fullmatch(r\"CY\\d{4}\")]\nannuel.assign(ventes_milliards=annuel[\"val\"] / 1e9)[[\"frame\", \"ventes_milliards\", \"form\"]].tail(4)\n\n\n\n\n\n\n\n\nframe\nventes_milliards\nform\n\n\n\n\n10\nCY2022\n81.462\n10-K\n\n\n20\nCY2023\n96.773\n10-K\n\n\n32\nCY2024\n97.690\n10-K\n\n\n43\nCY2025\n94.827\n10-K\n\n\n\n\n\n\n\nUne même année de ventes figure dans plusieurs dépôts successifs ; le champ frame désigne la valeur retenue pour chaque année civile. C’est la logique de scripts/build_course_data.py, qui a construit data/entreprises.csv.\nLes clés d’API obéissent à la même règle que le courriel : elles vivent dans une variable d’environnement (os.environ[\"FRED_API_KEY\"]), jamais dans un fichier versionné. Une clé publiée sur GitHub est repérée par des robots en quelques minutes ; il faut alors la révoquer.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#les-bases-de-données",
+    "href": "seance-03.html#les-bases-de-données",
+    "title": "3  Importer des données",
+    "section": "3.6 Les bases de données",
+    "text": "3.6 Les bases de données\nDans une entreprise, les données vivent rarement dans des fichiers : elles sont dans des bases, qu’on interroge en SQL. Le fichier data/strategie.db est une base SQLite qui contient les trois tables du cours. pd.read_sql envoie la requête et renvoie un DataFrame.\n\nimport sqlite3\ncon = sqlite3.connect(\"data/strategie.db\")\n\npd.read_sql(\"\"\"\nSELECT secteur,\n       COUNT(DISTINCT ticker)                                   AS n,\n       ROUND(SUM(chiffre_affaires) / 1000, 1)                   AS ventes_milliards,\n       ROUND(AVG(resultat_net * 1.0 / chiffre_affaires) * 100, 1) AS marge_moy_pct\nFROM entreprises\nWHERE annee = 2023\nGROUP BY secteur\nORDER BY ventes_milliards DESC\n\"\"\", con)\n\n\n\n\n\n\n\n\nsecteur\nn\nventes_milliards\nmarge_moy_pct\n\n\n\n\n0\nCommerce de détail\n4\n1567.1\n3.5\n\n\n1\nTechnologie\n7\n1214.5\n25.2\n\n\n2\nÉnergie\n3\n590.0\n14.6\n\n\n3\nAutomobile\n3\n430.6\n8.1\n\n\n4\nBiens de consommation\n4\n270.6\n15.6\n\n\n5\nPharmaceutique\n4\n230.3\n15.4\n\n\n6\nIndustrie\n4\n202.5\n0.3\n\n\n7\nRestauration\n2\n61.5\n22.3\n\n\n8\nMédias et divertissement\n1\n33.7\n16.0\n\n\n\n\n\n\n\nUne jointure relie deux tables par leurs clés — ici le pays du siège et l’année :\n\npd.read_sql(\"\"\"\nSELECT e.entreprise, e.chiffre_affaires / 1000 AS ventes_milliards, p.pib_milliards_usd,\n       ROUND(e.chiffre_affaires / 1000 / p.pib_milliards_usd * 100, 2) AS pct_pib\nFROM entreprises AS e\nJOIN pays AS p ON p.iso3 = e.pays_siege AND p.annee = e.annee\nWHERE e.ticker IN (?, ?, ?) AND e.annee = ?\n\"\"\", con, params=(\"TSLA\", \"AAPL\", \"WMT\", 2023))\n\n\n\n\n\n\n\n\nentreprise\nventes_milliards\npib_milliards_usd\npct_pib\n\n\n\n\n0\nTesla\n96.773\n27811.52\n0.35\n\n\n1\nApple\n383.285\n27811.52\n1.38\n\n\n2\nWalmart\n642.637\n27811.52\n2.31\n\n\n\n\n\n\n\nLes valeurs filtrées passent par params= et des ?, jamais par du texte collé dans la requête : un nom comme « McDonald’s » casserait la requête, et un texte malveillant pourrait la détourner.\n\ncon.close()\n\nDuckDB va plus loin : il interroge un fichier CSV ou parquet comme une table, sans base à créer.\n\nimport duckdb\nduckdb.sql(\"\"\"\nSELECT ticker, chiffre_affaires, resultat_net\nFROM 'data/entreprises.csv' WHERE annee = 2024\nORDER BY chiffre_affaires DESC LIMIT 5\n\"\"\").df()\n\n\n\n\n\n\n\n\nticker\nchiffre_affaires\nresultat_net\n\n\n\n\n0\nWMT\n674538.0\n19436.0\n\n\n1\nAMZN\n637959.0\n59248.0\n\n\n2\nAAPL\n391035.0\n93736.0\n\n\n3\nGOOGL\n350018.0\n100118.0\n\n\n4\nXOM\n349585.0\n33680.0",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#sauvegarder-et-documenter",
+    "href": "seance-03.html#sauvegarder-et-documenter",
+    "title": "3  Importer des données",
+    "section": "3.7 Sauvegarder et documenter",
+    "text": "3.7 Sauvegarder et documenter\nLe format parquet conserve les types et occupe moins de place ; le CSV reste lisible par tous. Le cours garde ses copies de travail en parquet et remet ses résultats en CSV.\n\nPath(\"sorties\").mkdir(exist_ok=True)\nco2.to_csv(\"sorties/co2.csv\", index=False)\nco2.to_parquet(\"sorties/co2.parquet\")\n{f: round(Path(f).stat().st_size / 1e6, 2) for f in [\"sorties/co2.csv\", \"sorties/co2.parquet\"]}\n\n{'sorties/co2.csv': 1.36, 'sorties/co2.parquet': 0.17}\n\n\nReste l’essentiel, qui ne s’écrit pas en Python : la fiche de provenance. Pour chaque source, le producteur, le mode d’accès, la date d’accès, l’unité, la licence et la dernière année disponible. Elle rend le travail vérifiable par un tiers, et par soi-même six semaines plus tard. La séance 4 assemblera ces sources en un seul tableau, ce qui suppose de savoir exactement ce que chacune mesure (Wickham 2014).",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-03.html#à-retenir",
+    "href": "seance-03.html#à-retenir",
+    "title": "3  Importer des données",
+    "section": "3.8 À retenir",
+    "text": "3.8 À retenir\n\nAprès chaque import, vérifier .shape et .dtypes : l’échec le plus grave est silencieux.\nsep, decimal, encoding règlent presque tous les CSV ; usecols, dtype, nrows allègent.\nTélécharger une fois, relire en local : le cache rend le travail rapide et reproductible.\nUne API répond par un code de statut et du JSON ; on vérifie le premier avant de lire le second.\nCourriels et clés d’API vivent dans des variables d’environnement, jamais dans le code.\nSQL sélectionne, filtre, agrège et joint dans la base ; params= protège la requête.\nChaque source a un producteur, une licence et un retard : la fiche de provenance les consigne.\n\n\n\n\n\nBosma, Bas, et Arjen van Witteloostuijn. 2024. « Machine Learning in International Business ». Journal of International Business Studies 55 (6): 676‑702. https://doi.org/10.1057/s41267-024-00687-6.\n\n\nMcKinney, Wes. 2022. Python for Data Analysis: Data Wrangling with pandas, NumPy, and Jupyter. 3ᵉ éd. O’Reilly. https://wesmckinney.com/book/.\n\n\nWickham, Hadley. 2014. « Tidy Data ». Journal of Statistical Software 59 (10): 1‑23. https://doi.org/10.18637/jss.v059.i10.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Importer des données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html",
+    "href": "seance-04.html",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "",
+    "text": "4.1 Ce que l’on ne voit pas dans un article\nUn article de stratégie présente un tableau de statistiques descriptives, puis des régressions. Il ne montre presque jamais ce qui a précédé : des semaines passées à corriger des types, à harmoniser des identifiants, à joindre des sources qui ne parlent pas la même langue, et à décider quoi faire des trous. Ce travail n’est pas préliminaire. C’est là que se prennent la plupart des décisions qui déterminent le résultat — et la plupart des erreurs qui le compromettent.\nCe chapitre part de deux questions que se pose un gestionnaire. La première : qui sont mes vrais concurrents ? Comparer une entreprise à la moyenne de toutes les autres n’a guère de sens ; il faut la comparer à son secteur, la même année. La seconde : les fusions-acquisitions créent-elles de la valeur ? Pour en avoir un premier aperçu, il faut importer des cours boursiers, calculer des rendements entreprise par entreprise, les aligner sur ceux du marché et découper une fenêtre autour de l’annonce. Aucune de ces deux questions ne demande de statistique avancée. Toutes deux demandent de savoir manipuler des tables.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#nettoyer",
+    "href": "seance-04.html#nettoyer",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.2 Nettoyer",
+    "text": "4.2 Nettoyer\nLes données arrivent rarement prêtes. Voici une petite table comme on en reçoit d’un collègue ou d’un tableur :\n\nbrut = pd.DataFrame({\n    \"Entreprise \": [\" Tesla\", \"Ford\", \"ford\", \"General Motors\", \"Ford\"],\n    \"Annee\":       [\"2023\", \"2023\", \"2023\", \"2023\", \"2023\"],\n    \"Ventes (M$)\": [\"96 773\", \"176 191\", \"176 191\", \"157 658\", \"176 191\"],\n    \"R&D\":         [\"3 969\", \"8 200\", \"8 200\", \"n.d.\", \"8 200\"],\n})\nbrut.dtypes\n\nEntreprise     str\nAnnee          str\nVentes (M$)    str\nR&D            str\ndtype: object\n\n\nTout y est du texte : on ne peut ni additionner ni comparer. Le nettoyage suit toujours le même ordre — les noms, le texte, les types, puis les doublons — parce que chaque étape dépend de la précédente : tant que \"ford\" et \"Ford\" coexistent, aucune recherche de doublons ne les trouvera.\n\npropre = brut.rename(columns={\"Entreprise \": \"entreprise\", \"Annee\": \"annee\",\n                              \"Ventes (M$)\": \"ventes\", \"R&D\": \"rd\"})\npropre[\"entreprise\"] = propre[\"entreprise\"].str.strip().str.title()\npropre[\"annee\"] = propre[\"annee\"].astype(int)\npropre[\"ventes\"] = propre[\"ventes\"].str.replace(\" \", \"\").astype(float)\npropre[\"rd\"] = pd.to_numeric(propre[\"rd\"].str.replace(\" \", \"\"), errors=\"coerce\")\nprint(propre.duplicated().sum(), \"doublon(s)\")\npropre = propre.drop_duplicates()\npropre\n\n2 doublon(s)\n\n\n\n\n\n\n\n\n\nentreprise\nannee\nventes\nrd\n\n\n\n\n0\nTesla\n2023\n96773.0\n3969.0\n\n\n1\nFord\n2023\n176191.0\n8200.0\n\n\n3\nGeneral Motors\n2023\n157658.0\nNaN\n\n\n\n\n\n\n\nDeux outils méritent attention. astype(float) échoue dès qu’une cellule n’est pas un nombre ; c’est utile quand on s’attend à des nombres partout. pd.to_numeric(..., errors=\"coerce\") transforme au contraire toute valeur illisible en NaN : c’est commode, mais cela cache le problème si l’on ne compte pas ensuite les valeurs manquantes créées.\n\n4.2.1 Les valeurs manquantes\nDans les données du cours, il n’y a aucun doublon entreprise × année, mais beaucoup de trous :\n\nentreprises = pd.read_csv(\"data/entreprises.csv\")\nprint(entreprises.duplicated([\"ticker\", \"annee\"]).sum(), \"doublon entreprise × année\")\nentreprises.isna().sum()\n\n0 doublon entreprise × année\n\n\nticker                0\nentreprise            0\ncik                   0\nsecteur               0\npays_siege            0\nannee                 0\nchiffre_affaires      3\nresultat_net         11\nactifs_totaux         5\ncapitaux_propres      3\nrd                  135\ninvestissements     121\ndtype: int64\n\n\nOn a trois options : retirer les lignes (dropna), remplir (fillna) ou signaler (créer une colonne booléenne). La troisième devrait toujours précéder les deux autres. La colonne rd montre pourquoi :\n\nentreprises[\"rd_manquant\"] = entreprises[\"rd\"].isna()\n(entreprises.groupby(\"entreprise\")[\"rd_manquant\"].mean()\n    .loc[lambda s: s &gt; 0].sort_values(ascending=False).round(2))\n\nentreprise\nAmazon              1.00\nCoca-Cola           1.00\nCostco              1.00\nMcDonald's          1.00\nNike                1.00\nStarbucks           1.00\nTarget              1.00\nWalmart             1.00\nGeneral Motors      0.73\nAlphabet            0.20\nProcter & Gamble    0.07\nName: rd_manquant, dtype: float64\n\n\nLes entreprises qui ne publient jamais de ligne « recherche et développement » sont des distributeurs, des chaînes de restauration et des marques de consommation — mais aussi Amazon, qui investit massivement en technologie sous un autre intitulé. Remplir par zéro rangerait Amazon parmi les entreprises les moins innovantes de l’échantillon. L’absence de valeur est ici une information sur la présentation des comptes, pas sur l’effort d’innovation.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#joindre",
+    "href": "seance-04.html#joindre",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.3 Joindre",
+    "text": "4.3 Joindre\nUne analyse combine presque toujours plusieurs sources. La jointure (merge) associe les lignes de deux tables qui partagent une clé. Le risque principal est silencieux : si la clé apparaît plusieurs fois du côté où l’on attendait une seule ligne, chaque observation est dupliquée, et rien ne signale l’erreur. Deux arguments de merge la rendent visible : validate=\"m:1\" exige que la table de droite ait au plus une ligne par clé, et indicator=True ajoute une colonne _merge qui dit d’où vient chaque ligne.\n\npays = pd.read_csv(\"data/pays.csv\")\navant = len(entreprises)\nent_pays = entreprises.merge(\n    pays[[\"iso3\", \"annee\", \"pib_hab_usd\", \"croissance_pib\"]],\n    left_on=[\"pays_siege\", \"annee\"], right_on=[\"iso3\", \"annee\"],\n    how=\"left\", validate=\"m:1\", indicator=True,\n)\nprint(avant, \"→\", len(ent_pays), \"lignes\")\nent_pays.groupby(\"annee\")[\"_merge\"].value_counts().unstack().tail(3)\n\n480 → 480 lignes\n\n\n\n\n\n\n\n\n_merge\nleft_only\nright_only\nboth\n\n\nannee\n\n\n\n\n\n\n\n2022\n0\n0\n32\n\n\n2023\n0\n0\n32\n\n\n2024\n32\n0\n0\n\n\n\n\n\n\n\nLe nombre de lignes n’a pas changé, ce qui confirme la relation plusieurs-à-un. Les lignes sans partenaire sont toutes en 2024 : les données de la Banque mondiale du cours s’arrêtent en 2023. Une jointure how=\"inner\" aurait supprimé une année entière sans le dire ; how=\"left\" avec indicator=True la montre.\nLa table des secteurs se joint de la même façon, par la colonne secteur :\n\nsecteurs = pd.read_csv(\"data/secteurs.csv\")\nentreprises.merge(secteurs, on=\"secteur\", how=\"left\", validate=\"m:1\").shape\n\n(480, 14)\n\n\npd.concat, enfin, n’associe pas des colonnes mais empile des lignes : c’est l’outil pour réunir des fenêtres de rendements calculées séparément, comme plus bas.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#remodeler",
+    "href": "seance-04.html#remodeler",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.4 Remodeler",
+    "text": "4.4 Remodeler\nWickham (2014) appelle rangées (tidy) les données où chaque variable est une colonne, chaque observation une ligne, et chaque type d’unité une table. entreprises.csv est rangé : une ligne correspond à une entreprise et une année. Beaucoup de sources publient pourtant un format large, avec une colonne par année — c’est le format par défaut des téléchargements de la Banque mondiale et de la plupart des tableaux Excel.\n\nlarge = (pays[pays[\"iso3\"].isin([\"CAN\", \"USA\", \"MEX\", \"CHN\"]) & (pays[\"annee\"] &gt;= 2019)]\n         .pivot(index=\"pays\", columns=\"annee\", values=\"pib_hab_usd\").round(0))\nlarge\n\n\n\n\n\n\n\nannee\n2019\n2020\n2021\n2022\n2023\n\n\npays\n\n\n\n\n\n\n\n\n\nCanada\n46353.0\n43538.0\n52887.0\n56497.0\n54848.0\n\n\nChina\n10343.0\n10627.0\n12887.0\n12971.0\n12951.0\n\n\nMexico\n10370.0\n8841.0\n10314.0\n11406.0\n13831.0\n\n\nUnited States\n65228.0\n64465.0\n71441.0\n78009.0\n82587.0\n\n\n\n\n\n\n\nCe format se lit bien, mais il ne se prête ni à un groupby par année ni à un graphique. melt le remet au format long :\n\nlong = large.reset_index().melt(id_vars=\"pays\", var_name=\"annee\", value_name=\"pib_hab_usd\")\nlong.shape\n\n(20, 3)\n\n\npivot refuse les combinaisons index × colonne en double ; pivot_table les agrège avec la fonction qu’on lui donne. La médiane de la marge nette par secteur et par année s’obtient ainsi en une instruction :\n\n(entreprises\n .assign(marge=entreprises[\"resultat_net\"] / entreprises[\"chiffre_affaires\"])\n .pivot_table(index=\"secteur\", columns=\"annee\", values=\"marge\", aggfunc=\"median\")\n .loc[:, [2019, 2020, 2021, 2022, 2023]].round(3))\n\n\n\n\n\n\n\nannee\n2019\n2020\n2021\n2022\n2023\n\n\nsecteur\n\n\n\n\n\n\n\n\n\nAutomobile\n0.001\n0.023\n0.105\n0.067\n0.062\n\n\nBiens de consommation\n0.088\n0.156\n0.159\n0.143\n0.145\n\n\nCommerce de détail\n0.029\n0.036\n0.046\n0.022\n0.032\n\n\nIndustrie\n0.127\n0.109\n0.144\n0.126\n0.063\n\n\nMédias et divertissement\n0.093\n0.110\n0.172\n0.142\n0.160\n\n\nPharmaceutique\n0.312\n0.199\n0.259\n0.235\n0.098\n\n\nRestauration\n0.209\n0.143\n0.235\n0.184\n0.223\n\n\nTechnologie\n0.256\n0.260\n0.295\n0.199\n0.253\n\n\nÉnergie\n0.056\n-0.126\n0.100\n0.151\n0.109",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#agréger-et-comparer-chaque-entreprise-à-son-groupe",
+    "href": "seance-04.html#agréger-et-comparer-chaque-entreprise-à-son-groupe",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.5 Agréger, et comparer chaque entreprise à son groupe",
+    "text": "4.5 Agréger, et comparer chaque entreprise à son groupe\ngroupby découpe la table en groupes. Ce que l’on fait ensuite détermine la forme du résultat : agg réduit chaque groupe à une ligne, transform renvoie une valeur pour chaque ligne d’origine. Le premier produit un tableau de synthèse, le second permet de comparer chaque observation à son groupe.\n\n(entreprises[entreprises[\"annee\"] == 2023]\n .groupby(\"secteur\")\n .agg(n=(\"ticker\", \"nunique\"),\n      ventes_mediane=(\"chiffre_affaires\", \"median\"),\n      rd_publiee=(\"rd\", \"count\"))\n .sort_values(\"ventes_mediane\", ascending=False))\n\n\n\n\n\n\n\n\nn\nventes_mediane\nrd_publiee\n\n\nsecteur\n\n\n\n\n\n\n\nCommerce de détail\n4\n408537.5\n0\n\n\nÉnergie\n3\n196913.0\n3\n\n\nAutomobile\n3\n157658.0\n2\n\n\nTechnologie\n7\n134902.0\n7\n\n\nBiens de consommation\n4\n66684.0\n2\n\n\nPharmaceutique\n4\n55514.5\n4\n\n\nIndustrie\n4\n50034.5\n4\n\n\nMédias et divertissement\n1\n33723.3\n1\n\n\nRestauration\n2\n30734.8\n0\n\n\n\n\n\n\n\nPour répondre à la question des vrais concurrents, on calcule le rendement des actifs (ROA), puis la moyenne du ROA du secteur la même année, et l’écart entre les deux :\n\nentreprises[\"roa\"] = entreprises[\"resultat_net\"] / entreprises[\"actifs_totaux\"]\nentreprises[\"roa_secteur\"] = entreprises.groupby([\"secteur\", \"annee\"])[\"roa\"].transform(\"mean\")\nentreprises[\"ecart_secteur\"] = entreprises[\"roa\"] - entreprises[\"roa_secteur\"]\n\nclassement = (entreprises[entreprises[\"annee\"] == 2023]\n              [[\"entreprise\", \"secteur\", \"roa\", \"roa_secteur\", \"ecart_secteur\"]]\n              .sort_values(\"ecart_secteur\", ascending=False).round(3))\npd.concat([classement.head(4), classement.tail(4)])\n\n\n\n\n\n\n\n\nentreprise\nsecteur\nroa\nroa_secteur\necart_secteur\n\n\n\n\n118\nNvidia\nTechnologie\n0.453\n0.186\n0.267\n\n\n238\nJohnson & Johnson\nPharmaceutique\n0.210\n0.076\n0.134\n\n\n433\nCaterpillar\nIndustrie\n0.118\n0.014\n0.104\n\n\n58\nApple\nTechnologie\n0.274\n0.186\n0.089\n\n\n253\nMerck & Co.\nPharmaceutique\n0.003\n0.076\n-0.073\n\n\n148\nIBM\nTechnologie\n0.055\n0.186\n-0.130\n\n\n448\n3M\nIndustrie\n-0.138\n0.014\n-0.152\n\n\n133\nIntel\nTechnologie\n0.009\n0.186\n-0.177\n\n\n\n\n\n\n\n\nd = classement.sort_values(\"ecart_secteur\")\nfig, ax = plt.subplots(figsize=(7.2, 6.4))\ncouleurs = [CL.good if v &gt; 0 else CL.warn for v in d[\"ecart_secteur\"]]\nax.barh(d[\"entreprise\"], d[\"ecart_secteur\"] * 100, color=couleurs)\nax.axvline(0, color=CL.muted, lw=0.8)\nax.set_xlabel(\"points de pourcentage\")\nax.tick_params(axis=\"y\", labelsize=8)\nplt.show()\n\n\n\n\n\n\n\nFigure 4.1: Écart du rendement des actifs à la moyenne du secteur, 2023. Une barre à droite de zéro signale une entreprise plus rentable que ses concurrents directs la même année.\n\n\n\n\n\nLe choix du groupe de comparaison change le diagnostic. Microsoft affiche un ROA supérieur à celui de la plupart des 32 entreprises, mais inférieur à la moyenne de son propre secteur en 2023, tiré vers le haut par Nvidia et Apple. Inversement, une moyenne calculée sur un très petit groupe ne dit presque rien : Netflix est seule dans son secteur, et son écart y vaut zéro par construction.\n\nentreprises.groupby(\"secteur\")[\"ticker\"].nunique().sort_values()\n\nsecteur\nMédias et divertissement    1\nRestauration                2\nAutomobile                  3\nÉnergie                     3\nBiens de consommation       4\nCommerce de détail          4\nIndustrie                   4\nPharmaceutique              4\nTechnologie                 7\nName: ticker, dtype: int64",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#le-temps-entité-par-entité",
+    "href": "seance-04.html#le-temps-entité-par-entité",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.6 Le temps, entité par entité",
+    "text": "4.6 Le temps, entité par entité\nDans un panel, toute opération qui regarde « l’année précédente » doit être faite par entité, après un tri. Sans groupby(\"ticker\"), shift et pct_change iraient chercher la dernière année d’une entreprise pour calculer la croissance de la suivante.\n\nentreprises = entreprises.sort_values([\"ticker\", \"annee\"])\nentreprises[\"croissance\"] = entreprises.groupby(\"ticker\")[\"chiffre_affaires\"].pct_change()\nentreprises[\"croissance_3ans\"] = (entreprises.groupby(\"ticker\")[\"croissance\"]\n                                  .transform(lambda s: s.rolling(3).mean()))\n(entreprises[entreprises[\"ticker\"] == \"TSLA\"]\n [[\"annee\", \"chiffre_affaires\", \"croissance\", \"croissance_3ans\"]].tail(6).round(3))\n\n\n\n\n\n\n\n\nannee\nchiffre_affaires\ncroissance\ncroissance_3ans\n\n\n\n\n9\n2019\n24578.0\n0.145\n0.550\n\n\n10\n2020\n31536.0\n0.283\n0.418\n\n\n11\n2021\n53823.0\n0.707\n0.378\n\n\n12\n2022\n81462.0\n0.514\n0.501\n\n\n13\n2023\n96773.0\n0.188\n0.469\n\n\n14\n2024\n97690.0\n0.009\n0.237\n\n\n\n\n\n\n\nLa moyenne mobile sur trois ans lisse les à-coups d’une année exceptionnelle et fait apparaître la tendance : la croissance de Tesla ralentit nettement après 2022.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#les-fusions-acquisitions-créent-elles-de-la-valeur-un-premier-regard",
+    "href": "seance-04.html#les-fusions-acquisitions-créent-elles-de-la-valeur-un-premier-regard",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.7 Les fusions-acquisitions créent-elles de la valeur ? Un premier regard",
+    "text": "4.7 Les fusions-acquisitions créent-elles de la valeur ? Un premier regard\nLe 18 janvier 2022, Microsoft annonce l’acquisition d’Activision Blizzard ; le 13 mars 2023, Pfizer annonce celle de Seagen. Si le marché juge qu’une acquisition détruit de la valeur pour l’acquéreur, le cours de ce dernier devrait baisser plus que le marché autour de l’annonce.\nOn commence par importer les cours une seule fois, en les gardant dans un cache local :\n\nfrom pathlib import Path\nimport yfinance as yf\n\ndef cours(ticker, debut=\"2021-06-01\", fin=\"2023-12-31\"):\n    \"\"\"Cours de clôture ajustés, mis en cache dans data/cache/ au premier appel.\"\"\"\n    fichier = Path(\"data/cache\") / f\"{ticker}.parquet\"\n    if not fichier.exists():\n        fichier.parent.mkdir(parents=True, exist_ok=True)\n        d = yf.download(ticker, start=debut, end=fin, progress=False, auto_adjust=True)\n        d.columns = [c[0] if isinstance(c, tuple) else c for c in d.columns]\n        d.to_parquet(fichier)\n    return pd.read_parquet(fichier)[\"Close\"]\n\nprix = pd.DataFrame({t: cours(t) for t in [\"MSFT\", \"PFE\", \"SPY\"]})\nrendements = prix.pct_change().dropna()\nrendements.describe().loc[[\"mean\", \"std\"]].round(4)\n\n\n\n\n\n\n\n\nMSFT\nPFE\nSPY\n\n\n\n\nmean\n0.0008\n-0.0002\n0.0003\n\n\nstd\n0.0179\n0.0168\n0.0114\n\n\n\n\n\n\n\nLe fonds SPY, qui réplique le S&P 500, sert de « marché ». Le rendement anormal naïf est la différence entre le rendement de l’acquéreur et celui du marché ; on le cumule sur une fenêtre de cinq jours de Bourse de part et d’autre de l’annonce.\n\ndef fenetre(ticker, annonce, avant=5, apres=5):\n    r = rendements[[ticker, \"SPY\"]].copy()\n    r[\"anormal\"] = r[ticker] - r[\"SPY\"]\n    i = r.index.searchsorted(pd.Timestamp(annonce))   # jour de Bourse de l'annonce, ou le suivant\n    w = r.iloc[i - avant : i + apres + 1].copy()\n    w[\"jour\"] = range(-avant, apres + 1)\n    w[\"cumul\"] = w[\"anormal\"].cumsum()\n    return w\n\nfen = pd.concat([fenetre(\"MSFT\", \"2022-01-18\").assign(operation=\"Microsoft · Activision\"),\n                 fenetre(\"PFE\", \"2023-03-13\").assign(operation=\"Pfizer · Seagen\")])\nfen.pivot(index=\"jour\", columns=\"operation\", values=\"cumul\").round(4)\n\n\n\n\n\n\n\noperation\nMicrosoft · Activision\nPfizer · Seagen\n\n\njour\n\n\n\n\n\n\n-5\n0.0020\n-0.0017\n\n\n-4\n-0.0049\n-0.0051\n\n\n-3\n0.0029\n-0.0122\n\n\n-2\n-0.0257\n-0.0102\n\n\n-1\n-0.0084\n0.0025\n\n\n0\n-0.0150\n0.0159\n\n\n1\n-0.0024\n0.0003\n\n\n2\n0.0030\n0.0161\n\n\n3\n0.0042\n0.0008\n\n\n4\n0.0011\n0.0058\n\n\n5\n-0.0133\n0.0139\n\n\n\n\n\n\n\n\nfig, ax = plt.subplots()\nfor (nom, g), c in zip(fen.groupby(\"operation\"), [CL.accent, CL.warn]):\n    ax.plot(g[\"jour\"], g[\"cumul\"] * 100, marker=\"o\", color=c, label=nom)\nax.axvline(0, color=CL.muted, lw=1)\nax.axhline(0, color=CL.muted, lw=0.8)\nax.set_xlabel(\"jours de Bourse autour de l'annonce\")\nax.set_ylabel(\"%\")\nax.legend(frameon=False)\nplt.show()\n\n\n\n\n\n\n\nFigure 4.2: Rendement anormal cumulé naïf (acquéreur moins SPY) autour de deux annonces d’acquisition. Le jour 0 est le premier jour de Bourse à partir de l’annonce.\n\n\n\n\n\nLes deux courbes vont dans des directions opposées, et restent de l’ordre d’un ou deux points de pourcentage — à peine plus que l’écart-type d’un seul rendement quotidien de ces titres, qui est lui-même voisin de deux pour cent. Il serait donc imprudent d’en tirer quoi que ce soit.\nCe calcul n’est pas une étude d’événement. Une étude d’événement en bonne et due forme (MacKinlay 1997) estime d’abord, sur une période antérieure à l’annonce, la relation normale entre le titre et le marché (le modèle de marché), plutôt que de supposer qu’ils évoluent un pour un ; elle porte sur un grand nombre d’annonces, dont elle fait la moyenne ; elle teste statistiquement si le rendement anormal moyen diffère de zéro ; et elle s’interroge sur les fuites d’information avant l’annonce et sur les autres nouvelles publiées le même jour. Le code ci-dessus est correct ; c’est la conclusion qu’on serait tenté d’en tirer qui ne le serait pas. Les séances consacrées aux fusions-acquisitions reprendront la question avec la méthode complète.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-04.html#à-retenir",
+    "href": "seance-04.html#à-retenir",
+    "title": "4  Manipuler les données : nettoyer, joindre, remodeler, agréger",
+    "section": "4.8 À retenir",
+    "text": "4.8 À retenir\n\nNettoyer suit un ordre : noms, texte, types, doublons. errors=\"coerce\" est utile à condition de compter les NaN qu’il crée.\nUne valeur manquante se signale avant d’être retirée ou remplie ; elle est souvent une information.\nChaque jointure se contrôle : nombre de lignes avant et après, validate=, indicator=.\nLes données rangées — une ligne par observation — sont le format de travail ; melt et pivot font l’aller-retour avec le format large des sources.\nagg résume un groupe ; transform compare chaque observation à son groupe. Le choix du groupe fait partie de l’analyse.\nDans un panel, shift, pct_change et rolling s’appliquent par entité, après un tri.\n\n\n\n\n\nMacKinlay, A. Craig. 1997. « Event Studies in Economics and Finance ». Journal of Economic Literature 35 (1): 13‑39.\n\n\nWickham, Hadley. 2014. « Tidy Data ». Journal of Statistical Software 59 (10): 1‑23. https://doi.org/10.18637/jss.v059.i10.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Manipuler les données : nettoyer, joindre, remodeler, agréger</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html",
+    "href": "seance-05.html",
+    "title": "5  Représenter les données",
+    "section": "",
+    "text": "5.1 Une manchette, plusieurs vérités\n« L’Amérique crée plus de valeur que tout autre pays. » La phrase circule, et elle est vraie — pour une certaine définition de valeur. Si la valeur est la production totale, les États-Unis dominent. Si elle est la production par habitant, ou la croissance, ou la capacité à attirer l’investissement étranger, le classement change du tout au tout.\nmesures = {\"pib_milliards_usd\": \"PIB total\",\n           \"pib_hab_usd\": \"PIB par habitant\",\n           \"croissance_pib\": \"Croissance du PIB\",\n           \"ide_entrants_pct_pib\": \"IDE entrants (% du PIB)\"}\nrangs = pd.DataFrame({\n    \"Mesure\": list(mesures.values()),\n    \"Rang des États-Unis\": [int(p23[m].rank(ascending=False)[p23[\"iso3\"] == \"USA\"].iloc[0]) for m in mesures],\n    \"Pays mesurés\": [int(p23[m].notna().sum()) for m in mesures],\n})\nrangs\n\n\n\nTable 5.1: Le rang des États-Unis en 2023 selon quatre mesures de la « valeur ». Source : Banque mondiale.\n\n\n\n\n\n\n\n\n\n\nMesure\nRang des États-Unis\nPays mesurés\n\n\n\n\n0\nPIB total\n1\n204\n\n\n1\nPIB par habitant\n11\n204\n\n\n2\nCroissance du PIB\n113\n204\n\n\n3\nIDE entrants (% du PIB)\n132\n195\nAucune de ces quatre lignes n’est fausse. Le choix de la mesure est un choix d’argument, et le graphique qui suit ce choix le rend visible — ou le cache. Ce chapitre traite de ce passage : de la donnée à l’image, et de l’image à la décision.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#pourquoi-regarder-plutôt-que-résumer",
+    "href": "seance-05.html#pourquoi-regarder-plutôt-que-résumer",
+    "title": "5  Représenter les données",
+    "section": "5.2 Pourquoi regarder plutôt que résumer",
+    "text": "5.2 Pourquoi regarder plutôt que résumer\nEn 1973, le statisticien Francis Anscombe publie quatre petits jeux de onze points (Anscombe 1973). Leurs moyennes, leurs variances et leur corrélation sont identiques à la deuxième décimale. Un tableau de statistiques résumées les déclare interchangeables.\n\nx  = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]\nx4 = [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8]\nys = {\"I\":   [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68],\n      \"II\":  [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74],\n      \"III\": [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73],\n      \"IV\":  [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]}\nfig, axes = plt.subplots(1, 4, figsize=(8, 2.6), sharex=True, sharey=True)\nfor ax, (jeu, y) in zip(axes, ys.items()):\n    xx = x4 if jeu == \"IV\" else x\n    ax.scatter(xx, y, color=CL.ink, s=12)\n    b, a = np.polyfit(xx, y, 1)\n    ax.plot([3, 20], [a + 3 * b, a + 20 * b], color=CL.accent, lw=1.2)\n    ax.set_title(f\"Jeu {jeu}  ·  r = {np.corrcoef(xx, y)[0, 1]:.2f}\", loc=\"left\", fontsize=8)\nplt.show()\n\n\n\n\n\n\n\nFigure 5.1: Le quartet d’Anscombe : quatre jeux de données aux statistiques résumées identiques, et la même droite de régression.\n\n\n\n\n\nLe premier jeu est une relation linéaire bruitée ; le deuxième, une courbe ; le troisième, une droite parfaite déviée par un seul point ; le quatrième n’a aucune relation, sauf celle qu’un point isolé fabrique. La leçon est toujours valable : on regarde avant de résumer, et on résume ce qu’on a vu.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#ce-que-lœil-lit-bien",
+    "href": "seance-05.html#ce-que-lœil-lit-bien",
+    "title": "5  Représenter les données",
+    "section": "5.3 Ce que l’œil lit bien",
+    "text": "5.3 Ce que l’œil lit bien\nUn graphique transforme des nombres en propriétés visuelles : une position, une longueur, un angle, une surface, une couleur. Cleveland et McGill ont mesuré, par des expériences, la précision avec laquelle on lit chacune (Cleveland et McGill 1984). L’ordre qu’ils obtiennent est devenu la règle de base de la visualisation :\n\nla position sur une échelle commune ;\nla position sur des échelles non alignées ;\nla longueur ;\nl’angle et la pente ;\nl’aire ;\nle volume, la saturation et la teinte.\n\nLa conséquence pratique est simple. La comparaison la plus importante doit être confiée à l’encodage le plus précis. Le diagramme circulaire encode par l’angle ; la barre, par la position. Les mêmes nombres, présentés des deux façons, ne se lisent pas avec la même précision (Figure 5.2).\n\ntop5 = p23.nlargest(5, \"pib_milliards_usd\").set_index(\"pays\")[\"pib_milliards_usd\"]\ntotal = p23[\"pib_milliards_usd\"].sum()\nparts = pd.concat([top5, pd.Series({\"Reste du monde\": total - top5.sum()})]) / total\nfig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 3))\na1.pie(parts, labels=parts.index, colors=CL.ramp, textprops={\"fontsize\": 7})\ns = parts.sort_values() * 100\na2.barh(s.index, s, color=CL.accent)\nfor i, v in enumerate(s):\n    a2.text(v + 0.5, i, f\"{v:.0f} %\", va=\"center\", fontsize=7)\na2.set_xlabel(\"Part du PIB mondial (%)\")\nplt.show()\nprint(f\"Part des États-Unis : {parts['United States']:.1%}\")\n\n\n\n\n\n\n\nFigure 5.2: Part du PIB mondial en 2023 : les mêmes six nombres, lus par l’angle et par la position. Source : Banque mondiale.\n\n\n\n\n\nPart des États-Unis : 26.1%",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#lanatomie-dune-figure",
+    "href": "seance-05.html#lanatomie-dune-figure",
+    "title": "5  Représenter les données",
+    "section": "5.4 L’anatomie d’une figure",
+    "text": "5.4 L’anatomie d’une figure\nEn matplotlib, une figure se construit en deux objets : fig, la page, et ax, le système d’axes où l’on dessine. Écrire fig, ax = plt.subplots() puis appeler les méthodes de ax plutôt que les fonctions plt.* garde chaque instruction attachée à un panneau précis — ce qui devient indispensable dès qu’il y en a plusieurs.\nCinq éléments séparent une figure de travail d’une figure que l’on remet :\n\nun titre qui énonce le message (« L’écart entre les États-Unis et le Canada se creuse »), plutôt que le sujet (« PIB par habitant ») ;\nune unité sur chaque axe ;\nla source, en petit, sous la figure ;\nun étiquetage direct des séries, qui évite l’aller-retour vers une légende ;\nun enregistrement à la bonne résolution : fig.savefig(\"sorties/f.png\", dpi=200), appelé avant plt.show().\n\n\nchoix = {\"USA\": CL.warn, \"CAN\": CL.accent, \"JPN\": CL.good, \"MEX\": CL.muted}\nfig, ax = plt.subplots(figsize=(7, 3.6))\nfor iso, coul in choix.items():\n    d = pays[pays[\"iso3\"] == iso].dropna(subset=[\"pib_hab_usd\"])\n    ax.plot(d[\"annee\"], d[\"pib_hab_usd\"] / 1000, color=coul)\n    fin = d.iloc[-1]\n    ax.text(fin[\"annee\"] + 0.4, fin[\"pib_hab_usd\"] / 1000, fin[\"pays\"], color=coul,\n            va=\"center\", fontsize=8)\nax.set_xlim(2000, 2027)\nax.set_title(\"L'écart entre les États-Unis et le Canada se creuse depuis 2014\", loc=\"left\")\nax.set_ylabel(\"milliers de $ US courants\")\nplt.show()\necart = pays[pays[\"iso3\"].isin([\"USA\", \"CAN\"]) & pays[\"annee\"].isin([2014, 2023])] \\\n    .pivot(index=\"annee\", columns=\"iso3\", values=\"pib_hab_usd\")\nprint((ecart[\"USA\"] - ecart[\"CAN\"]).round(0))\n\n\n\n\n\n\n\nFigure 5.3: PIB par habitant, en milliers de dollars US courants, 2000-2023. Source : Banque mondiale.\n\n\n\n\n\nannee\n2014     4192.0\n2023    27739.0\ndtype: float64",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#choisir-le-graphique-selon-la-question",
+    "href": "seance-05.html#choisir-le-graphique-selon-la-question",
+    "title": "5  Représenter les données",
+    "section": "5.5 Choisir le graphique selon la question",
+    "text": "5.5 Choisir le graphique selon la question\nLe bon graphique se choisit à partir de la question, jamais à partir du menu d’un logiciel. Cinq questions couvrent l’essentiel du travail d’un analyste en stratégie.\n\n\n\n\n\n\n\n\nQuestion\nForme\nEn Python\n\n\n\n\nComparer des catégories\nBarres horizontales triées\nax.barh, sns.barplot\n\n\nSuivre une évolution\nLigne\nax.plot, sns.lineplot\n\n\nVoir une distribution\nHistogramme, boîte à moustaches\nsns.histplot, sns.boxplot\n\n\nVoir une relation\nNuage de points, souvent en échelle log\nsns.scatterplot\n\n\nMontrer une composition\nBarres empilées\ndf.plot.barh(stacked=True)\n\n\n\nLa distribution du PIB par habitant illustre pourquoi l’échelle compte. Sur une échelle linéaire, presque tous les pays s’écrasent dans la première classe ; sur une échelle logarithmique, la forme apparaît (Figure 5.4).\n\nfig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 2.8))\nsns.histplot(p23[\"pib_hab_usd\"] / 1000, bins=30, ax=a1, color=CL.accent)\na1.set(xlabel=\"milliers de $\", ylabel=\"pays\")\nsns.histplot(p23[\"pib_hab_usd\"], bins=30, log_scale=True, ax=a2, color=CL.accent)\na2.set(xlabel=\"$ (échelle log)\", ylabel=\"\")\nusa = p23.loc[p23[\"iso3\"] == \"USA\", \"pib_hab_usd\"].iloc[0]\na2.axvline(usa, color=CL.warn)\nplt.show()\nprint(f\"moyenne {p23['pib_hab_usd'].mean():,.0f} $ · médiane {p23['pib_hab_usd'].median():,.0f} $ · \"\n      f\"pays devant les États-Unis : {(p23['pib_hab_usd'] &gt; usa).sum()}\")\n\n\n\n\n\n\n\nFigure 5.4: Distribution du PIB par habitant en 2023, échelle linéaire et logarithmique. Source : Banque mondiale.\n\n\n\n\n\nmoyenne 22,296 $ · médiane 7,862 $ · pays devant les États-Unis : 10\n\n\nL’écart entre la moyenne et la médiane est à lui seul un diagnostic : quelques économies très riches tirent la moyenne vers le haut. Et plusieurs des pays qui devancent les États-Unis sont de petits territoires — micro-États, places financières — dont le PIB par habitant dit peu de chose sur une stratégie d’implantation.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#seaborn-la-statistique-en-une-ligne",
+    "href": "seance-05.html#seaborn-la-statistique-en-une-ligne",
+    "title": "5  Représenter les données",
+    "section": "5.6 seaborn : la statistique en une ligne",
+    "text": "5.6 seaborn : la statistique en une ligne\nseaborn s’appuie sur matplotlib et parle directement le langage des DataFrames : on lui donne data=, puis les noms de colonnes pour x, y, hue (la couleur), col (les panneaux). La boîte à moustaches par secteur résume quinze ans de marges nettes pour les 32 entreprises du cours (Figure 5.5).\n\nent[\"marge\"] = ent[\"resultat_net\"] / ent[\"chiffre_affaires\"] * 100\nordre = ent.groupby(\"secteur\")[\"marge\"].median().sort_values().index\nfig, ax = plt.subplots(figsize=(7.5, 3.6))\nsns.boxplot(data=ent, y=\"secteur\", x=\"marge\", order=ordre, color=CL.line, ax=ax, fliersize=2)\nax.axvline(0, color=CL.warn, lw=1)\nax.set(xlim=(-30, 60), xlabel=\"Marge nette (%)\", ylabel=\"\")\nplt.show()\nent.groupby(\"secteur\")[\"marge\"].median().sort_values().round(1)\n\n\n\n\n\n\n\n\n\n\n(a) Marge nette (résultat net / chiffre d’affaires) par secteur, 32 entreprises, 2010-2024. Source : SEC EDGAR.\n\n\n\n\n\n\n\nsecteur\nCommerce de détail           2.6\nAutomobile                   3.5\nMédias et divertissement     7.4\nÉnergie                      9.3\nIndustrie                   10.9\nBiens de consommation       12.6\nRestauration                17.6\nPharmaceutique              18.4\nTechnologie                 22.2\nName: marge, dtype: float64\n\n\n(b)\n\n\n\n\n\nFigure 5.5\n\n\n\n\nLe trait central est la médiane ; la boîte couvre la moitié centrale des observations ; les points isolés sont des années exceptionnelles. Le commerce de détail travaille sur des marges minces, la technologie et la pharmacie sur des marges épaisses : ce sont deux modèles d’affaires, pas deux niveaux de compétence.\nLes petits multiples — un panneau par groupe, avec sns.relplot(..., col=\"secteur\") — permettent de comparer des formes d’évolution sans superposer trente lignes. Le choix sharey=True ou False change la lecture : une échelle commune compare les niveaux, une échelle libre compare les formes.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#plotly-explorer-avant-de-conclure",
+    "href": "seance-05.html#plotly-explorer-avant-de-conclure",
+    "title": "5  Représenter les données",
+    "section": "5.7 plotly : explorer avant de conclure",
+    "text": "5.7 plotly : explorer avant de conclure\nPour explorer, un graphique interactif vaut mieux qu’un graphique figé : on survole un point pour savoir quel pays il représente, on zoome sur un groupe. plotly.express produit ces figures avec la même syntaxe que seaborn.\n\nimport plotly.express as px\nd = p23.dropna(subset=[\"pib_hab_usd\", \"ide_entrants_pct_pib\", \"population\"])\nd = d[d[\"ide_entrants_pct_pib\"].between(-10, 40)]\nfig = px.scatter(d, x=\"pib_hab_usd\", y=\"ide_entrants_pct_pib\", size=\"population\",\n                 color=\"region\", hover_name=\"pays\", log_x=True, size_max=40,\n                 labels={\"pib_hab_usd\": \"PIB par habitant ($, log)\",\n                         \"ide_entrants_pct_pib\": \"IDE entrants (% du PIB)\"})\nfig.show()\n\n        \n        \n        \n\n\n                            \n                                            \n\n\nEn survolant les points les plus hauts, on découvre que l’IDE rapporté au PIB est souvent le plus élevé dans de petites économies ou des places financières : la mesure capte autant les flux de passage que l’attractivité productive. C’est une conclusion que l’exploration interactive fait apparaître, et qu’un graphique statique destiné à un rapport devra ensuite énoncer clairement.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#les-graphiques-qui-trompent-sans-mentir",
+    "href": "seance-05.html#les-graphiques-qui-trompent-sans-mentir",
+    "title": "5  Représenter les données",
+    "section": "5.8 Les graphiques qui trompent sans mentir",
+    "text": "5.8 Les graphiques qui trompent sans mentir\nTrois procédés reviennent dans la presse comme dans les présentations d’entreprise.\nL’axe tronqué. Une barre encode une longueur ; si l’axe commence à 80 plutôt qu’à 0, un écart de dix pour cent paraît un écart du simple au triple. Les lignes, qui encodent une position, peuvent zoomer sans tromper.\nLe double axe. Deux séries d’unités différentes sur deux échelles verticales : comme chaque échelle se choisit librement, l’auteur décide où les courbes se croisent. Deux panneaux disent la même chose sans ce pouvoir arbitraire.\nLe camembert en trois dimensions. Il cumule l’encodage le moins précis (l’angle) et une perspective qui grossit la part du premier plan. Des barres horizontales triées le remplacent toujours avec profit.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-05.html#à-retenir",
+    "href": "seance-05.html#à-retenir",
+    "title": "5  Représenter les données",
+    "section": "5.9 À retenir",
+    "text": "5.9 À retenir\n\nUne affirmation sur la « valeur » n’est vérifiable qu’une fois la mesure choisie, et le graphique rend ce choix visible.\nOn regarde les données avant de les résumer (Anscombe), et on confie la comparaison principale à la position (Cleveland et McGill).\nUne figure remise a un titre-message, des unités, une source et, si possible, un étiquetage direct.\nmatplotlib pour le contrôle, seaborn pour la statistique, plotly pour l’exploration.\n\n\n\n\n\nAnscombe, F. J. 1973. « Graphs in Statistical Analysis ». The American Statistician 27 (1): 17‑21. https://doi.org/10.1080/00031305.1973.10478966.\n\n\nCleveland, William S., et Robert McGill. 1984. « Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods ». Journal of the American Statistical Association 79 (387): 531‑54. https://doi.org/10.1080/01621459.1984.10478080.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Représenter les données</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html",
+    "href": "seance-06.html",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "",
+    "text": "6.1 Ce que l’on voit, et ce que l’on peut affirmer\nLes cinq premiers chapitres ont appris à obtenir des données et à les regarder. Celui-ci pose une question que le regard seul ne tranche pas : une différence observée est-elle assez solide pour être affirmée ? Tesla affiche en 2023 une marge nette supérieure à celle de Ford ; les entreprises technologiques semblent plus rentables que les autres ; les grandes dépenses de R-D paraissent aller avec de grands profits. Chacune de ces impressions peut être vraie, ou être un accident de l’échantillon que l’on a sous les yeux.\nLa statistique ne supprime pas cette incertitude. Elle la mesure, et elle oblige à dire, avec chaque résultat, de combien il pourrait être faux. C’est une discipline plus qu’une technique : la plupart des erreurs de ce chapitre ne sont pas des erreurs de calcul, mais des phrases qui affirment plus que les chiffres ne le permettent.\nLe chapitre travaille sur trois indicateurs construits à partir de data/entreprises.csv : le rendement de l’actif (roa, résultat net divisé par les actifs totaux), la marge nette (marge, résultat net divisé par le chiffre d’affaires) et l’intensité de R-D (intensite_rd, dépenses de R-D divisées par le chiffre d’affaires).\nentreprises = pd.read_csv(\"data/entreprises.csv\")\nentreprises[\"roa\"] = entreprises[\"resultat_net\"] / entreprises[\"actifs_totaux\"]\nentreprises[\"marge\"] = entreprises[\"resultat_net\"] / entreprises[\"chiffre_affaires\"]\nentreprises[\"intensite_rd\"] = entreprises[\"rd\"] / entreprises[\"chiffre_affaires\"]\n\ne23 = entreprises[entreprises[\"annee\"] == 2023].copy()   # une ligne par entreprise",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html#décrire",
+    "href": "seance-06.html#décrire",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "6.2 Décrire",
+    "text": "6.2 Décrire\n\n6.2.1 Le centre\nLa moyenne est le point d’équilibre d’une distribution ; la médiane, le milieu de son classement. Les deux coïncident quand la distribution est symétrique, et divergent quand elle ne l’est pas. Le chiffre d’affaires de nos 32 entreprises en 2023 en donne un exemple net.\n\nca = e23[\"chiffre_affaires\"]\nprint(f\"Moyenne : {ca.mean():,.0f} M$   Médiane : {ca.median():,.0f} M$   Asymétrie : {ca.skew():.2f}\")\n\nMoyenne : 143,776 M$   Médiane : 79,900 M$   Asymétrie : 2.01\n\n\nLa moyenne (143,776 millions de dollars) est près de deux fois la médiane (79,900 millions), parce que quelques géants de la distribution — Walmart et Amazon en tête — tirent le point d’équilibre vers eux. Pour une variable de taille (ventes, actifs, effectifs, capitalisation), la médiane décrit mieux « l’entreprise typique » ; la moyenne reste utile quand c’est le total qui compte. Dans le doute, on rapporte les deux.\n\n\n6.2.2 La dispersion\nL’écart type mesure l’éloignement typique à la moyenne ; il est sensible aux valeurs extrêmes. L’écart interquartile (Q3 − Q1) délimite la moitié centrale des observations et y résiste.\n\nprint(e23[\"roa\"].describe().round(3))\n\ncount    32.000\nmean      0.103\nstd       0.099\nmin      -0.138\n25%       0.057\n50%       0.094\n75%       0.144\nmax       0.453\nName: roa, dtype: float64\n\n\n\n(e23.groupby(\"secteur\")[\"roa\"]\n    .agg(n=\"count\", moyenne=\"mean\", mediane=\"median\", ecart_type=\"std\")\n    .sort_values(\"mediane\", ascending=False)\n    .round(3))\n\n\n\n\n\n\n\n\nn\nmoyenne\nmediane\necart_type\n\n\nsecteur\n\n\n\n\n\n\n\n\nTechnologie\n7\n0.186\n0.170\n0.146\n\n\nRestauration\n2\n0.146\n0.146\n0.007\n\n\nBiens de consommation\n4\n0.119\n0.116\n0.026\n\n\nMédias et divertissement\n1\n0.111\n0.111\nNaN\n\n\nÉnergie\n3\n0.097\n0.096\n0.016\n\n\nCommerce de détail\n4\n0.070\n0.068\n0.013\n\n\nPharmaceutique\n4\n0.076\n0.046\n0.096\n\n\nIndustrie\n4\n0.014\n0.038\n0.117\n\n\nAutomobile\n3\n0.064\n0.036\n0.067\n\n\n\n\n\n\n\nLa colonne n est la première à lire. Un secteur représenté par deux entreprises n’a pas d’écart type digne de ce nom, et une moyenne sur deux observations n’est qu’une anecdote chiffrée.\n\n\n6.2.3 La forme\n\nfig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 3.2))\na1.hist(e23[\"chiffre_affaires\"] / 1000, bins=12, color=CL.ink)\na1.set_title(\"Ventes (G$)\")\na2.hist(np.log10(e23[\"chiffre_affaires\"]), bins=12, color=CL.accent)\na2.set_title(\"log10(ventes en M$)\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n\n\nFigure 6.1: Chiffre d’affaires 2023 des 32 entreprises, en milliards de dollars US (à gauche) et en logarithme décimal (à droite). Le logarithme rend la distribution plus symétrique.\n\n\n\n\n\nLe passage au logarithme est courant pour les variables de taille. Il a un prix : une différence de logarithmes est une différence relative. On ne peut plus dire « 10 milliards de plus », mais « tant de pour cent de plus ».",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html#de-léchantillon-à-la-population",
+    "href": "seance-06.html#de-léchantillon-à-la-population",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "6.3 De l’échantillon à la population",
+    "text": "6.3 De l’échantillon à la population\nNos 32 entreprises ne sont pas « les entreprises ». Ce sont de grandes sociétés cotées aux États-Unis, choisies parce qu’elles sont connues — c’est-à-dire, pour la plupart, parce qu’elles ont réussi. Toute conclusion porte d’abord sur elles. L’étendre à une population plus large exige un argument, et aucun test statistique ne remplace cet argument.\nSupposons tout de même que ces entreprises soient un tirage dans une population plus vaste. Un autre tirage aurait donné une autre moyenne. L’erreur type mesure de combien, typiquement :\n\\[\n\\text{ET}(\\bar x) = \\frac{s}{\\sqrt{n}}\n\\]\n\nroa = e23[\"roa\"].dropna()\nn, moy, s = len(roa), roa.mean(), roa.std()\net = s / np.sqrt(n)\nic = stats.t.interval(0.95, df=n - 1, loc=moy, scale=et)\nprint(f\"ROA moyen = {moy:.3f}, erreur type = {et:.3f}, IC 95 % = [{ic[0]:.3f} ; {ic[1]:.3f}]\")\n\nROA moyen = 0.103, erreur type = 0.018, IC 95 % = [0.067 ; 0.139]\n\n\nL’intervalle de confiance à 95 % se lit ainsi : si l’on répétait l’échantillonnage un grand nombre de fois, 95 % des intervalles construits de cette façon contiendraient la vraie moyenne. Il ne dit pas qu’il y a 95 % de chances que la vraie moyenne soit dans cet intervalle-ci ; la vraie moyenne n’est pas aléatoire, c’est l’intervalle qui l’est. La nuance paraît scolastique ; elle devient importante dès que l’on compare deux intervalles.\nLe bootstrap reprend la même idée sans formule : on ré-échantillonne nos propres données, avec remise, des milliers de fois, et l’on regarde comment varie la statistique.\n\nrng = np.random.default_rng(60)\nboot_moy = [rng.choice(roa.values, size=n).mean() for _ in range(5_000)]\nboot_med = [np.median(rng.choice(roa.values, size=n)) for _ in range(5_000)]\nprint(f\"IC bootstrap de la moyenne : [{np.percentile(boot_moy, 2.5):.3f} ; {np.percentile(boot_moy, 97.5):.3f}]\")\nprint(f\"IC bootstrap de la médiane : [{np.percentile(boot_med, 2.5):.3f} ; {np.percentile(boot_med, 97.5):.3f}]\")\n\nIC bootstrap de la moyenne : [0.071 ; 0.137]\nIC bootstrap de la médiane : [0.075 ; 0.121]\n\n\nLes deux méthodes donnent des intervalles voisins pour la moyenne. Le bootstrap a l’avantage de s’appliquer tel quel à la médiane, pour laquelle il n’existe pas de formule simple.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html#comparer",
+    "href": "seance-06.html#comparer",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "6.4 Comparer",
+    "text": "6.4 Comparer\n\n6.4.1 La logique d’un test\nUn test statistique part d’une hypothèse nulle — « le ROA moyen est nul », « les deux groupes ont la même moyenne » — et calcule la probabilité d’observer un écart au moins aussi grand que celui des données si cette hypothèse était vraie. Cette probabilité est la valeur p.\n\nt1 = stats.ttest_1samp(roa, popmean=0)\nprint(f\"t = {t1.statistic:.2f}, p = {t1.pvalue:.2g}\")\n\nt = 5.88, p = 1.8e-06\n\n\nNos entreprises sont rentables en moyenne, et un ROA nul serait très incompatible avec ces données. Personne n’en doutait : l’échantillon a été construit à partir d’entreprises qui ont réussi. Le test répond rigoureusement à la question posée ; il ne dit rien de la pertinence de la question.\n\n\n6.4.2 Deux groupes indépendants\nLes entreprises technologiques sont-elles plus rentables que les autres ?\n\ntech = e23.loc[e23[\"secteur\"] == \"Technologie\", \"roa\"]\nautres = e23.loc[e23[\"secteur\"] != \"Technologie\", \"roa\"]\nwelch = stats.ttest_ind(tech, autres, equal_var=False)\nprint(f\"Tech : n = {len(tech)}, moyenne = {tech.mean():.3f} · Autres : n = {len(autres)}, moyenne = {autres.mean():.3f}\")\nprint(f\"Écart = {tech.mean() - autres.mean():+.3f}, t = {welch.statistic:.2f}, p = {welch.pvalue:.3f}\")\n\nTech : n = 7, moyenne = 0.186 · Autres : n = 25, moyenne = 0.080\nÉcart = +0.106, t = 1.85, p = 0.108\n\n\nL’écart est de 11 points de ROA : considérable du point de vue d’un gestionnaire. La valeur p, 0.11, dépasse pourtant le seuil conventionnel de 5 %. Les deux constats ne se contredisent pas. Le groupe technologique compte 7 entreprises seulement, et leurs ROA sont très dispersés : Nvidia et Intel n’ont presque rien en commun en 2023. Ces données ne suffisent pas à établir l’écart — ce qui ne veut pas dire que l’écart n’existe pas.\nLe test utilisé est celui de Welch (equal_var=False), qui n’exige pas que les deux groupes aient la même variance. Le test de Student classique l’exige ; rien ne la garantit ici. Quand les variances sont égales, les deux tests donnent presque la même réponse ; quand elles ne le sont pas, Welch protège. C’est le choix par défaut de ce cours.\n\n\n6.4.3 Deux séries appariées\nTesla et Ford sont observées les mêmes années : on peut les comparer année par année, ce qui élimine tout ce que les deux entreprises partagent une année donnée (la conjoncture, les taux, la pandémie).\n\ntf = (entreprises[entreprises[\"ticker\"].isin([\"TSLA\", \"F\"])]\n      .pivot(index=\"annee\", columns=\"ticker\", values=\"marge\"))\ntf[\"ecart\"] = tf[\"TSLA\"] - tf[\"F\"]\ntf.round(3)\n\n\n\n\n\n\n\nticker\nF\nTSLA\necart\n\n\nannee\n\n\n\n\n\n\n\n2010\n0.051\n-1.322\n-1.373\n\n\n2011\n0.149\n-1.246\n-1.395\n\n\n2012\n0.042\n-0.959\n-1.001\n\n\n2013\n0.081\n-0.037\n-0.118\n\n\n2014\n0.009\n-0.092\n-0.100\n\n\n2015\n0.049\n-0.220\n-0.269\n\n\n2016\n0.030\n-0.096\n-0.127\n\n\n2017\n0.049\n-0.167\n-0.216\n\n\n2018\n0.023\n-0.045\n-0.069\n\n\n2019\n0.001\n-0.035\n-0.036\n\n\n2020\n-0.010\n0.023\n0.033\n\n\n2021\n0.132\n0.105\n-0.027\n\n\n2022\n-0.013\n0.155\n0.167\n\n\n2023\n0.025\n0.155\n0.130\n\n\n2024\n0.032\n0.073\n0.041\n\n\n\n\n\n\n\n\np_tout = stats.ttest_rel(tf[\"TSLA\"], tf[\"F\"])\np_rec = stats.ttest_rel(tf.loc[2020:, \"TSLA\"], tf.loc[2020:, \"F\"])\nprint(f\"2010-2024 : écart moyen {tf['ecart'].mean():+.3f}, p = {p_tout.pvalue:.3f}\")\nprint(f\"2020-2024 : écart moyen {tf.loc[2020:, 'ecart'].mean():+.3f}, p = {p_rec.pvalue:.3f}\")\n\n2010-2024 : écart moyen -0.291, p = 0.048\n2020-2024 : écart moyen +0.069, p = 0.121\n\n\nSur quinze ans, l’écart moyen est négatif : les pertes massives des années de démarrage de Tesla dominent la moyenne. Depuis 2020, Tesla dépasse Ford 4 années sur cinq, mais cinq années ne suffisent pas à rejeter l’égalité au seuil de 5 % (p = 0.12). « Tesla est plus rentable que Ford » est donc une phrase incomplète : il lui manque une période, une mesure et une incertitude.\nElle porte aussi un piège plus subtil. Si l’on choisit la période après avoir regardé les données — parce qu’elle donne le résultat espéré —, le test ne teste plus rien : il confirme un choix déjà fait. La période se fixe avant le calcul, et se justifie par un argument (un changement de modèle d’affaires, une première année rentable), pas par la valeur p qu’elle produit.\n\n\n6.4.4 Ce qu’une valeur p n’est pas\nL’American Statistical Association a jugé nécessaire, en 2016, de rappeler six principes sur la valeur p (Wasserstein et Lazar 2016). Quatre d’entre eux concernent directement le gestionnaire. Une valeur p mesure l’incompatibilité des données avec un modèle précis ; elle n’est pas la probabilité que l’hypothèse étudiée soit vraie ; elle ne mesure pas l’ampleur ni l’importance d’un effet ; et elle ne devrait pas, à elle seule, fonder une décision.\nLe contresens le plus coûteux est de lire « non significatif » comme « aucun effet ». L’exemple du secteur technologique le montre : un écart de plusieurs points, mesuré sur sept entreprises, peut ne pas être significatif tout en étant important. Le contresens symétrique — « significatif » donc « important » — n’est pas moins répandu, et une littérature entière montre comment la recherche de résultats significatifs, multipliée par la liberté de choisir ses spécifications, remplit les revues de résultats fragiles (Ioannidis 2005). En management, Miller et Bamberger plaident pour l’inverse : publier et lire les réplications et les résultats nuls comme des découvertes à part entière (Miller et Bamberger 2016).\nLa règle de ce cours en découle : on rapporte d’abord l’écart en unités, puis son intervalle de confiance, et seulement ensuite la valeur p.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html#relier",
+    "href": "seance-06.html#relier",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "6.5 Relier",
+    "text": "6.5 Relier\n\n6.5.1 Corrélations\nLes entreprises qui investissent en R-D ont-elles de meilleures marges ? Le premier geste est toujours le nuage de points.\n\nx = e23.dropna(subset=[\"intensite_rd\", \"marge\"])\nfig, ax = plt.subplots(figsize=(6.5, 4))\nax.scatter(x[\"intensite_rd\"], x[\"marge\"], color=CL.ink)\nfor _, r in x.iterrows():\n    ax.annotate(r[\"ticker\"], (r[\"intensite_rd\"], r[\"marge\"]), fontsize=8,\n                color=CL.muted, xytext=(3, 3), textcoords=\"offset points\")\nax.set_xlabel(\"Intensité de R-D (R-D / ventes)\")\nax.set_ylabel(\"Marge nette\")\nplt.show()\n\n\n\n\n\n\n\nFigure 6.2: Intensité de R-D et marge nette en 2023, pour les entreprises qui publient leur R-D.\n\n\n\n\n\n\npear = stats.pearsonr(x[\"intensite_rd\"], x[\"marge\"])\nspear = stats.spearmanr(x[\"intensite_rd\"], x[\"marge\"])\nprint(f\"n = {len(x)} · Pearson r = {pear.statistic:+.3f} (p = {pear.pvalue:.2f}) · Spearman rho = {spear.statistic:+.3f} (p = {spear.pvalue:.2f})\")\n\nn = 23 · Pearson r = +0.054 (p = 0.81) · Spearman rho = +0.123 (p = 0.58)\n\n\nLa corrélation de Pearson mesure une relation linéaire, et une seule observation extrême peut la fabriquer ou l’effacer. Celle de Spearman travaille sur les rangs : elle mesure une relation monotone, quelle qu’en soit la forme, et résiste aux extrêmes. Ici, sur 23 entreprises, les deux sont proches de zéro (r = +0.05, rho = +0.12) : en 2023, on ne détecte aucune relation entre intensité de R-D et marge nette. Neuf entreprises n’entrent pas dans ce calcul, parce qu’elles ne publient pas de ligne de R-D ; la réponse ne porte que sur celles qui le font.\n\nimport seaborn as sns\ncols = [\"roa\", \"marge\", \"intensite_rd\", \"chiffre_affaires\", \"actifs_totaux\"]\nfig, ax = plt.subplots(figsize=(5.6, 4.2))\nsns.heatmap(e23[cols].corr(method=\"spearman\"), annot=True, fmt=\".2f\",\n            cmap=\"RdBu_r\", vmin=-1, vmax=1, cbar=False, ax=ax)\nplt.show()\n\n\n\n\n\n\n\nFigure 6.3: Corrélations de Spearman entre cinq variables, 2023.\n\n\n\n\n\n\n\n6.5.2 Une première régression\nLa régression linéaire simple résume le nuage par une droite :\n\\[\n\\text{ROA}_i = \\beta_0 + \\beta_1 \\times \\text{intensité R-D}_i + \\varepsilon_i\n\\]\n\nm = smf.ols(\"roa ~ intensite_rd\", data=e23.dropna(subset=[\"intensite_rd\", \"roa\"])).fit()\nprint(m.summary().tables[1])\nprint(f\"R² = {m.rsquared:.3f}, n = {int(m.nobs)}\")\n\n================================================================================\n                   coef    std err          t      P&gt;|t|      [0.025      0.975]\n--------------------------------------------------------------------------------\nIntercept        0.1090      0.034      3.226      0.004       0.039       0.179\nintensite_rd    -0.0288      0.198     -0.145      0.886      -0.441       0.383\n================================================================================\nR² = 0.001, n = 23\n\n\nLe coefficient de intensite_rd est la variation du ROA associée à une hausse d’une unité d’intensité de R-D — soit cent points de pourcentage ; pour un point, on le divise par cent. Ici il vaut -0.029, son intervalle de confiance contient largement zéro et le R² est quasi nul. La régression dit, avec d’autres mots, ce que disait la corrélation.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html#corrélation-nest-pas-causalité",
+    "href": "seance-06.html#corrélation-nest-pas-causalité",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "6.6 Corrélation n’est pas causalité",
+    "text": "6.6 Corrélation n’est pas causalité\nMême une corrélation solide n’autoriserait pas la recommandation « investissez en R-D pour être plus rentable ». Trois histoires produisent la même corrélation : la R-D crée des produits rentables (causalité) ; les entreprises rentables peuvent se permettre la R-D (causalité inverse) ; un troisième facteur, comme le secteur, détermine les deux (variable confondante). La régression ne choisit pas entre elles. C’est le dispositif de recherche qui le fait — et c’est l’objet des articles discutés aux séances 7 à 11.\n\n6.6.1 Un panel n’est pas un échantillon plus grand\nIl est tentant d’empiler les quinze années pour gagner des observations.\n\npanel = entreprises.dropna(subset=[\"intensite_rd\", \"roa\"])\nnaif = smf.ols(\"roa ~ intensite_rd\", data=panel).fit()\ngrappe = smf.ols(\"roa ~ intensite_rd\", data=panel).fit(\n    cov_type=\"cluster\", cov_kwds={\"groups\": panel[\"ticker\"]})\nprint(f\"{int(naif.nobs)} lignes, {panel['ticker'].nunique()} entreprises\")\nprint(f\"Naïf     : coef = {naif.params['intensite_rd']:+.3f}, ET = {naif.bse['intensite_rd']:.3f}, p = {naif.pvalues['intensite_rd']:.3f}\")\nprint(f\"Grappes  : coef = {grappe.params['intensite_rd']:+.3f}, ET = {grappe.bse['intensite_rd']:.3f}, p = {grappe.pvalues['intensite_rd']:.3f}\")\n\n343 lignes, 24 entreprises\nNaïf     : coef = -0.167, ET = 0.041, p = 0.000\nGrappes  : coef = -0.167, ET = 0.186, p = 0.369\n\n\nLes 343 lignes ne sont pas 343 informations indépendantes : elles viennent de 24 entreprises, et Apple en 2022 ressemble beaucoup à Apple en 2023. L’erreur type naïve l’ignore et se montre trop optimiste (p = 5e-05). En regroupant les erreurs par entreprise (cov_type=\"cluster\"), le coefficient ne change pas, mais l’erreur type est multipliée par 4.6 et la valeur p passe à 0.37. Le résultat « significatif » disparaît.\n\n\n6.6.2 Contrôler le secteur\n\nsecteur = smf.ols(\"roa ~ intensite_rd + C(secteur)\", data=panel).fit(\n    cov_type=\"cluster\", cov_kwds={\"groups\": panel[\"ticker\"]})\nprint(f\"Avec secteur : coef = {secteur.params['intensite_rd']:+.3f}, p = {secteur.pvalues['intensite_rd']:.2g}\")\n\nAvec secteur : coef = -0.421, p = 2.4e-09\n\n\nC(secteur) ajoute une constante par secteur : on compare désormais les observations à l’intérieur de leur secteur. Le coefficient passe de -0.17 à -0.42, et devient nettement différent de zéro. À secteur égal, les observations (entreprise-année) à forte intensité de R-D vont avec un ROA plus faible. Le secteur masquait donc une relation négative.\n\nfig, ax = plt.subplots(figsize=(6.5, 4))\nax.scatter(panel[\"intensite_rd\"], panel[\"roa\"], color=CL.muted, s=12, label=\"autres entreprises-années\")\nt = panel[panel[\"ticker\"] == \"TSLA\"]\nax.scatter(t[\"intensite_rd\"], t[\"roa\"], color=CL.warn, s=30, label=\"Tesla\")\nfor _, r in t[t[\"annee\"] &lt;= 2012].iterrows():\n    ax.annotate(int(r[\"annee\"]), (r[\"intensite_rd\"], r[\"roa\"]), fontsize=8,\n                color=CL.warn, xytext=(4, 0), textcoords=\"offset points\")\nax.set_xlabel(\"Intensité de R-D\"); ax.set_ylabel(\"ROA\")\nax.legend(frameon=False)\nplt.show()\n\n\n\n\n\n\n\nFigure 6.4: Intensité de R-D et ROA, toutes les années. Les premières années de Tesla, en rouge, se situent loin du reste du nuage.\n\n\n\n\n\nFaut-il en conclure que la R-D détruit de la rentabilité ? Non. Le graphique montre d’où vient une partie de la relation : des entreprises en phase de démarrage, comme Tesla avant 2013, dépensent beaucoup en R-D par rapport à des ventes encore faibles et perdent de l’argent. La causalité va peut-être de la phase de croissance à la fois vers la R-D et vers les pertes. Un coefficient n’est jamais plus solide que le nuage dont il vient.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seance-06.html#ce-que-lon-peut-écrire",
+    "href": "seance-06.html#ce-que-lon-peut-écrire",
+    "title": "6  Statistiques de base : décrire, comparer, relier",
+    "section": "6.7 Ce que l’on peut écrire",
+    "text": "6.7 Ce que l’on peut écrire\nLe travail de ce chapitre se résume en phrases que l’on peut défendre, et en phrases que l’on ne peut pas écrire.\n\n\n\n\n\n\n\nOn peut écrire\nOn ne peut pas écrire\n\n\n\n\nDans un échantillon de 32 grandes entreprises américaines, en 2023, on ne détecte pas de relation entre intensité de R-D et rentabilité.\nLa R-D ne sert à rien.\n\n\nÀ secteur égal, les entreprises-années à forte intensité de R-D ont un ROA plus faible, sur 2010-2024.\nRéduire la R-D augmenterait la rentabilité.\n\n\nDepuis 2020, la marge de Tesla dépasse celle de Ford quatre années sur cinq ; l’écart n’est pas statistiquement établi.\nTesla est plus rentable que Ford.\n\n\n\nLa colonne de gauche est moins spectaculaire. C’est la seule qui survit à un lecteur attentif.\n\nPour aller plus loin. Le travail 2 des « premiers pas » demande exactement cet exercice sur une question que vous choisissez : une source importée avec Python, des statistiques descriptives interprétées, deux graphiques, un test lu honnêtement, et un fichier de code qui reproduit chaque chiffre. Consigne : 06-statistiques-de-base/PREMIERS-PAS-TRAVAIL-2.md.\n\n\n\n\n\nIoannidis, John P. A. 2005. « Why Most Published Research Findings Are False ». PLoS Medicine 2 (8): e124. https://doi.org/10.1371/journal.pmed.0020124.\n\n\nMiller, C. Chet, et Peter Bamberger. 2016. « Exploring Emergent and Poorly Understood Phenomena in the Strangest of Places: The Footprint of Discovery in Replications, Meta-Analyses, and Null Findings ». Academy of Management Discoveries 2 (4): 313‑19. https://doi.org/10.5465/amd.2016.0115.\n\n\nWasserstein, Ronald L., et Nicole A. Lazar. 2016. « The ASA Statement on p-Values: Context, Process, and Purpose ». The American Statistician 70 (2): 129‑33. https://doi.org/10.1080/00031305.2016.1154108.",
+    "crumbs": [
+      "Python pour la stratégie",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Statistiques de base : décrire, comparer, relier</span>"
+    ]
+  },
+  {
+    "objectID": "seances-07-13.html",
+    "href": "seances-07-13.html",
+    "title": "7  Des outils aux questions : les séances 7 à 13",
+    "section": "",
+    "text": "7.1 Lire un cas avec les yeux d’un analyste\nLes six premiers chapitres ont donné les outils. Les séances 7 à 11, données par Marie-Ann et Russell, les mettent au service de questions de recherche en stratégie, à partir d’articles et d’études de cas (Harvard Business Publishing, Ivey Publishing, dépôts de recherche). Elles ne demandent pas de Python en classe ; le projet final, lui, en demande, et c’est là que les chapitres précédents servent.\nCe chapitre fait le lien : pour chaque séance, la question, la méthode, et ce que vous savez déjà faire.\nUne étude de cas raconte une décision. L’habitude que les séances Python ont voulu installer s’applique à elle aussi : repérer chaque affirmation chiffrée, se demander d’où vient le chiffre, à quoi il est comparé, et ce qu’il faudrait pour le vérifier. Un cas bien écrit le permet ; un cas moins bien écrit le révèle.",
+    "crumbs": [
+      "Articles et études de cas",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Des outils aux questions : les séances 7 à 13</span>"
+    ]
+  },
+  {
+    "objectID": "seances-07-13.html#du-cas-au-projet",
+    "href": "seances-07-13.html#du-cas-au-projet",
+    "title": "7  Des outils aux questions : les séances 7 à 13",
+    "section": "7.2 Du cas au projet",
+    "text": "7.2 Du cas au projet\nLe projet de recherche du cours demande une question, un article modèle, une démarche empirique, des données, des résultats et une discussion ; Bosma et van Witteloostuijn (2024) montrent la diversité des démarches possibles en affaires internationales. L’article modèle joue le même rôle que le cas : il montre une façon de poser la question et d’y répondre. Votre travail consiste à reprendre cette démarche sur vos propres données — importées, nettoyées, représentées et testées avec les outils des chapitres 1 à 6.\n\n\n\n\nBosma, Bas, et Arjen van Witteloostuijn. 2024. « Machine Learning in International Business ». Journal of International Business Studies 55 (6): 676‑702. https://doi.org/10.1057/s41267-024-00687-6.\n\n\nMacKinlay, A. Craig. 1997. « Event Studies in Economics and Finance ». Journal of Economic Literature 35 (1): 13‑39.",
+    "crumbs": [
+      "Articles et études de cas",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Des outils aux questions : les séances 7 à 13</span>"
+    ]
+  },
+  {
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "Annexe A — Installation pas à pas",
+    "section": "",
+    "text": "A.1 Python\nTéléchargez Python 3.12 ou 3.13 depuis https://www.python.org/downloads/.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Installation pas à pas</span>"
+    ]
+  },
+  {
+    "objectID": "installation.html#python",
+    "href": "installation.html#python",
+    "title": "Annexe A — Installation pas à pas",
+    "section": "",
+    "text": "Windows : cochez « Add python.exe to PATH » dans le premier écran de l’installateur. Vérifiez ensuite dans PowerShell : py --version.\nmacOS : installez le paquet .pkg, puis double-cliquez Install Certificates.command dans Applications/Python 3.x. Vérifiez dans le Terminal : python3 --version.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Installation pas à pas</span>"
+    ]
+  },
+  {
+    "objectID": "installation.html#vs-code",
+    "href": "installation.html#vs-code",
+    "title": "Annexe A — Installation pas à pas",
+    "section": "A.2 VS Code",
+    "text": "A.2 VS Code\nTéléchargez Visual Studio Code (https://code.visualstudio.com/), puis installez les extensions Python et Jupyter (Microsoft) depuis l’onglet Extensions.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Installation pas à pas</span>"
+    ]
+  },
+  {
+    "objectID": "installation.html#le-dossier-du-cours-et-lenvironnement-virtuel",
+    "href": "installation.html#le-dossier-du-cours-et-lenvironnement-virtuel",
+    "title": "Annexe A — Installation pas à pas",
+    "section": "A.3 Le dossier du cours et l’environnement virtuel",
+    "text": "A.3 Le dossier du cours et l’environnement virtuel\nTéléchargez le dossier du cours depuis https://github.com/warint/MNGT60439 (Code → Download ZIP), ouvrez-le dans VS Code (Fichier → Ouvrir le dossier), puis un terminal (Terminal → Nouveau terminal) :\n# macOS / Linux\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\n# Windows\npy -m venv .venv\n.venv\\Scripts\\activate\npython -m pip install --upgrade pip\npython -m pip install -r requirements.txt\nPuis Ctrl/Cmd + Maj + P → Python: Select Interpreter → l’interpréteur de .venv.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Installation pas à pas</span>"
+    ]
+  },
+  {
+    "objectID": "installation.html#vérifier",
+    "href": "installation.html#vérifier",
+    "title": "Annexe A — Installation pas à pas",
+    "section": "A.4 Vérifier",
+    "text": "A.4 Vérifier\npython 01-installer-la-plateforme/00-pre-seance/verifier_environnement.py",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Installation pas à pas</span>"
+    ]
+  },
+  {
+    "objectID": "installation.html#dépannage",
+    "href": "installation.html#dépannage",
+    "title": "Annexe A — Installation pas à pas",
+    "section": "A.5 Dépannage",
+    "text": "A.5 Dépannage\n\n\n\n\n\n\n\n\nSymptôme\nCause probable\nRemède\n\n\n\n\npython: command not found\nPython absent du PATH\nmacOS : python3 ; Windows : py, ou réinstaller en cochant Add to PATH\n\n\nModuleNotFoundError\nMauvais interpréteur\nActiver .venv ; Select Interpreter dans VS Code\n\n\nCERTIFICATE_VERIFY_FAILED\nCertificats macOS absents\nInstall Certificates.command ; ou export SSL_CERT_FILE=$(python -c \"import certifi; print(certifi.where())\")\n\n\nFileNotFoundError: data/…\nTerminal ouvert ailleurs\ncd vers la racine du dossier du cours\n\n\nrunning scripts is disabled\nPolitique PowerShell\nSet-ExecutionPolicy -Scope CurrentUser RemoteSigned",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Installation pas à pas</span>"
+    ]
+  },
+  {
+    "objectID": "sources-de-donnees.html",
+    "href": "sources-de-donnees.html",
+    "title": "Annexe B — Sources de données",
+    "section": "",
+    "text": "B.1 entreprises.csv\nToutes les données sont réelles et proviennent de sources publiques. Elles sont reconstruites par scripts/build_course_data.py :\n32 grandes entreprises cotées aux États-Unis, choisies pour couvrir neuf secteurs. Montants en millions de dollars US, alignés sur l’année civile (champ frame de la SEC : l’exercice qui se termine dans l’année ; les stocks sont mesurés en fin d’année).",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Sources de données</span>"
+    ]
+  },
+  {
+    "objectID": "sources-de-donnees.html#entreprises.csv",
+    "href": "sources-de-donnees.html#entreprises.csv",
+    "title": "Annexe B — Sources de données",
+    "section": "",
+    "text": "Variable\nDescription\n\n\n\n\nticker\nSymbole boursier\n\n\nentreprise\nNom usuel\n\n\ncik\nIdentifiant permanent du déclarant à la SEC\n\n\nsecteur\nSecteur (voir secteurs.csv)\n\n\npays_siege\nPays du siège social (code ISO3 ; toutes USA)\n\n\nannee\nAnnée civile\n\n\nchiffre_affaires\nRevenus totaux (balises Revenues, RevenueFromContractWithCustomer…, SalesRevenueNet)\n\n\nresultat_net\nRésultat net (NetIncomeLoss)\n\n\nactifs_totaux\nTotal de l’actif, fin d’année (Assets)\n\n\ncapitaux_propres\nCapitaux propres, fin d’année (StockholdersEquity)\n\n\nrd\nDépenses de recherche et développement (ResearchAndDevelopmentExpense)\n\n\ninvestissements\nAcquisitions d’immobilisations corporelles (PaymentsToAcquirePropertyPlantAndEquipment)\n\n\n\n\nB.1.1 Pièges connus — à lire avant d’analyser\n\nrd manque pour environ 28 % des lignes. Les distributeurs (Walmart, Costco, Target), la restauration (McDonald’s, Starbucks), Coca-Cola, Nike, General Motors et Amazon ne publient pas de ligne « R-D » sous cette balise. Amazon en dépense énormément, mais l’appelle Technology and infrastructure. Une valeur manquante n’est pas un zéro.\ninvestissements manque pour environ 25 % des lignes, pour des raisons semblables (balises différentes selon l’entreprise).\nLes exercices décalés (Apple, Microsoft, Nike, Costco…) sont rangés dans l’année civile où ils se terminent : l’exercice 2023 de Microsoft se termine le 30 juin 2023.\nMerck 2023 : la R-D (30,5 G$) inclut une acquisition de R-D en cours (Prometheus) ; c’est le chiffre publié, pas une erreur.\nCe sont des entreprises survivantes et géantes : aucune conclusion ne s’étend aux PME, ni aux entreprises disparues entre 2010 et 2024.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Sources de données</span>"
+    ]
+  },
+  {
+    "objectID": "sources-de-donnees.html#pays.csv",
+    "href": "sources-de-donnees.html#pays.csv",
+    "title": "Annexe B — Sources de données",
+    "section": "B.2 pays.csv",
+    "text": "B.2 pays.csv\n217 économies (agrégats régionaux exclus) × 2000–2023.\n\n\n\n\n\n\n\n\nVariable\nIndicateur Banque mondiale\nUnité\n\n\n\n\niso3, pays\n—\ncode ISO3, nom anglais\n\n\nregion, revenu\nMétadonnées pays\nrégion ; groupe de revenu\n\n\nannee\n—\n—\n\n\npib_milliards_usd\nNY.GDP.MKTP.CD\nmilliards $ US courants\n\n\npib_hab_usd\nNY.GDP.PCAP.CD\n$ US courants par habitant\n\n\ncroissance_pib\nNY.GDP.MKTP.KD.ZG\n% annuel, prix constants\n\n\npopulation\nSP.POP.TOTL\nhabitants\n\n\nide_entrants_pct_pib\nBX.KLT.DINV.WD.GD.ZS\nIDE, entrées nettes, % du PIB\n\n\ncommerce_pct_pib\nNE.TRD.GNFS.ZS\nexportations + importations, % du PIB\n\n\nrd_pct_pib\nGB.XPD.RSDV.GD.ZS\ndépense intérieure de R-D, % du PIB\n\n\nenergie_renouv_pct\nEG.FEC.RNEW.ZS\npart des renouvelables dans la consommation finale d’énergie\n\n\n\n\nB.2.1 Pièges connus\n\nrd_pct_pib manque pour 58 % des lignes : beaucoup de pays ne la mesurent pas, ou pas chaque année.\nide_entrants_pct_pib peut être négatif (désinvestissement) et prend des valeurs extrêmes dans les centres financiers (îles Caïmans, Liechtenstein : plus de 1 000 % du PIB certaines années).\nenergie_renouv_pct s’arrête en 2021 pour la plupart des pays (71 pays en 2022, aucun en 2023).\nLes dollars courants mélangent croissance réelle, inflation et taux de change.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Sources de données</span>"
+    ]
+  },
+  {
+    "objectID": "sources-de-donnees.html#autres-sources-utiles-pour-le-projet",
+    "href": "sources-de-donnees.html#autres-sources-utiles-pour-le-projet",
+    "title": "Annexe B — Sources de données",
+    "section": "B.3 Autres sources utiles pour le projet",
+    "text": "B.3 Autres sources utiles pour le projet\n\n\n\n\n\n\n\n\nSource\nContenu\nAccès\n\n\n\n\nSEC EDGAR\nÉtats financiers des sociétés cotées aux États-Unis\nAPI data.sec.gov (User-Agent obligatoire)\n\n\nBanque mondiale — WDI\nIndicateurs pays (PIB, IDE, commerce, énergie…)\nAPI v2, paquet wbgapi\n\n\nOur World in Data\nÉmissions, énergie, santé, démographie\nFichiers CSV sur GitHub\n\n\nOCDE\nStatistiques des pays membres\nAPI SDMX\n\n\nFRED (Réserve fédérale de St. Louis)\nSéries macroéconomiques et financières\nAPI, clé gratuite\n\n\nStatistique Canada\nTableaux de données canadiens\nAPI Web Data Service\n\n\nYahoo Finance\nCours boursiers\nPaquet yfinance (usage non commercial)\n\n\nHarvard Dataverse, ICPSR, openICPSR\nDonnées de réplication d’articles\nTéléchargement",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Sources de données</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html",
+    "href": "aide-memoire.html",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "",
+    "text": "C.1 Lire et écrire\nLes fonctions utilisées dans les séances 1 à 6, une ligne chacune.",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html#lire-et-écrire",
+    "href": "aide-memoire.html#lire-et-écrire",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "",
+    "text": "Code\nEffet\n\n\n\n\npd.read_csv(\"data/f.csv\")\nLire un CSV (aussi une URL https://…)\n\n\npd.read_csv(f, sep=\";\", decimal=\",\", encoding=\"cp1252\")\nLire un CSV « Excel français »\n\n\npd.read_excel(\"f.xlsx\", sheet_name=0)\nLire une feuille Excel\n\n\npd.read_html(url)\nLire les tableaux d’une page web (liste de DataFrame)\n\n\npd.read_sql(\"SELECT …\", con)\nExécuter une requête SQL sur une base\n\n\nrequests.get(url, params=…, headers=…).json()\nInterroger une API\n\n\ndf.to_csv(\"f.csv\", index=False) · df.to_parquet(\"f.parquet\")\nEnregistrer",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html#regarder",
+    "href": "aide-memoire.html#regarder",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "C.2 Regarder",
+    "text": "C.2 Regarder\n\n\n\n\n\n\n\nCode\nEffet\n\n\n\n\ndf.shape · df.head() · df.info() · df.describe()\nTaille, premières lignes, types, résumé\n\n\ndf[\"col\"].value_counts() · df[\"col\"].unique()\nFréquences, valeurs distinctes\n\n\ndf.isna().sum()\nValeurs manquantes par colonne",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html#sélectionner-et-créer",
+    "href": "aide-memoire.html#sélectionner-et-créer",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "C.3 Sélectionner et créer",
+    "text": "C.3 Sélectionner et créer\n\n\n\n\n\n\n\nCode\nEffet\n\n\n\n\ndf[\"col\"] · df[[\"a\", \"b\"]]\nUne colonne (Series) · plusieurs colonnes (DataFrame)\n\n\ndf.loc[lignes, colonnes] · df.iloc[0:5, 0:3]\nPar étiquette · par position\n\n\ndf[(df[\"a\"] &gt; 0) & (df[\"b\"] == \"x\")]\nFiltrer (& et, \\| ou, ~ non)\n\n\ndf[df[\"ticker\"].isin([\"TSLA\", \"F\"])]\nFiltrer sur une liste\n\n\ndf.sort_values(\"col\", ascending=False) · df.nlargest(5, \"col\")\nTrier\n\n\ndf[\"marge\"] = df[\"resultat_net\"] / df[\"chiffre_affaires\"]\nNouvelle colonne\n\n\ndf.assign(marge=lambda d: d.resultat_net / d.chiffre_affaires)\nNouvelle colonne, dans une chaîne",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html#transformer",
+    "href": "aide-memoire.html#transformer",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "C.4 Transformer",
+    "text": "C.4 Transformer\n\n\n\n\n\n\n\nCode\nEffet\n\n\n\n\ndf.groupby(\"secteur\")[\"roa\"].agg([\"mean\", \"median\", \"count\"])\nRésumer par groupe\n\n\ndf.groupby([\"secteur\", \"annee\"])[\"roa\"].transform(\"mean\")\nMoyenne du groupe, ligne à ligne\n\n\ndf.merge(autre, on=\"cle\", how=\"left\", validate=\"m:1\")\nJoindre deux tables\n\n\npd.concat([a, b])\nEmpiler\n\n\ndf.melt(id_vars=…, var_name=…, value_name=…) · df.pivot(index=…, columns=…, values=…)\nLarge ↔︎ long\n\n\ndf.groupby(\"ticker\")[\"ventes\"].pct_change()\nTaux de croissance par entreprise",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html#représenter",
+    "href": "aide-memoire.html#représenter",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "C.5 Représenter",
+    "text": "C.5 Représenter\n\n\n\n\n\n\n\nCode\nEffet\n\n\n\n\nfig, ax = plt.subplots() · ax.plot(x, y) · fig.savefig(\"f.png\", dpi=150)\nmatplotlib\n\n\nsns.histplot, sns.boxplot, sns.scatterplot(hue=…), sns.relplot(col=…)\nseaborn\n\n\npx.scatter(df, x=…, y=…, size=…, hover_name=…) · px.choropleth(df, locations=\"iso3\")\nplotly",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  },
+  {
+    "objectID": "aide-memoire.html#tester",
+    "href": "aide-memoire.html#tester",
+    "title": "Annexe C — Aide-mémoire Python",
+    "section": "C.6 Tester",
+    "text": "C.6 Tester\n\n\n\n\n\n\n\nCode\nEffet\n\n\n\n\ndf[\"x\"].mean(), .median(), .std(), .quantile([.25, .75]), .skew()\nDescriptives\n\n\nstats.ttest_ind(a, b, equal_var=False)\nTest t de Welch\n\n\ndf[[\"x\", \"y\"]].corr(method=\"spearman\")\nCorrélation\n\n\nsmf.ols(\"y ~ x + C(secteur)\", data=df).fit().summary()\nRégression MCO",
+    "crumbs": [
+      "Annexes",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Aide-mémoire Python</span>"
+    ]
+  }
+]

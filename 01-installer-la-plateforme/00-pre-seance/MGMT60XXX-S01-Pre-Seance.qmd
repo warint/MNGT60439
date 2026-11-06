@@ -1,0 +1,260 @@
+---
+title: "Séance 1 : Avant la séance"
+subtitle: "Arriver avec une plateforme qui fonctionne"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    footer: "MGMT 60XXX · Séance 01 pré-séance · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · Avant le cours {.center .scrollable}
+
+1. Ce qu'il faut faire, et combien de temps cela prend
+2. Lire l'article
+3. Installer Python et VS Code
+4. Récupérer le dossier du cours et créer l'environnement virtuel
+5. Vérifier l'installation
+6. Choisir un assistant d'IA générative
+7. Autovérification
+8. Quand ça ne marche pas
+
+## À quoi sert la séance 1 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Transformer une **affirmation** en **question vérifiable**
+- Dire quelles données il faudrait pour y répondre
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- Lancer Python dans VS Code, dans un **environnement virtuel**
+- Lire un fichier CSV et afficher ses premières lignes
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Exécuter un script de bout en bout
+- Utiliser l'IA générative pour **expliquer**, jamais pour remplacer la vérification
+
+::::
+
+:::::
+
+# Avant la séance {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Arriver avec une plateforme qui fonctionne
+:::
+
+## Ce qu'il faut faire, et combien de temps cela prend
+
+| | | |
+|---|---|---|
+| **1** | Lire l'article | 30–45 min |
+| **2** | Installer Python 3.12 ou 3.13 et VS Code | 20–30 min |
+| **3** | Récupérer le dossier du cours, créer `.venv`, installer les paquets | 15 min |
+| **4** | Exécuter `verifier_environnement.py` | 5 min |
+| **5** | Choisir un assistant d'IA et faire l'autovérification | 15 min |
+
+::: {.warn}
+La pratique commence **par** votre environnement. Une installation qui échoue en classe, c'est
+quarante-cinq minutes perdues pour vous et pour vos voisin·es. Si une étape bloque, écrivez-moi
+**avant** la séance, avec la sortie complète du script de vérification.
+:::
+
+## 1 · Lire l'article
+
+**Miller, D. (2007). *Paradigm Prison, or In Praise of Atheoretic Research*.**
+*Strategic Organization*, 5(2), 177–184.
+[doi.org/10.1177/1476127007077558](https://doi.org/10.1177/1476127007077558)
+
+Lisez pour l'**argument**. Notez quatre choses :
+
+| | |
+|---|---|
+| **1** | La thèse de l'auteur, en une phrase |
+| **2** | Ce qu'il reproche à la recherche « guidée par la théorie » |
+| **3** | Le rôle qu'il donne à l'observation des données |
+| **4** | Une objection que vous lui feriez |
+
+::: {.muted}
+C'est la position de départ du cours : en stratégie, **regarder les données** avant de savoir
+exactement ce que l'on cherche n'est pas une faute de méthode — à condition de le dire.
+:::
+
+## 2 · Installer Python
+
+Téléchargez **Python 3.12 ou 3.13** depuis [python.org/downloads](https://www.python.org/downloads/).
+
+| | macOS | Windows |
+|---|---|---|
+| Installer | Le fichier `.pkg`, options par défaut | Le fichier `.exe` : **cochez « Add python.exe to PATH »** |
+| Après | Double-cliquez **`Install Certificates.command`** dans `Applications/Python 3.x` | Rien |
+| Vérifier | Terminal : `python3 --version` | PowerShell : `py --version` |
+
+::: {.warn}
+**macOS — le piège des certificats.** Sans `Install Certificates.command`, Python sait accéder à
+Internet avec `requests`, mais `pd.read_csv("https://…")` échoue avec
+`CERTIFICATE_VERIFY_FAILED`. Vous ne le remarquerez qu'à la séance 3, au pire moment.
+:::
+
+## 2 · Installer VS Code
+
+1. Téléchargez **Visual Studio Code** : [code.visualstudio.com](https://code.visualstudio.com/)
+2. Ouvrez l'onglet **Extensions** (`Ctrl/Cmd + Maj + X`) et installez :
+   - **Python** (Microsoft)
+   - **Jupyter** (Microsoft)
+3. Optionnel : **Rainbow CSV**, pour lire les fichiers CSV en couleurs
+
+::: {.muted}
+Vous préférez **Positron** (Posit) ou **PyCharm** ? Aucun problème, tant que vous savez
+sélectionner l'interpréteur de votre `.venv`. Les démonstrations se font dans VS Code.
+:::
+
+## 3 · Récupérer le dossier du cours
+
+Sur [github.com/warint/MNGT60439](https://github.com/warint/MNGT60439) : **Code → Download ZIP**,
+décompressez sur votre **Bureau** et renommez le dossier `mngt60xxx` (le ZIP s'appelle
+`MNGT60439-main`). Vous connaissez git ? `git clone https://github.com/warint/MNGT60439.git mngt60xxx`.
+
+Ouvrez ensuite un terminal **dans ce dossier** :
+
+```bash
+cd ~/Desktop/mngt60xxx           # Windows : cd $HOME\Desktop\mngt60xxx
+```
+
+::: {.step}
+Dans VS Code : **Fichier → Ouvrir le dossier…** → `mngt60xxx`, puis **Terminal → Nouveau
+terminal**. Le terminal s'ouvre directement au bon endroit.
+:::
+
+## 3 · Créer l'environnement virtuel et installer les paquets
+
+::::: columns
+:::: {.column width="50%"}
+**macOS**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+::::
+:::: {.column width="50%"}
+**Windows (PowerShell)**
+
+```powershell
+py -m venv .venv
+.venv\Scripts\activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+::::
+:::::
+
+Une fois activé, le terminal affiche `(.venv)` au début de la ligne.
+
+::: {.warn}
+**Windows :** si PowerShell refuse d'activer (`running scripts is disabled`), exécutez une fois
+`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, puis recommencez.
+:::
+
+## 3 · Dire à VS Code d'utiliser cet environnement
+
+`Ctrl/Cmd + Maj + P` → **Python: Select Interpreter** → choisissez l'interpréteur dont le chemin
+contient **`.venv`**.
+
+Vérifiez en bas à droite de la fenêtre : on doit y lire `3.13.x ('.venv': venv)` ou équivalent.
+
+::: {.muted}
+Si vous ouvrez un notebook `.ipynb`, choisissez le même environnement comme **noyau** (en haut
+à droite du notebook).
+:::
+
+## 4 · Vérifier l'installation
+
+Depuis la racine du dossier, avec `.venv` activé :
+
+```bash
+python 01-installer-la-plateforme/00-pre-seance/verifier_environnement.py
+```
+
+Chaque ligne doit afficher `[OK    ]`. Le script vérifie :
+
+- la version de Python et l'environnement virtuel ;
+- les douze paquets du cours ;
+- la lecture de `data/entreprises.csv` et la production d'un graphique dans `sorties/` ;
+- l'accès sécurisé à Internet (API de la Banque mondiale, fichier CSV en ligne).
+
+::: {.warn}
+Une ligne en `ÉCHEC` ? Le script affiche la marche à suivre. Si elle ne suffit pas, envoyez-moi
+**la sortie complète** — pas une capture d'écran de la dernière ligne.
+:::
+
+## 5 · Choisir un assistant d'IA générative
+
+Vous pouvez utiliser l'assistant de votre choix : ChatGPT, Claude, Copilot (gratuit pour les
+étudiant·es avec GitHub Education), Gemini…
+
+Avant la séance, faites cet essai :
+
+> « Je débute en Python. Explique-moi, en cinq phrases, ce qu'est un environnement virtuel et
+> pourquoi on en crée un par projet. Puis pose-moi deux questions pour vérifier que j'ai
+> compris. »
+
+::: {.step}
+**Règle permanente du cours.** L'IA explique, commente, vous interroge. Elle ne remplace pas la
+vérification : chaque usage dans un travail remis est déclaré, avec ce que vous avez vérifié.
+:::
+
+## 6 · Autovérification
+
+Répondez **par écrit** avant la séance. Vous ne les remettez pas ; le cours suppose que vous
+les avez essayées.
+
+1. Quelle est la différence entre **Python**, un **paquet** et un **environnement virtuel** ?
+2. Qu'affiche `print(2023 + 1)` ? Et `print("2023" + "1")` ? Pourquoi ?
+3. Un collègue écrit « Tesla est bonne pour l'environnement ». Écrivez **une question précise
+   et mesurable** qui permettrait de vérifier une partie de cette affirmation.
+4. Selon Miller (2007), qu'est-ce qu'une recherche « atéorique » apporte qu'une recherche guidée
+   par une théorie n'apporte pas ?
+
+## Quand ça ne marche pas
+
+| Symptôme | Cause probable | Remède |
+|---|---|---|
+| `python: command not found` | Python absent du PATH | macOS : `python3` ; Windows : réinstaller en cochant **Add to PATH**, ou `py` |
+| `ModuleNotFoundError: No module named 'pandas'` | Mauvais interpréteur | Activer `.venv` ; dans VS Code, **Select Interpreter** |
+| `CERTIFICATE_VERIFY_FAILED` | Certificats macOS | `Install Certificates.command` |
+| `FileNotFoundError: data/entreprises.csv` | Terminal ouvert ailleurs | `cd` vers la racine du dossier du cours |
+| `running scripts is disabled` | Politique PowerShell | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
+
+**À la séance :** une plateforme qui fonctionne, l'article annoté, et vos quatre réponses.

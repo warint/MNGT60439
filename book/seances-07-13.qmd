@@ -1,0 +1,37 @@
+---
+title: "Des outils aux questions : les séances 7 à 13"
+---
+
+Les six premiers chapitres ont donné les outils. Les séances 7 à 11, données par Marie-Ann et
+Russell, les mettent au service de questions de recherche en stratégie, à partir d'**articles**
+et d'**études de cas** (Harvard Business Publishing, Ivey Publishing, dépôts de recherche). Elles
+ne demandent pas de Python en classe ; le projet final, lui, en demande, et c'est là que les
+chapitres précédents servent.
+
+Ce chapitre fait le lien : pour chaque séance, la question, la méthode, et ce que vous savez
+déjà faire.
+
+| Séance | Question | Méthode | Déjà vu dans ce livre |
+|---|---|---|---|
+| 07 · Fusions-acquisitions | Les F&A créent-elles réellement de la valeur ? | Étude d'événement [@mackinlay1997] ; performance de marché et comptable | Rendements autour d'une annonce (chapitre 4) |
+| 08 · ESG et écoblanchiment | Les mieux notés en ESG aident-ils vraiment la planète ? | Corrélation, MCO | Importer des émissions (chapitre 3) ; corrélation et MCO (chapitre 6) |
+| 09 · Groupes stratégiques | Qui sont mes véritables concurrents ? | Analyse de grappes | Écart à la moyenne du secteur (chapitre 4) |
+| 10 · Rémunération des dirigeants | Les incitatifs de long terme poussent-ils à la R-D ? | Panel : effets fixes et aléatoires ; endogénéité | Intensité de R-D ; dépendance des observations d'une même entreprise (chapitre 6) |
+| 11 · Coaching | Votre question tient-elle debout ? | Rencontres individuelles | Les premiers pas — travail 2 |
+| 12–13 · Présentations | Vulgariser son sujet en cinq minutes | — | Tout |
+
+## Lire un cas avec les yeux d'un analyste
+
+Une étude de cas raconte une décision. L'habitude que les séances Python ont voulu installer
+s'applique à elle aussi : repérer chaque affirmation chiffrée, se demander d'où vient le chiffre,
+à quoi il est comparé, et ce qu'il faudrait pour le vérifier. Un cas bien écrit le permet ; un cas
+moins bien écrit le révèle.
+
+## Du cas au projet
+
+Le projet de recherche du cours demande une question, un article modèle, une démarche empirique,
+des données, des résultats et une discussion ; Bosma et van Witteloostuijn [-@bosma2024] montrent
+la diversité des démarches possibles en affaires internationales. L'article modèle joue le même rôle que le cas : il montre une façon de
+poser la question et d'y répondre. Votre travail consiste à reprendre cette démarche sur vos
+propres données — importées, nettoyées, représentées et testées avec les outils des chapitres 1
+à 6.

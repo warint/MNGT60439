@@ -1,0 +1,57 @@
+---
+title: "Installation pas à pas"
+---
+
+## Python
+
+Téléchargez **Python 3.12 ou 3.13** depuis <https://www.python.org/downloads/>.
+
+- **Windows** : cochez **« Add python.exe to PATH »** dans le premier écran de l'installateur.
+  Vérifiez ensuite dans PowerShell : `py --version`.
+- **macOS** : installez le paquet `.pkg`, puis double-cliquez **`Install Certificates.command`**
+  dans `Applications/Python 3.x`. Vérifiez dans le Terminal : `python3 --version`.
+
+## VS Code
+
+Téléchargez **Visual Studio Code** (<https://code.visualstudio.com/>), puis installez les
+extensions **Python** et **Jupyter** (Microsoft) depuis l'onglet Extensions.
+
+## Le dossier du cours et l'environnement virtuel
+
+Téléchargez le dossier du cours depuis <https://github.com/warint/MNGT60439> (**Code → Download ZIP**),
+ouvrez-le dans VS Code (**Fichier → Ouvrir le dossier**), puis un terminal
+(**Terminal → Nouveau terminal**) :
+
+```bash
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+```powershell
+# Windows
+py -m venv .venv
+.venv\Scripts\activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Puis `Ctrl/Cmd + Maj + P` → **Python: Select Interpreter** → l'interpréteur de `.venv`.
+
+## Vérifier
+
+```bash
+python 01-installer-la-plateforme/00-pre-seance/verifier_environnement.py
+```
+
+## Dépannage
+
+| Symptôme | Cause probable | Remède |
+|---|---|---|
+| `python: command not found` | Python absent du PATH | macOS : `python3` ; Windows : `py`, ou réinstaller en cochant *Add to PATH* |
+| `ModuleNotFoundError` | Mauvais interpréteur | Activer `.venv` ; **Select Interpreter** dans VS Code |
+| `CERTIFICATE_VERIFY_FAILED` | Certificats macOS absents | `Install Certificates.command` ; ou `export SSL_CERT_FILE=$(python -c "import certifi; print(certifi.where())")` |
+| `FileNotFoundError: data/…` | Terminal ouvert ailleurs | `cd` vers la racine du dossier du cours |
+| `running scripts is disabled` | Politique PowerShell | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |

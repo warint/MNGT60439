@@ -1,0 +1,661 @@
+---
+title: "Séance 3 : Importer des données"
+subtitle: "CSV, URL, paquets, API, bases de données : monter le dossier Tesla"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+jupyter: mgmt60xxx
+execute:
+  echo: true
+  warning: false
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 03 · Thierry Warin, PhD · HEC Montréal"
+---
+
+```{python}
+#| include: false
+# Les exemples s'écrivent comme si on travaillait depuis la racine du dépôt.
+import os, sys
+os.chdir("../..")
+sys.path.insert(0, "slides")
+import pandas as pd
+pd.set_option("display.width", 120)
+pd.set_option("display.max_columns", 8)
+```
+
+## Plan · La séance {.center .scrollable}
+
+1. Une question, cinq sources
+2. Le fichier CSV local — et ses pièges
+3. Une URL : lire un fichier en ligne
+4. Les paquets qui parlent aux sources
+5. Les API : demander des données à un serveur
+6. Les bases de données : SQL depuis Python
+7. Sauvegarder, mettre en cache, documenter
+
+## À quoi sert la séance 3 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Traduire « Tesla est-elle bonne pour l'environnement ? » en **liste de données** à réunir
+- Savoir d'où vient chaque chiffre : producteur, unité, date, licence
+- Juger si une source est assez fiable pour une décision
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- `pd.read_csv` avec `sep`, `decimal`, `encoding`, `usecols`, `dtype`, `nrows`
+- `requests.get` : code de statut, JSON, paramètres, en-têtes
+- `pd.read_sql` sur SQLite, et DuckDB sur un fichier CSV
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Télécharger **une fois**, relire en local ensuite (le cache)
+- Ne jamais écrire une clé d'API ou un courriel dans le code
+- Tenir une **fiche de provenance** pour chaque source
+
+::::
+
+:::::
+
+# Une question, cinq sources {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Ce qu'il faudrait réunir {.scrollable}
+
+« Tesla est-elle bonne pour l'environnement ? » À la séance 1, nous avons écrit les questions
+précises. Chacune appelle **une source différente**, servie d'une **façon différente** :
+
+| Ce qu'on veut savoir | Source | Comment on l'obtient |
+|---|---|---|
+| Taille et rentabilité de Tesla, Ford, GM | SEC, via `data/entreprises.csv` | **Fichier CSV** local |
+| Émissions de CO₂ par habitant, par pays | Our World in Data | **URL** d'un fichier en ligne |
+| Ce que le marché pense de Tesla | Yahoo Finance | **Paquet** `yfinance` |
+| Part de l'électricité renouvelable | Banque mondiale | **API** web (et paquet `wbgapi`) |
+| Les déclarations financières détaillées | SEC EDGAR | **API** avec un en-tête obligatoire |
+| Toutes les données du cours, réunies | `data/strategie.db` | **Base de données** SQL |
+
+::: {.step}
+Une voiture électrique roule avec l'électricité **du pays où elle roule**. La question
+environnementale est donc aussi une question de **pays** — d'où les sources internationales.
+:::
+
+# Le fichier CSV local {background-color="#E3120B" style="color:#F7F4ED"}
+
+## `read_csv` : le cas simple {.scrollable}
+
+```{python}
+import pandas as pd
+
+entreprises = pd.read_csv("data/entreprises.csv")
+print(entreprises.shape)
+entreprises.head(3)
+```
+
+CSV veut dire *comma-separated values* : du texte, une ligne par observation, des virgules
+entre les colonnes. C'est le format le plus répandu — et le moins normalisé.
+
+## Le même fichier, « à la française » {.scrollable}
+
+Excel en français enregistre un CSV avec **`;`** entre les colonnes, **`,`** pour la décimale, et
+un encodage Windows. Ouvrons `data/entreprises_fr.csv` comme si de rien n'était :
+
+```{python}
+mal = pd.read_csv("data/entreprises_fr.csv", encoding="cp1252")
+print(mal.shape)
+mal.head(2)
+```
+
+::: {.warn}
+Aucune erreur, et pourtant **une seule colonne** : pandas a cherché des virgules, n'a trouvé que
+des points-virgules, et a tout mis dans la même case. Toujours vérifier `.shape` après un import.
+:::
+
+## Sans l'encodage : une erreur, cette fois {.scrollable}
+
+```{python}
+try:
+    pd.read_csv("data/entreprises_fr.csv", sep=";")
+except UnicodeDecodeError as erreur:
+    print(type(erreur).__name__, ":", erreur)
+```
+
+Le caractère `é` de « Énergie » n'est pas écrit de la même façon en UTF-8 (le standard du web)
+et en Windows-1252 (le défaut d'Excel sous Windows). L'octet `0xe9`, c'est un `é` en Windows-1252.
+
+## Les trois options qui règlent tout {.scrollable}
+
+```{python}
+bon = pd.read_csv(
+    "data/entreprises_fr.csv",
+    sep=";",            # séparateur de colonnes
+    decimal=",",        # séparateur décimal
+    encoding="cp1252",  # encodage Windows (« latin » d'Excel)
+)
+print(bon.shape)
+print(bon["chiffre_affaires"].dtype)
+```
+
+Si `decimal=","` manque, `"96773,0"` reste du **texte** (`object`) : impossible d'en faire la
+moyenne. Le type d'une colonne dit si l'import a réussi.
+
+## Lire moins, lire juste : `usecols`, `dtype`, `nrows` {.scrollable}
+
+```{python}
+apercu = pd.read_csv("data/entreprises.csv", nrows=5)          # un coup d'œil
+leger = pd.read_csv(
+    "data/entreprises.csv",
+    usecols=["ticker", "annee", "chiffre_affaires", "resultat_net"],   # 4 colonnes sur 12
+    dtype={"ticker": "category", "annee": "int16"},                  # types imposés
+)
+print(apercu.shape, leger.shape)
+print(leger.dtypes)
+```
+
+Sur un fichier de 50 000 lignes, c'est un détail. Sur 50 millions, `usecols` décide si
+l'ordinateur tient le coup.
+
+## Excel : aller-retour {.scrollable}
+
+```{python}
+from pathlib import Path
+
+Path("sorties").mkdir(exist_ok=True)
+auto = entreprises[entreprises["secteur"] == "Automobile"]
+auto.to_excel("sorties/automobile.xlsx", sheet_name="auto", index=False)
+
+relu = pd.read_excel("sorties/automobile.xlsx", sheet_name="auto")
+print(relu.shape)
+relu.tail(3)
+```
+
+`read_excel` demande le paquet `openpyxl`, installé par `requirements.txt`. `index=False` évite
+une colonne de numéros de ligne inutile dans le classeur.
+
+# Une URL : lire un fichier en ligne {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Une règle avant d'aller en ligne : télécharger une fois {.scrollable}
+
+Le réseau de la salle est lent, les serveurs changent leurs fichiers, et certains limitent le
+nombre de requêtes. On télécharge **une fois**, on garde une copie, on relit la copie.
+
+```{python}
+from pathlib import Path
+
+CACHE = Path("data/cache")
+CACHE.mkdir(parents=True, exist_ok=True)
+
+def charger(nom, telecharger):
+    """Relit data/cache/<nom>.parquet s'il existe ; sinon télécharge, enregistre, renvoie."""
+    fichier = CACHE / f"{nom}.parquet"
+    if fichier.exists():
+        return pd.read_parquet(fichier)
+    df = telecharger()
+    df.to_parquet(fichier)
+    return df
+```
+
+`telecharger` est une **fonction** que l'on passe à `charger` ; elle ne s'exécute que si la
+copie locale manque. Pour la supprimer et forcer un nouveau téléchargement : effacez le fichier.
+
+## Our World in Data : le CO₂ de tous les pays {.scrollable}
+
+```{python}
+URL_CO2 = "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"
+
+co2 = charger("owid_co2", lambda: pd.read_csv(
+    URL_CO2, usecols=["country", "year", "iso_code", "co2_per_capita", "share_global_co2"]))
+print(co2.shape)
+co2[co2["iso_code"].isin(["USA", "CAN", "CHN", "NOR", "POL"]) & (co2["year"] == 2023)]
+```
+
+`read_csv` accepte une URL **comme un nom de fichier**. `lambda: …` écrit une petite fonction
+sans nom : « quand on t'appellera, lis ce fichier ».
+
+## Le piège macOS : `CERTIFICATE_VERIFY_FAILED` {.scrollable}
+
+Sur un Mac, avec le Python de python.org, il arrive que `requests.get(url)` fonctionne mais
+que `pd.read_csv(url)` échoue :
+
+```text
+URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed:
+unable to get local issuer certificate>
+```
+
+`requests` apporte ses propres certificats (le paquet `certifi`) ; `pandas` utilise ceux du
+système, que l'installateur de python.org n'a pas encore installés.
+
+::: {.step}
+**La solution durable** : Finder → Applications → Python 3.x → double-cliquez
+**`Install Certificates.command`**. **La solution d'un soir**, dans le terminal :
+`export SSL_CERT_FILE=$(python -c "import certifi; print(certifi.where())")`
+:::
+
+## Un tableau dans une page web : `read_html` {.scrollable}
+
+```{python}
+URL_WIKI = "https://en.wikipedia.org/wiki/List_of_largest_automotive_companies_by_revenue"
+
+def tableau_wiki():
+    tables = pd.read_html(URL_WIKI, storage_options={"User-Agent": "Mozilla/5.0"})
+    return tables[0]
+
+constructeurs = charger("wiki_constructeurs", tableau_wiki)
+constructeurs.head(6)
+```
+
+`read_html` renvoie une **liste** de tous les tableaux de la page ; on prend le premier. Le
+`User-Agent` dit au serveur qui l'interroge — Wikipédia refuse les requêtes anonymes.
+
+## Ce que `read_html` ne garantit pas {.scrollable}
+
+| Risque | Ce qui se passe | Parade |
+|---|---|---|
+| La page change | Le tableau 0 devient le tableau 1 | Vérifier les colonnes après chaque lecture |
+| Les nombres sont du texte | `"351.1"`, des notes `[3]` dans les cellules | `pd.to_numeric(..., errors="coerce")` |
+| La source n'est pas la source | Wikipédia **recopie** des rapports annuels | Remonter à la source primaire pour un travail remis |
+
+::: {.warn}
+Wikipédia sert à **trouver** une source, pas à **citer** un chiffre. Dans votre projet, le
+chiffre de ventes de Volkswagen vient du rapport annuel de Volkswagen.
+:::
+
+# Les paquets qui parlent aux sources {background-color="#E3120B" style="color:#F7F4ED"}
+
+## `yfinance` : les cours boursiers {.scrollable}
+
+```{python}
+import yfinance as yf
+
+def cours():
+    brut = yf.download(["TSLA", "F", "GM"], start="2020-01-01", end="2025-01-01",
+                       auto_adjust=True, progress=False)
+    return brut["Close"]            # on ne garde que les cours de clôture ajustés
+
+prix = charger("cours_auto", cours)
+print(prix.shape)
+prix.tail(3)
+```
+
+`auto_adjust=True` corrige les cours pour les fractionnements d'actions et les dividendes :
+sans lui, l'action Tesla semblerait s'effondrer le jour de son fractionnement de 2022.
+
+## Ce que le marché a dit, en un graphique {.scrollable}
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.2
+from plotstyle import setup
+plt = setup()
+
+base100 = prix / prix.iloc[0] * 100
+fig, ax = plt.subplots()
+for ticker in base100.columns:
+    ax.plot(base100.index, base100[ticker], label=ticker)
+ax.set_yscale("log")
+ax.set_title("Cours ajusté, base 100 au 2 janvier 2020")
+ax.legend(frameon=False)
+plt.show()
+```
+
+## Un mot sur Yahoo Finance {.scrollable}
+
+- `yfinance` n'est **pas** un produit officiel de Yahoo : c'est un paquet bénévole qui lit le
+  site. Il casse parfois quand le site change ; `pip install -U yfinance` règle souvent le problème.
+- Les conditions d'utilisation de Yahoo **interdisent de redistribuer** les données : on les
+  télécharge, on ne les publie pas dans le dépôt.
+- Pour un travail de recherche, les sources de référence sont CRSP ou Compustat via **WRDS**,
+  auxquelles HEC Montréal donne accès.
+
+## `wbgapi` : la Banque mondiale en une ligne {.scrollable}
+
+```{python}
+import wbgapi as wb
+
+co2_hab = charger("wb_co2_hab", lambda: wb.data.DataFrame(
+    "EN.GHG.CO2.PC.CE.AR5",                       # CO₂ par habitant, tonnes
+    ["USA", "CAN", "CHN", "NOR", "DEU"],
+    time=range(2018, 2023)).reset_index())
+co2_hab
+```
+
+Comment connaître le code `EN.GHG.CO2.PC.CE.AR5` ? `wb.series.info(q="CO2")` cherche dans les
+quelque 1 500 indicateurs du catalogue.
+
+# Les API {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Une API, c'est une URL qui répond avec des données {.scrollable}
+
+```text
+https://api.worldbank.org/v2/country/CAN;USA;CHN/indicator/EG.ELC.RNEW.ZS?format=json&date=2015:2022
+└──────── serveur ──────┘└──── ressource : quels pays, quel indicateur ───┘└──── paramètres ────┘
+```
+
+| Élément | Rôle |
+|---|---|
+| **Point d'accès** (*endpoint*) | L'adresse de la ressource |
+| **Paramètres** | Ce qu'on filtre : années, format, taille de page |
+| **En-têtes** (*headers*) | Qui demande : `User-Agent`, clé d'accès |
+| **Code de statut** | `200` = OK, `404` = introuvable, `429` = trop de requêtes, `403` = refusé |
+| **Réponse** | Le plus souvent du **JSON** : listes et dictionnaires imbriqués |
+
+## `requests.get` : la requête {.scrollable}
+
+```{python}
+import requests
+
+url = "https://api.worldbank.org/v2/country/CAN;USA;CHN;NOR;POL/indicator/EG.ELC.RNEW.ZS"
+parametres = {"format": "json", "date": "2015:2022", "per_page": 100}
+
+reponse = requests.get(url, params=parametres, timeout=30)
+print(reponse.status_code)
+print(reponse.url)
+```
+
+`params=` construit la fin de l'URL pour vous, avec les bons `?` et `&`. `timeout=30` évite
+d'attendre indéfiniment un serveur qui ne répond pas.
+
+## Lire le JSON {.scrollable}
+
+```{python}
+donnees = reponse.json()
+print(type(donnees), len(donnees))
+print(donnees[0])                 # l'en-tête : pages, total
+donnees[1][0]                     # la première observation
+```
+
+La Banque mondiale renvoie une **liste de deux éléments** : les métadonnées (`page`, `pages`,
+`total`), puis la liste des observations. Chaque observation est un dictionnaire, parfois imbriqué.
+
+## Du JSON au DataFrame {.scrollable}
+
+```{python}
+lignes = [
+    {"iso3": obs["countryiso3code"], "annee": int(obs["date"]), "renouv_pct": obs["value"]}
+    for obs in donnees[1]
+]
+elec = pd.DataFrame(lignes)
+elec.pivot(index="annee", columns="iso3", values="renouv_pct").round(1).tail(4)
+```
+
+Part de l'électricité produite à partir de sources renouvelables (%). Une Tesla au Canada ou en
+Norvège roule surtout à l'hydroélectricité ; en Pologne ou en Chine, surtout au charbon. La
+ligne 2022 est vide : la série publiée s'arrête en 2021 — une source a toujours un **retard**.
+
+## La pagination : quand la réponse ne tient pas sur une page {.scrollable}
+
+```{python}
+def banque_mondiale(indicateur, pays="all", dates="2015:2022"):
+    """Toutes les pages d'un indicateur de la Banque mondiale, dans un DataFrame."""
+    url = f"https://api.worldbank.org/v2/country/{pays}/indicator/{indicateur}"
+    page, lignes = 1, []
+    while True:
+        r = requests.get(url, params={"format": "json", "date": dates,
+                                      "per_page": 1000, "page": page}, timeout=60)
+        r.raise_for_status()                      # stoppe net si le statut n'est pas 200
+        meta, obs = r.json()
+        lignes += [{"iso3": o["countryiso3code"], "annee": int(o["date"]),
+                    "valeur": o["value"]} for o in obs]
+        if page >= meta["pages"]:
+            return pd.DataFrame(lignes)
+        page += 1
+
+tous = charger("wb_renouv_tous", lambda: banque_mondiale("EG.ELC.RNEW.ZS"))
+print(tous.shape)
+```
+
+## SEC EDGAR : les états financiers déposés {.scrollable}
+
+```{python}
+import os
+
+# La SEC exige un User-Agent qui vous identifie : « Prénom Nom courriel ».
+# On le lit dans une variable d'environnement, jamais écrit dans le code.
+ua = os.environ.get("SEC_USER_AGENT", "HEC Montreal MGMT60XXX course")
+
+def faits_tesla():
+    url = "https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json"
+    r = requests.get(url, headers={"User-Agent": ua}, timeout=60)
+    r.raise_for_status()
+    ventes = r.json()["facts"]["us-gaap"]["RevenueFromContractWithCustomerExcludingAssessedTax"]
+    return pd.DataFrame(ventes["units"]["USD"])
+
+brut = charger("sec_tesla_ventes", faits_tesla)
+print(brut.shape)
+brut[["end", "val", "fy", "form", "frame"]].tail(4)
+```
+
+## Démêler la réponse de la SEC {.scrollable}
+
+Une même année de ventes apparaît **plusieurs fois** : dans le rapport annuel de l'année, puis
+comme point de comparaison dans les deux rapports suivants. Le champ `frame` désigne la valeur
+retenue pour chaque année civile.
+
+```{python}
+annuel = brut[brut["frame"].fillna("").str.fullmatch(r"CY\d{4}")]
+annuel = annuel.assign(annee=annuel["frame"].str[2:].astype(int),
+                       ventes_G=annuel["val"] / 1e9)
+annuel[["annee", "ventes_G", "form", "end"]].tail(5)
+```
+
+C'est exactement ce que fait `scripts/build_course_data.py` pour les 32 entreprises du cours.
+
+## Les règles du jeu d'une API {.scrollable}
+
+| Règle | SEC EDGAR | Banque mondiale | FRED (Réserve fédérale) |
+|---|---|---|---|
+| Identification | `User-Agent` avec courriel | Aucune | **Clé d'API** gratuite |
+| Limite de débit | 10 requêtes / seconde | Raisonnable | 120 requêtes / minute |
+| Licence | Domaine public | CC BY 4.0 | Selon la série |
+
+Dépasser la limite donne un code **`429`** ou **`403`**, parfois un blocage de quelques minutes.
+Dans une boucle, ajoutez `time.sleep(0.2)` entre deux requêtes.
+
+## Une clé d'API ne s'écrit jamais dans le code {.scrollable}
+
+```{python}
+#| eval: false
+import os, requests
+
+cle = os.environ["FRED_API_KEY"]          # définie dans le terminal, pas ici
+r = requests.get("https://api.stlouisfed.org/fred/series/observations",
+                 params={"series_id": "DCOILWTICO", "api_key": cle, "file_type": "json",
+                         "observation_start": "2020-01-01"}, timeout=30)
+petrole = pd.DataFrame(r.json()["observations"])[["date", "value"]]
+```
+
+```bash
+export FRED_API_KEY="votre-cle"            # macOS / Linux (ajoutez-la à ~/.zshrc)
+setx FRED_API_KEY "votre-cle"              # Windows (rouvrez le terminal ensuite)
+```
+
+::: {.warn}
+Une clé publiée sur GitHub est trouvée par des robots **en quelques minutes**. Si cela arrive :
+révoquez-la sur le site du fournisseur, puis créez-en une autre. L'effacer du dépôt ne suffit pas.
+:::
+
+# Les bases de données {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Pourquoi une base de données ? {.scrollable}
+
+| Fichier CSV | Base de données |
+|---|---|
+| Un fichier = une table | Plusieurs tables, reliées par des clés |
+| On charge **tout** en mémoire | On demande **seulement** ce qu'il faut |
+| Aucun contrôle des types | Chaque colonne a un type |
+| Un utilisateur à la fois | Des milliers, en même temps |
+
+Les données des entreprises vivent dans des bases (SAP, Oracle, Snowflake…). On les interroge
+en **SQL**, un langage que vous retrouverez dans tous les postes d'analyste.
+
+## Se connecter à SQLite {.scrollable}
+
+```{python}
+import sqlite3
+
+con = sqlite3.connect("data/strategie.db")
+pd.read_sql("SELECT name FROM sqlite_master WHERE type = 'table'", con)
+```
+
+SQLite est une base **contenue dans un seul fichier**, livrée avec Python : rien à installer.
+`data/strategie.db` contient les trois tables du cours.
+
+## `SELECT … FROM … WHERE` {.scrollable}
+
+```{python}
+requete = """
+SELECT entreprise, annee, chiffre_affaires, resultat_net
+FROM entreprises
+WHERE secteur = 'Automobile' AND annee >= 2022
+ORDER BY annee, chiffre_affaires DESC
+"""
+pd.read_sql(requete, con)
+```
+
+`SELECT` choisit les colonnes, `FROM` la table, `WHERE` les lignes, `ORDER BY` l'ordre. Le
+résultat arrive directement dans un DataFrame.
+
+## `GROUP BY` : agréger dans la base {.scrollable}
+
+```{python}
+pd.read_sql("""
+SELECT secteur,
+       COUNT(DISTINCT ticker)               AS n_entreprises,
+       ROUND(SUM(chiffre_affaires) / 1000, 1) AS ventes_milliards,
+       ROUND(AVG(resultat_net * 1.0 / chiffre_affaires) * 100, 1) AS marge_moy_pct
+FROM entreprises
+WHERE annee = 2023
+GROUP BY secteur
+ORDER BY ventes_milliards DESC
+""", con)
+```
+
+## `JOIN` : relier deux tables {.scrollable}
+
+```{python}
+pd.read_sql("""
+SELECT e.entreprise, e.annee, e.chiffre_affaires,
+       p.pib_milliards_usd,
+       ROUND(e.chiffre_affaires / 1000 / p.pib_milliards_usd * 100, 2) AS ventes_pct_pib_usa
+FROM entreprises AS e
+JOIN pays AS p ON p.iso3 = e.pays_siege AND p.annee = e.annee
+WHERE e.ticker IN ('TSLA', 'WMT', 'AAPL') AND e.annee = 2023
+""", con)
+```
+
+La **clé** relie les tables : ici le pays du siège (`USA`) et l'année. Walmart vend l'équivalent
+d'environ 2 % du PIB américain — une comparaison grossière (ventes ≠ valeur ajoutée), mais parlante.
+
+## Paramètres : ne jamais coller du texte dans une requête {.scrollable}
+
+```{python}
+secteur_choisi = "Énergie"
+pd.read_sql("SELECT entreprise, annee, resultat_net FROM entreprises "
+            "WHERE secteur = ? AND annee = ?", con, params=(secteur_choisi, 2023))
+```
+
+Le `?` est rempli par `params=`. Construire la requête avec `f"... '{secteur_choisi}'"` casse dès
+qu'un nom contient une apostrophe (« McDonald's ») — et ouvre la porte à l'injection SQL.
+
+```{python}
+con.close()
+```
+
+## DuckDB : du SQL directement sur un fichier {.scrollable}
+
+```{python}
+import duckdb
+
+duckdb.sql("""
+SELECT ticker, chiffre_affaires, resultat_net
+FROM 'data/entreprises.csv'
+WHERE annee = 2024
+ORDER BY chiffre_affaires DESC
+LIMIT 5
+""").df()
+```
+
+Aucune base à créer : DuckDB lit le CSV (ou un fichier parquet) **comme une table**. Sur de gros
+fichiers, il est souvent bien plus rapide que pandas.
+
+# Sauvegarder, mettre en cache, documenter {background-color="#E3120B" style="color:#F7F4ED"}
+
+## CSV ou parquet ? {.scrollable}
+
+```{python}
+co2.to_csv("sorties/co2.csv", index=False)
+co2.to_parquet("sorties/co2.parquet")
+
+for f in ["sorties/co2.csv", "sorties/co2.parquet"]:
+    print(f"{f:22s} {Path(f).stat().st_size / 1e6:5.2f} Mo")
+```
+
+| | CSV | Parquet |
+|---|---|---|
+| Lisible par un humain, par Excel | Oui | Non |
+| Conserve les types (dates, catégories) | Non | Oui |
+| Taille, vitesse | Grand, lent | Compact, rapide |
+
+**Règle du cours :** parquet pour vos copies de travail, CSV pour ce que vous remettez.
+
+## Ce que vous avez dans le cache {.scrollable}
+
+```{python}
+for f in sorted(CACHE.glob("*.parquet")):
+    print(f"{f.name:28s} {pd.read_parquet(f).shape}")
+```
+
+Supprimez `data/cache/` et tout se retélécharge. Ce dossier **n'est pas versionné** : chacun
+reconstruit le sien à partir du code — c'est cela, la reproductibilité.
+
+## La fiche de provenance {.scrollable}
+
+Pour chaque source du dossier, une ligne :
+
+| Donnée | Producteur | Accès | Date d'accès | Unité | Licence |
+|---|---|---|---|---|---|
+| Ventes, résultat | SEC EDGAR | API `companyfacts` | 2026-11-06 | M$ US courants | Domaine public |
+| CO₂ par habitant | Global Carbon Project via OWID | URL CSV | 2026-11-06 | t CO₂ / hab. | CC BY 4.0 |
+| Électricité renouvelable | Banque mondiale | API v2 | 2026-11-06 | % de la production | CC BY 4.0 |
+| Cours boursiers | Yahoo Finance | `yfinance` | 2026-11-06 | $ US ajustés | Usage personnel |
+
+::: {.step}
+Votre rapport final en contiendra une. Commencez-la aujourd'hui : dans six semaines, vous ne
+saurez plus d'où vient le fichier `donnees_v3_final.csv`.
+:::
+
+## Avant la pratique {.scrollable}
+
+- `data/cache/` contient vos copies : la pratique peut se faire **sans réseau**
+- Votre `SEC_USER_AGENT` est défini (`echo $SEC_USER_AGENT` l'affiche)
+- `pd.read_csv` sur une URL fonctionne — sinon, le correctif des certificats
+
+**Pratique :** *Monter le dossier de données « Tesla et l'environnement », de cinq sources, avec
+sa fiche de provenance.*

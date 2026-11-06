@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Quarto
+.quarto/
+*_files/
+# Les présentations rendues vivent dans docs/ (GitHub Pages) ; ailleurs, on ne
+# versionne que la source .qmd.
+*.html
+!docs/**/*.html
+!docs/**/*_files/
+# Le gel (freeze) du livre est versionné : on peut rendre le livre sans réexécuter le code.
+!book/_freeze/**
+
+# Sorties produites par les scripts des étudiant·es
+sorties/
+**/outputs/
+
+# macOS / iCloud
+.DS_Store
+* [0-9]
+* [0-9].*
+
+# Office
+~$*
+
+# Documents de travail internes
+*.docx
+
+# Téléchargements mis en cache par les scripts (séances 3 et 4)
+data/cache/

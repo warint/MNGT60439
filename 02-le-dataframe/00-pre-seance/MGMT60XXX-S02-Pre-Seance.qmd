@@ -1,0 +1,165 @@
+---
+title: "Séance 2 : Avant la séance"
+subtitle: "Le DataFrame, la table de l'analyste"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 02 pré-séance · Thierry Warin, PhD · HEC Montréal"
+---
+
+## Plan · Avant le cours {.center .scrollable}
+
+1. Ce qu'il faut faire, et combien de temps cela prend
+2. Lire : McKinney, sur la structure même du DataFrame
+3. Revoir quatre notions de gestion
+4. Ouvrir les données et les regarder
+5. Autovérification
+6. L'IA générative pour se préparer
+
+## À quoi sert la séance 2 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Distinguer **taille** (résultat net) et **performance** (marge, ROA, ROE)
+- Dire pourquoi un classement change quand on change de mesure
+- Comparer des entreprises **à l'intérieur** d'un secteur
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- Lire un DataFrame : `shape`, `dtypes`, `info`, `describe`
+- Sélectionner avec `[]`, `[[ ]]`, `.loc`, `.iloc`, des masques et `.query`
+- Créer des colonnes, trier, résumer avec `groupby().agg()`
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Vérifier la **forme** d'un résultat après chaque opération
+- Lire une valeur manquante comme une information sur la source
+- Refuser un ratio dont le dénominateur n'a pas de sens
+
+::::
+
+:::::
+
+# Avant la séance {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Quelles entreprises créent le plus de valeur ?
+:::
+
+## Ce qu'il faut faire, et combien de temps cela prend
+
+| | | |
+|---|---|---|
+| **1** | Lire McKinney (2010) et le chapitre 5 de *Python for Data Analysis* | 60 min |
+| **2** | Revoir quatre ratios de gestion | 15 min |
+| **3** | Ouvrir `data/entreprises.csv` et noter trois observations | 20 min |
+| **4** | Répondre à l'autovérification, par écrit | 15 min |
+
+::: {.warn}
+Le cours suppose que votre environnement de la séance 1 fonctionne. Si
+`verifier_environnement.py` affichait encore un **ÉCHEC**, réglez-le d'abord.
+:::
+
+## 1 · Lire
+
+**McKinney, W. (2010).** *Data Structures for Statistical Computing in Python.*
+Actes de la 9ᵉ conférence SciPy, 56–61.
+[doi:10.25080/Majora-92bf1922-00a](https://doi.org/10.25080/Majora-92bf1922-00a)
+
+L'article qui a présenté pandas. Lisez-le pour comprendre **pourquoi** un tableau a un index.
+
+**McKinney, W. (2022).** *Python for Data Analysis*, 3ᵉ éd., chapitre 5,
+« Getting Started with pandas » — en accès libre :
+<https://wesmckinney.com/book/pandas-basics>
+
+| | Annotez |
+|---|---|
+| **1** | La différence entre une Series et un DataFrame, en une phrase |
+| **2** | À quoi sert l'index — et ce qui se passe quand deux index ne correspondent pas |
+| **3** | Un exemple du chapitre que vous pourriez refaire avec des entreprises |
+
+## 2 · Quatre notions de gestion
+
+| Ratio | Formule | Question |
+|---|---|---|
+| **Marge nette** | résultat net / chiffre d'affaires | Que reste-t-il de chaque dollar vendu ? |
+| **ROA** | résultat net / actifs totaux | Que rapporte chaque dollar d'actifs ? |
+| **ROE** | résultat net / capitaux propres | Que rapporte chaque dollar des actionnaires ? |
+| **Intensité R-D** | dépenses de R-D / chiffre d'affaires | Quelle part des ventes va à l'innovation ? |
+
+::: {.muted}
+Si l'une vous est peu familière, demandez à votre assistant IA un exemple chiffré — puis refaites
+le calcul vous-même.
+:::
+
+## 3 · Ouvrir les données
+
+Dans VS Code, à la racine du dépôt, `.venv` activé :
+
+```python
+import pandas as pd
+
+entreprises = pd.read_csv("data/entreprises.csv")
+print(entreprises.shape)
+print(entreprises.head())
+print(entreprises["secteur"].value_counts())
+```
+
+Notez **trois observations** sur ce que vous voyez. Exemples de pistes :
+
+- Quelles colonnes contiennent des valeurs manquantes ?
+- Dans quelle unité sont les montants ?
+- Une ligne représente-t-elle une entreprise, ou autre chose ?
+
+## 4 · Autovérification
+
+Répondez par écrit. Vous ne remettez rien, mais le cours suppose que vous avez essayé.
+
+1. `df["ventes"]` et `df[["ventes"]]` : quelle différence de type, et pourquoi ?
+2. Pourquoi écrit-on `(a > 0) & (b < 5)` et non `a > 0 and b < 5` ?
+3. Une entreprise a des capitaux propres négatifs et un profit positif. Que vaut son ROE, et que
+   vaut-il comme information ?
+4. Walmart n'a aucune valeur dans la colonne `rd`. Doit-on la remplacer par 0 ?
+
+## L'IA générative pour se préparer
+
+Requêtes utiles :
+
+- « Explique la différence entre `.loc` et `.iloc` dans pandas avec un tableau de trois
+  entreprises. Ne me donne pas plus de six lignes de code. »
+- « Pose-moi cinq questions sur `groupby` dans pandas, une à la fois, et corrige mes réponses. »
+- « Quand le ROE d'une entreprise est-il trompeur ? Donne deux exemples réels, que je vérifierai. »
+
+::: {.warn}
+Le code d'une IA vise souvent une ancienne version de pandas (`df.append`,
+`SettingWithCopyWarning`). Le cours utilise **pandas 3** : exécutez, lisez l'erreur, corrigez.
+:::

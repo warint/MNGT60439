@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; Représenter les données – Données et stratégie avec Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./seance-06.html" rel="next">
+<link href="./seance-04.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-87cceeb0dc72897ec58809a022325911.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-654b0d63ec6aea178ec964394c84683d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./seance-01.html">Python pour la stratégie</a></li><li class="breadcrumb-item"><a href="./seance-05.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Données et stratégie avec Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/warint/MNGT60439/tree/main/book/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Avant-propos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Python pour la stratégie</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installer la plateforme</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Le DataFrame, la table de l’analyste</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Importer des données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Manipuler les données : nettoyer, joindre, remodeler, agréger</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-05.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Articles et études de cas</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seances-07-13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Des outils aux questions : les séances 7 à 13</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Annexes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installation pas à pas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sources-de-donnees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Sources de données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./aide-memoire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Aide-mémoire Python</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#une-manchette-plusieurs-vérités" id="toc-une-manchette-plusieurs-vérités" class="nav-link active" data-scroll-target="#une-manchette-plusieurs-vérités"><span class="header-section-number">5.1</span> Une manchette, plusieurs vérités</a></li>
+  <li><a href="#pourquoi-regarder-plutôt-que-résumer" id="toc-pourquoi-regarder-plutôt-que-résumer" class="nav-link" data-scroll-target="#pourquoi-regarder-plutôt-que-résumer"><span class="header-section-number">5.2</span> Pourquoi regarder plutôt que résumer</a></li>
+  <li><a href="#ce-que-lœil-lit-bien" id="toc-ce-que-lœil-lit-bien" class="nav-link" data-scroll-target="#ce-que-lœil-lit-bien"><span class="header-section-number">5.3</span> Ce que l’œil lit bien</a></li>
+  <li><a href="#lanatomie-dune-figure" id="toc-lanatomie-dune-figure" class="nav-link" data-scroll-target="#lanatomie-dune-figure"><span class="header-section-number">5.4</span> L’anatomie d’une figure</a></li>
+  <li><a href="#choisir-le-graphique-selon-la-question" id="toc-choisir-le-graphique-selon-la-question" class="nav-link" data-scroll-target="#choisir-le-graphique-selon-la-question"><span class="header-section-number">5.5</span> Choisir le graphique selon la question</a></li>
+  <li><a href="#seaborn-la-statistique-en-une-ligne" id="toc-seaborn-la-statistique-en-une-ligne" class="nav-link" data-scroll-target="#seaborn-la-statistique-en-une-ligne"><span class="header-section-number">5.6</span> seaborn : la statistique en une ligne</a></li>
+  <li><a href="#plotly-explorer-avant-de-conclure" id="toc-plotly-explorer-avant-de-conclure" class="nav-link" data-scroll-target="#plotly-explorer-avant-de-conclure"><span class="header-section-number">5.7</span> plotly : explorer avant de conclure</a></li>
+  <li><a href="#les-graphiques-qui-trompent-sans-mentir" id="toc-les-graphiques-qui-trompent-sans-mentir" class="nav-link" data-scroll-target="#les-graphiques-qui-trompent-sans-mentir"><span class="header-section-number">5.8</span> Les graphiques qui trompent sans mentir</a></li>
+  <li><a href="#à-retenir" id="toc-à-retenir" class="nav-link" data-scroll-target="#à-retenir"><span class="header-section-number">5.9</span> À retenir</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/warint/MNGT60439/blob/main/book/seance-05.qmd" class="toc-action"><i class="bi bi-github"></i>Voir la source</a></li><li><a href="https://github.com/warint/MNGT60439/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./seance-01.html">Python pour la stratégie</a></li><li class="breadcrumb-item"><a href="./seance-05.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="une-manchette-plusieurs-vérités" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="une-manchette-plusieurs-vérités"><span class="header-section-number">5.1</span> Une manchette, plusieurs vérités</h2>
+<p>« L’Amérique crée plus de valeur que tout autre pays. » La phrase circule, et elle est vraie — pour une certaine définition de <em>valeur</em>. Si la valeur est la production totale, les États-Unis dominent. Si elle est la production par habitant, ou la croissance, ou la capacité à attirer l’investissement étranger, le classement change du tout au tout.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mesures <span class="op">=</span> {<span class="st">"pib_milliards_usd"</span>: <span class="st">"PIB total"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">"pib_hab_usd"</span>: <span class="st">"PIB par habitant"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"croissance_pib"</span>: <span class="st">"Croissance du PIB"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">"ide_entrants_pct_pib"</span>: <span class="st">"IDE entrants (</span><span class="sc">% d</span><span class="st">u PIB)"</span>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>rangs <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Mesure"</span>: <span class="bu">list</span>(mesures.values()),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rang des États-Unis"</span>: [<span class="bu">int</span>(p23[m].rank(ascending<span class="op">=</span><span class="va">False</span>)[p23[<span class="st">"iso3"</span>] <span class="op">==</span> <span class="st">"USA"</span>].iloc[<span class="dv">0</span>]) <span class="cf">for</span> m <span class="kw">in</span> mesures],</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pays mesurés"</span>: [<span class="bu">int</span>(p23[m].notna().<span class="bu">sum</span>()) <span class="cf">for</span> m <span class="kw">in</span> mesures],</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>rangs</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-rangs" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rangs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.1: Le rang des États-Unis en 2023 selon quatre mesures de la « valeur ». Source : Banque mondiale.
+</figcaption>
+<div aria-describedby="tbl-rangs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Mesure</th>
+<th data-quarto-table-cell-role="th">Rang des États-Unis</th>
+<th data-quarto-table-cell-role="th">Pays mesurés</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>PIB total</td>
+<td>1</td>
+<td>204</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>PIB par habitant</td>
+<td>11</td>
+<td>204</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Croissance du PIB</td>
+<td>113</td>
+<td>204</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>IDE entrants (% du PIB)</td>
+<td>132</td>
+<td>195</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Aucune de ces quatre lignes n’est fausse. Le choix de la mesure est un choix d’argument, et le graphique qui suit ce choix le rend visible — ou le cache. Ce chapitre traite de ce passage : de la donnée à l’image, et de l’image à la décision.</p>
+</section>
+<section id="pourquoi-regarder-plutôt-que-résumer" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="pourquoi-regarder-plutôt-que-résumer"><span class="header-section-number">5.2</span> Pourquoi regarder plutôt que résumer</h2>
+<p>En 1973, le statisticien Francis Anscombe publie quatre petits jeux de onze points <span class="citation" data-cites="anscombe1973">(<a href="#ref-anscombe1973" role="doc-biblioref">Anscombe 1973</a>)</span>. Leurs moyennes, leurs variances et leur corrélation sont identiques à la deuxième décimale. Un tableau de statistiques résumées les déclare interchangeables.</p>
+<div id="cell-fig-anscombe" class="cell" data-fig-height="2.6" data-fig-width="8" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x  <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">13</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">7</span>, <span class="dv">5</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x4 <span class="op">=</span> [<span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ys <span class="op">=</span> {<span class="st">"I"</span>:   [<span class="fl">8.04</span>, <span class="fl">6.95</span>, <span class="fl">7.58</span>, <span class="fl">8.81</span>, <span class="fl">8.33</span>, <span class="fl">9.96</span>, <span class="fl">7.24</span>, <span class="fl">4.26</span>, <span class="fl">10.84</span>, <span class="fl">4.82</span>, <span class="fl">5.68</span>],</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"II"</span>:  [<span class="fl">9.14</span>, <span class="fl">8.14</span>, <span class="fl">8.74</span>, <span class="fl">8.77</span>, <span class="fl">9.26</span>, <span class="fl">8.10</span>, <span class="fl">6.13</span>, <span class="fl">3.10</span>, <span class="fl">9.13</span>, <span class="fl">7.26</span>, <span class="fl">4.74</span>],</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"III"</span>: [<span class="fl">7.46</span>, <span class="fl">6.77</span>, <span class="fl">12.74</span>, <span class="fl">7.11</span>, <span class="fl">7.81</span>, <span class="fl">8.84</span>, <span class="fl">6.08</span>, <span class="fl">5.39</span>, <span class="fl">8.15</span>, <span class="fl">6.42</span>, <span class="fl">5.73</span>],</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"IV"</span>:  [<span class="fl">6.58</span>, <span class="fl">5.76</span>, <span class="fl">7.71</span>, <span class="fl">8.84</span>, <span class="fl">8.47</span>, <span class="fl">7.04</span>, <span class="fl">5.25</span>, <span class="fl">12.50</span>, <span class="fl">5.56</span>, <span class="fl">7.91</span>, <span class="fl">6.89</span>]}</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">2.6</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (jeu, y) <span class="kw">in</span> <span class="bu">zip</span>(axes, ys.items()):</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    xx <span class="op">=</span> x4 <span class="cf">if</span> jeu <span class="op">==</span> <span class="st">"IV"</span> <span class="cf">else</span> x</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    ax.scatter(xx, y, color<span class="op">=</span>CL.ink, s<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    b, a <span class="op">=</span> np.polyfit(xx, y, <span class="dv">1</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    ax.plot([<span class="dv">3</span>, <span class="dv">20</span>], [a <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> b, a <span class="op">+</span> <span class="dv">20</span> <span class="op">*</span> b], color<span class="op">=</span>CL.accent, lw<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Jeu </span><span class="sc">{</span>jeu<span class="sc">}</span><span class="ss">  ·  r = </span><span class="sc">{</span>np<span class="sc">.</span>corrcoef(xx, y)[<span class="dv">0</span>, <span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ss">"</span>, loc<span class="op">=</span><span class="st">"left"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-anscombe" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-anscombe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-05_files/figure-html/fig-anscombe-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-anscombe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: Le quartet d’Anscombe : quatre jeux de données aux statistiques résumées identiques, et la même droite de régression.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le premier jeu est une relation linéaire bruitée ; le deuxième, une courbe ; le troisième, une droite parfaite déviée par un seul point ; le quatrième n’a <strong>aucune</strong> relation, sauf celle qu’un point isolé fabrique. La leçon est toujours valable : on regarde <em>avant</em> de résumer, et on résume <em>ce qu’on a vu</em>.</p>
+</section>
+<section id="ce-que-lœil-lit-bien" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="ce-que-lœil-lit-bien"><span class="header-section-number">5.3</span> Ce que l’œil lit bien</h2>
+<p>Un graphique transforme des nombres en propriétés visuelles : une position, une longueur, un angle, une surface, une couleur. Cleveland et McGill ont mesuré, par des expériences, la précision avec laquelle on lit chacune <span class="citation" data-cites="cleveland1984">(<a href="#ref-cleveland1984" role="doc-biblioref">Cleveland et McGill 1984</a>)</span>. L’ordre qu’ils obtiennent est devenu la règle de base de la visualisation :</p>
+<ol type="1">
+<li>la position sur une échelle commune ;</li>
+<li>la position sur des échelles non alignées ;</li>
+<li>la longueur ;</li>
+<li>l’angle et la pente ;</li>
+<li>l’aire ;</li>
+<li>le volume, la saturation et la teinte.</li>
+</ol>
+<p>La conséquence pratique est simple. La comparaison la plus importante doit être confiée à l’encodage le plus précis. Le diagramme circulaire encode par l’angle ; la barre, par la position. Les mêmes nombres, présentés des deux façons, ne se lisent pas avec la même précision (<a href="#fig-angle" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>).</p>
+<div id="cell-fig-angle" class="cell" data-fig-height="3" data-fig-width="8" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>top5 <span class="op">=</span> p23.nlargest(<span class="dv">5</span>, <span class="st">"pib_milliards_usd"</span>).set_index(<span class="st">"pays"</span>)[<span class="st">"pib_milliards_usd"</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> p23[<span class="st">"pib_milliards_usd"</span>].<span class="bu">sum</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>parts <span class="op">=</span> pd.concat([top5, pd.Series({<span class="st">"Reste du monde"</span>: total <span class="op">-</span> top5.<span class="bu">sum</span>()})]) <span class="op">/</span> total</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fig, (a1, a2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">3</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>a1.pie(parts, labels<span class="op">=</span>parts.index, colors<span class="op">=</span>CL.ramp, textprops<span class="op">=</span>{<span class="st">"fontsize"</span>: <span class="dv">7</span>})</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> parts.sort_values() <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>a2.barh(s.index, s, color<span class="op">=</span>CL.accent)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(s):</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    a2.text(v <span class="op">+</span> <span class="fl">0.5</span>, i, <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0f}</span><span class="ss"> %"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>a2.set_xlabel(<span class="st">"Part du PIB mondial (%)"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Part des États-Unis : </span><span class="sc">{</span>parts[<span class="st">'United States'</span>]<span class="sc">:.1%}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-angle" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-angle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-05_files/figure-html/fig-angle-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-angle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: Part du PIB mondial en 2023 : les mêmes six nombres, lus par l’angle et par la position. Source : Banque mondiale.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Part des États-Unis : 26.1%</code></pre>
+</div>
+</div>
+</section>
+<section id="lanatomie-dune-figure" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="lanatomie-dune-figure"><span class="header-section-number">5.4</span> L’anatomie d’une figure</h2>
+<p>En matplotlib, une figure se construit en deux objets : <code>fig</code>, la page, et <code>ax</code>, le système d’axes où l’on dessine. Écrire <code>fig, ax = plt.subplots()</code> puis appeler les méthodes de <code>ax</code> plutôt que les fonctions <code>plt.*</code> garde chaque instruction attachée à un panneau précis — ce qui devient indispensable dès qu’il y en a plusieurs.</p>
+<p>Cinq éléments séparent une figure de travail d’une figure que l’on remet :</p>
+<ul>
+<li>un <strong>titre qui énonce le message</strong> (« L’écart entre les États-Unis et le Canada se creuse »), plutôt que le sujet (« PIB par habitant ») ;</li>
+<li>une <strong>unité</strong> sur chaque axe ;</li>
+<li>la <strong>source</strong>, en petit, sous la figure ;</li>
+<li>un <strong>étiquetage direct</strong> des séries, qui évite l’aller-retour vers une légende ;</li>
+<li>un enregistrement à la bonne résolution : <code>fig.savefig("sorties/f.png", dpi=200)</code>, appelé <strong>avant</strong> <code>plt.show()</code>.</li>
+</ul>
+<div id="cell-fig-voisins" class="cell" data-fig-height="3.6" data-fig-width="7" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>choix <span class="op">=</span> {<span class="st">"USA"</span>: CL.warn, <span class="st">"CAN"</span>: CL.accent, <span class="st">"JPN"</span>: CL.good, <span class="st">"MEX"</span>: CL.muted}</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.6</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> iso, coul <span class="kw">in</span> choix.items():</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> pays[pays[<span class="st">"iso3"</span>] <span class="op">==</span> iso].dropna(subset<span class="op">=</span>[<span class="st">"pib_hab_usd"</span>])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    ax.plot(d[<span class="st">"annee"</span>], d[<span class="st">"pib_hab_usd"</span>] <span class="op">/</span> <span class="dv">1000</span>, color<span class="op">=</span>coul)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    fin <span class="op">=</span> d.iloc[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ax.text(fin[<span class="st">"annee"</span>] <span class="op">+</span> <span class="fl">0.4</span>, fin[<span class="st">"pib_hab_usd"</span>] <span class="op">/</span> <span class="dv">1000</span>, fin[<span class="st">"pays"</span>], color<span class="op">=</span>coul,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">2000</span>, <span class="dv">2027</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"L'écart entre les États-Unis et le Canada se creuse depuis 2014"</span>, loc<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"milliers de $ US courants"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>ecart <span class="op">=</span> pays[pays[<span class="st">"iso3"</span>].isin([<span class="st">"USA"</span>, <span class="st">"CAN"</span>]) <span class="op">&amp;</span> pays[<span class="st">"annee"</span>].isin([<span class="dv">2014</span>, <span class="dv">2023</span>])] <span class="op">\</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    .pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"iso3"</span>, values<span class="op">=</span><span class="st">"pib_hab_usd"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((ecart[<span class="st">"USA"</span>] <span class="op">-</span> ecart[<span class="st">"CAN"</span>]).<span class="bu">round</span>(<span class="dv">0</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-voisins" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-voisins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-05_files/figure-html/fig-voisins-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-voisins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.3: PIB par habitant, en milliers de dollars US courants, 2000-2023. Source : Banque mondiale.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>annee
+2014     4192.0
+2023    27739.0
+dtype: float64</code></pre>
+</div>
+</div>
+</section>
+<section id="choisir-le-graphique-selon-la-question" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="choisir-le-graphique-selon-la-question"><span class="header-section-number">5.5</span> Choisir le graphique selon la question</h2>
+<p>Le bon graphique se choisit à partir de la question, jamais à partir du menu d’un logiciel. Cinq questions couvrent l’essentiel du travail d’un analyste en stratégie.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>Forme</th>
+<th>En Python</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Comparer des catégories</td>
+<td>Barres horizontales triées</td>
+<td><code>ax.barh</code>, <code>sns.barplot</code></td>
+</tr>
+<tr class="even">
+<td>Suivre une évolution</td>
+<td>Ligne</td>
+<td><code>ax.plot</code>, <code>sns.lineplot</code></td>
+</tr>
+<tr class="odd">
+<td>Voir une distribution</td>
+<td>Histogramme, boîte à moustaches</td>
+<td><code>sns.histplot</code>, <code>sns.boxplot</code></td>
+</tr>
+<tr class="even">
+<td>Voir une relation</td>
+<td>Nuage de points, souvent en échelle log</td>
+<td><code>sns.scatterplot</code></td>
+</tr>
+<tr class="odd">
+<td>Montrer une composition</td>
+<td>Barres empilées</td>
+<td><code>df.plot.barh(stacked=True)</code></td>
+</tr>
+</tbody>
+</table>
+<p>La distribution du PIB par habitant illustre pourquoi l’échelle compte. Sur une échelle linéaire, presque tous les pays s’écrasent dans la première classe ; sur une échelle logarithmique, la forme apparaît (<a href="#fig-distribution" class="quarto-xref">Figure&nbsp;<span>5.4</span></a>).</p>
+<div id="cell-fig-distribution" class="cell" data-fig-height="2.8" data-fig-width="8" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, (a1, a2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">2.8</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(p23[<span class="st">"pib_hab_usd"</span>] <span class="op">/</span> <span class="dv">1000</span>, bins<span class="op">=</span><span class="dv">30</span>, ax<span class="op">=</span>a1, color<span class="op">=</span>CL.accent)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>a1.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"milliers de $"</span>, ylabel<span class="op">=</span><span class="st">"pays"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>sns.histplot(p23[<span class="st">"pib_hab_usd"</span>], bins<span class="op">=</span><span class="dv">30</span>, log_scale<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>a2, color<span class="op">=</span>CL.accent)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>a2.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"$ (échelle log)"</span>, ylabel<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>usa <span class="op">=</span> p23.loc[p23[<span class="st">"iso3"</span>] <span class="op">==</span> <span class="st">"USA"</span>, <span class="st">"pib_hab_usd"</span>].iloc[<span class="dv">0</span>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>a2.axvline(usa, color<span class="op">=</span>CL.warn)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"moyenne </span><span class="sc">{</span>p23[<span class="st">'pib_hab_usd'</span>]<span class="sc">.</span>mean()<span class="sc">:,.0f}</span><span class="ss"> $ · médiane </span><span class="sc">{</span>p23[<span class="st">'pib_hab_usd'</span>]<span class="sc">.</span>median()<span class="sc">:,.0f}</span><span class="ss"> $ · "</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"pays devant les États-Unis : </span><span class="sc">{</span>(p23[<span class="st">'pib_hab_usd'</span>] <span class="op">&gt;</span> usa)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-05_files/figure-html/fig-distribution-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.4: Distribution du PIB par habitant en 2023, échelle linéaire et logarithmique. Source : Banque mondiale.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>moyenne 22,296 $ · médiane 7,862 $ · pays devant les États-Unis : 10</code></pre>
+</div>
+</div>
+<p>L’écart entre la moyenne et la médiane est à lui seul un diagnostic : quelques économies très riches tirent la moyenne vers le haut. Et plusieurs des pays qui devancent les États-Unis sont de petits territoires — micro-États, places financières — dont le PIB par habitant dit peu de chose sur une stratégie d’implantation.</p>
+</section>
+<section id="seaborn-la-statistique-en-une-ligne" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="seaborn-la-statistique-en-une-ligne"><span class="header-section-number">5.6</span> seaborn : la statistique en une ligne</h2>
+<p>seaborn s’appuie sur matplotlib et parle directement le langage des DataFrames : on lui donne <code>data=</code>, puis les noms de colonnes pour <code>x</code>, <code>y</code>, <code>hue</code> (la couleur), <code>col</code> (les panneaux). La boîte à moustaches par secteur résume quinze ans de marges nettes pour les 32 entreprises du cours (<a href="#fig-boites" class="quarto-xref">Figure&nbsp;<span>5.5</span></a>).</p>
+<div class="cell" data-fig-height="3.6" data-fig-width="7.5" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ent[<span class="st">"marge"</span>] <span class="op">=</span> ent[<span class="st">"resultat_net"</span>] <span class="op">/</span> ent[<span class="st">"chiffre_affaires"</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ordre <span class="op">=</span> ent.groupby(<span class="st">"secteur"</span>)[<span class="st">"marge"</span>].median().sort_values().index</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">7.5</span>, <span class="fl">3.6</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>ent, y<span class="op">=</span><span class="st">"secteur"</span>, x<span class="op">=</span><span class="st">"marge"</span>, order<span class="op">=</span>ordre, color<span class="op">=</span>CL.line, ax<span class="op">=</span>ax, fliersize<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">0</span>, color<span class="op">=</span>CL.warn, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">30</span>, <span class="dv">60</span>), xlabel<span class="op">=</span><span class="st">"Marge nette (%)"</span>, ylabel<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ent.groupby(<span class="st">"secteur"</span>)[<span class="st">"marge"</span>].median().sort_values().<span class="bu">round</span>(<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-boites" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-fig-width="7.5" data-fig-height="3.6" data-execution_count="7">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-boites-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div id="fig-boites-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-boites-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-05_files/figure-html/fig-boites-output-1.png" class="img-fluid figure-img" data-ref-parent="fig-boites">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-boites-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Marge nette (résultat net / chiffre d’affaires) par secteur, 32 entreprises, 2010-2024. Source : SEC EDGAR.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="fig-boites-2" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-boites-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre><code>secteur
+Commerce de détail           2.6
+Automobile                   3.5
+Médias et divertissement     7.4
+Énergie                      9.3
+Industrie                   10.9
+Biens de consommation       12.6
+Restauration                17.6
+Pharmaceutique              18.4
+Technologie                 22.2
+Name: marge, dtype: float64</code></pre>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-boites-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b)
+</figcaption>
+</figure>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-boites-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.5
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Le trait central est la médiane ; la boîte couvre la moitié centrale des observations ; les points isolés sont des années exceptionnelles. Le commerce de détail travaille sur des marges minces, la technologie et la pharmacie sur des marges épaisses : ce sont deux modèles d’affaires, pas deux niveaux de compétence.</p>
+<p>Les <strong>petits multiples</strong> — un panneau par groupe, avec <code>sns.relplot(..., col="secteur")</code> — permettent de comparer des formes d’évolution sans superposer trente lignes. Le choix <code>sharey=True</code> ou <code>False</code> change la lecture : une échelle commune compare les niveaux, une échelle libre compare les formes.</p>
+</section>
+<section id="plotly-explorer-avant-de-conclure" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="plotly-explorer-avant-de-conclure"><span class="header-section-number">5.7</span> plotly : explorer avant de conclure</h2>
+<p>Pour explorer, un graphique interactif vaut mieux qu’un graphique figé : on survole un point pour savoir quel pays il représente, on zoome sur un groupe. <code>plotly.express</code> produit ces figures avec la même syntaxe que seaborn.</p>
+<div id="b57f9193" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> p23.dropna(subset<span class="op">=</span>[<span class="st">"pib_hab_usd"</span>, <span class="st">"ide_entrants_pct_pib"</span>, <span class="st">"population"</span>])</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> d[d[<span class="st">"ide_entrants_pct_pib"</span>].between(<span class="op">-</span><span class="dv">10</span>, <span class="dv">40</span>)]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.scatter(d, x<span class="op">=</span><span class="st">"pib_hab_usd"</span>, y<span class="op">=</span><span class="st">"ide_entrants_pct_pib"</span>, size<span class="op">=</span><span class="st">"population"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                 color<span class="op">=</span><span class="st">"region"</span>, hover_name<span class="op">=</span><span class="st">"pays"</span>, log_x<span class="op">=</span><span class="va">True</span>, size_max<span class="op">=</span><span class="dv">40</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                 labels<span class="op">=</span>{<span class="st">"pib_hab_usd"</span>: <span class="st">"PIB par habitant ($, log)"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"ide_entrants_pct_pib"</span>: <span class="st">"IDE entrants (</span><span class="sc">% d</span><span class="st">u PIB)"</span>})</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+        <script>
+        window.PlotlyConfig = {MathJaxConfig: 'local'};
+        if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+        </script>
+        <script type="module">import "https://cdn.plot.ly/plotly-4.1.1.min"</script>
+        
+</div>
+<div class="cell-output cell-output-display">
+<div style="height:525px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="d704ad2a-235a-4eca-81cb-b65cd675df45" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("d704ad2a-235a-4eca-81cb-b65cd675df45")) {                    Plotly.newPlot(                        "d704ad2a-235a-4eca-81cb-b65cd675df45",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=Latin America & Caribbean \u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Aruba","Argentina","Antigua and Barbuda","Bahamas, The","Belize","Bolivia","Brazil","Barbados","Chile","Colombia","Costa Rica","Curacao","Dominica","Dominican Republic","Ecuador","Grenada","Guatemala","Guyana","Honduras","Haiti","Jamaica","St. Kitts and Nevis","St. Lucia","Mexico","Nicaragua","Panama","Peru","Paraguay","El Salvador","Suriname","Sint Maarten (Dutch part)","Turks and Caicos Islands","Trinidad and Tobago","Uruguay","St. Vincent and the Grenadines","Venezuela, RB"],"legendgroup":"Latin America & Caribbean ","marker":{"color":"#636efa","size":{"dtype":"i4","bdata":"X6MBAGHctgKEbAEAUBgGAOJFBgC\u002f1LoAecCVDOBOBABT+CsBgFseA3XnTQAeXAIAzgMBAMHmrACzWhIBWckBACaQFAHxmwwAc22iAJaSsQDqVCsAprYAAFW8AgDvq7sHvR5oAAcJRABxcQQC8m5oAPhGYACWmAkA\u002faYAAHa0AADW3RQAsbIzAMuLAQA21q8B"},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"Latin America & Caribbean ","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"nu+nxjMK4UDb+X5q7NrLQLbz\u002fdQQf9VA46WbxPiq4kBeukkMwgC9QJHtfD+1srBArBxaZMtExECHFtnO9\u002fvYQNV46SZhrtBAokW2831ku0BOYhBYMb3QQESLbOdzuNRAYOXQIntcw0Dwp8ZLN8PEQOxRuB4lPrpAvp8aLz1LxkCwcmiRbXq2QM3MzMxs\u002ftNAI9v5fuo2qUBMN4lBYEeaQBsv3SRmdr1AMzMzMzsM1kC4HoXrUZjKQOkmMQhsA8tAcT0K1+NipEAIrBxaTFvSQJ7vp8YL775AcT0K10OfuEAfhetRuMe0QOXQItv5kbVAkxgEVnpD40AUrkfhxlHhQBkEVg4d4dFAXI\u002fC9ajU1kArhxbZLqvEQD0K16PwQqxA"},"xaxis":"x","y":{"dtype":"f8","bdata":"JzEIrBxaDcCTGARWDi0QQNV46SYxiCxATDeJQWDlAEAZBFYOLbLhP8dLN4lBYN0\u002ftvP91HjpBkC28\u002f3UeOkIQDEIrBxa5BZAAiuHFtlOEkDTTWIQWDkYQPT91HjpphBAbxKDwMohHUBaZDvfT40PQJhuEoPAytk\u002fQmDl0CJ7MEAdWmQ730\u002f5P7x0kxgE1hrAi2zn+6nx+j9g5dAi2\u002fm+PzEIrBxaZAJAz\u002fdT46WbBkCJQWDl0KIgQDEIrBxaZPs\u002foBov3SQGGUDpJjEIrBwKQH0\u002fNV66Sfo\u002fBFYOLbKdBEBaZDvfT40CQBfZzvdT4ytARrbz\u002fdR4BUAX2c73U+P\u002fP3E9Ctej8BfAGy\u002fdJAaBGsAlBoGVQ4sbQGiR7Xw\u002fNfC\u002f"},"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=Sub-Saharan Africa \u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Angola","Burundi","Benin","Burkina Faso","Botswana","Central African Republic","Cote d'Ivoire","Cameroon","Congo, Dem. Rep.","Congo, Rep.","Comoros","Cabo Verde","Ethiopia","Gabon","Ghana","Guinea","Gambia, The","Guinea-Bissau","Equatorial Guinea","Kenya","Liberia","Lesotho","Madagascar","Mali","Mozambique","Mauritania","Mauritius","Malawi","Namibia","Niger","Nigeria","Rwanda","Sudan","Senegal","Sierra Leone","Somalia, Fed. Rep.","Sao Tome and Principe","Eswatini","Seychelles","Chad","Togo","Tanzania","Uganda","South Africa","Zambia","Zimbabwe"],"legendgroup":"Sub-Saharan Africa ","marker":{"color":"#EF553B","size":{"dtype":"i4","bdata":"UsIwAmri0AA6UdcAcFhfAXTYJQClnk4A1ozbAc\u002fusAEjOU4G5VdeANP5DABb+AcA7K2rBzXqJQAKkAMCXM\u002fbAHUqKQB72yAA\u002fTAcAPtnTAMn0VMAMEUjABwD3AEnsGoBWDsBAumiTACHDRMAYgdCAZc2LQD7Ko8BwTeVDaft1ACnl\u002fsChdcTAeAYgQBXIRgB14UDAKrGEgDd0wEAGMkmAWp8fQAGgfgD2XDmAmCLxAP9ODwBVlf5AA=="},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"Sub-Saharan Africa ","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"sp3vpwaLpkA9CtejcDlvQMHKoUW2yJVA3SQGgZVJi0DNzMzMTJO+QIts5\u002fup\u002f35A30+Nl+4\u002fpEBmZmZm5uGaQARWDi2yoYRA+n5qvPRbo0CuR+F6lO+aQLKd76fmurJAObTIdj5\u002fkEDn+6nx0nq+QCuHFtnOn6JA5dAi2\u002flNmEDVeOkmMZiLQPp+arx0I45AfT81XlqEukAxCKwcWlqeQGQ730+N+YhAFK5H4XrLjECNl24SgxCAQFTjpZvESZBASgwCK4dxg0Aj2\u002fl+6p+gQESLbOf7AsZAH4XrUbjJg0BWDi2y\u002fYGwQD0K16NwP4RASgwCK4e1oECsHFpkO5SQQCUGgZVD6ohAQmDl0CKImkASg8DKobKHQAwCK4cWp4JAUI2XblJdp0BvEoPACletQLgeheuhtNFAsHJoke2vjUC4HoXrUXmSQF66SQwCIJNAtvP91HhSj0CDwMqhRZK3QPT91HjpypRAMzMzM3MmoUA="},"xaxis":"x","y":{"dtype":"f8","bdata":"lkOLbOf7\u002f78CK4cW2c7vP2q8dJMYBAJAnMQgsHJo4T+PwvUoXI8OQLgehetRuPC\u002fz\u002fdT46WbCEAhsHJoke36P2iR7Xw\u002fNQtA3SQGgZXDFUBcj8L1KFzXPycxCKwcWhlAaJHtfD81A0AxCKwcWmT3v2iR7Xw\u002fNfo\u002fRrbz\u002fdR4F0Coxks3iUEhQFyPwvUoXPM\u002fc2iR7Xw\u002f979qvHSTGATiP8HKoUW2cxxAI9v5fmq88j\u002fsUbgehesJQK5H4XoUrgZATDeJQWClKUCNl24Sg8AfQClcj8L1qBZABFYOLbKd+T+mm8QgsFIyQE5iEFg5NBhA+n5qvHST2D\u002fufD81XroIQJZDi2zn+\u002fU\u002faJHtfD81L0D+1HjpJjECQBkEVg4tshhA\u002fKnx0k1i\u002fD+wcmiR7XzjP\u002fp+arx0EyZAc2iR7Xw\u002fA0A9CtejcD3qP+Olm8QgsABAWmQ730+NGEBoke18PzXwP5qZmZmZmQJAi2zn+6nx+j8="},"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=Europe & Central Asia\u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Albania","Andorra","Armenia","Austria","Azerbaijan","Belgium","Bulgaria","Bosnia and Herzegovina","Belarus","Czechia","Germany","Denmark","Spain","Estonia","Finland","France","United Kingdom","Georgia","Greece","Croatia","Iceland","Italy","Kazakhstan","Kyrgyz Republic","Lithuania","Luxembourg","Latvia","Moldova","North Macedonia","Montenegro","Norway","Poland","Portugal","Romania","Russian Federation","San Marino","Serbia","Slovak Republic","Slovenia","Sweden","Tajikistan","Turkmenistan","Turkiye","Ukraine","Uzbekistan","Kosovo"],"legendgroup":"Europe & Central Asia","marker":{"color":"#00cc96","size":{"dtype":"i4","bdata":"iswkANg7AQBMOy0A8VaLAObvmgBqv7MABF5iALGZMAC6DIwAqsWlAOnc9gRIvloAEM3hAq7oFAAnNFUAPkcTBLCfFQSbsTgAt82eAObkOgB\u002f4gUAGAeEA3g2NgFmVWwAIdErAD4rCgA+vhwAt4AlAOjjGwCpgwkA8ThUAPnNLwL+aKEARtkiAdKckghEhAAAzw9lADTOUgANWyAAuMagACeJngBWX3AAjfgVBeTBPwLTAiAC7KwZAA=="},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"Europe & Central Asia","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"5dAi21kGw0CTGARWjtvmQMHKoUUW379AppvEIHCg60BKDAIrB927QBKDwMqV+epAUI2XbgL3zkDn+6nxguvAQC\u002fdJAbB2L5AdZMYBGYE30CBlUOLGL\u002fqQG8Sg8C4nPBAYOXQIqda4EDy0k1iAI7dQARWDi0W0OlA2\u002fl+aoTT5UBI4XoU9l\u002foQClcj8LVLcBACtejcO3L1kBaZDvf36nVQLKd76eUEfRAZmZmZvYt40BYObTItifJQG3n+6lxtKBAlkOLbNdT20CiRbbzdEMAQYlBYOWQLdZAdZMYBJaPukD8qfHSLfHAQK5H4XoU8cdAgZVDi4Y29kAv3SQGUaDVQDvfT42n\u002fNpAQmDl0BrR0UDD9Shcf1HLQAwCK4fqO+1AyXa+n9r8x0BaZDvftwnYQGZmZmYe5d9AGQRWDsnU6kBSuB6F62mSQFg5tMh2srRAj8L1KIwfykACK4cWmRO0QGIQWDn0j6dARrbz\u002fVRMuEA="},"xaxis":"x","y":{"dtype":"f8","bdata":"mpmZmZmZG0C+nxov3SQdQDMzMzMzMwNA6SYxCKwc4j+8dJMYBFbWP0w3iUFg5eS\u002fI9v5fmo8FECe76fGS7cQQMuhRbbz\u002fQVAxSCwcmiRC0CsHFpkO9\u002f\u002fP7ByaJHtfABAMzMzMzMzB0AdWmQ73w8pQCuHFtnO96O\u002f1XjpJjEI7D+YbhKDwMrZP6abxCCwchtAtMh2vp8a\u002fz\u002fTTWIQWDkPQLTIdr6fGhtAoBov3SQG\u002fT+wcmiR7XwBQGIQWDm0yPA\u002f30+Nl24SE0AdWmQ7308jwOOlm8QgsA9ASOF6FK5HAUDJdr6fGi8QQIXrUbgehRtA9ihcj8L1BUB1kxgEVo4RQNnO91PjpQ9A1XjpJjEIBEAGgZVDi2zfv\u002fp+arx0k+y\u002fSOF6FK5HGECe76fGSzfZP7gehetRuABAzczMzMzMCUCR7Xw\u002fNV7yP4XrUbgehfk\u002fmG4Sg8DK7T+Nl24Sg8ADQArXo3A9CgBA6SYxCKxcIUA="},"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=Middle East, North Africa, Afghanistan & Pakistan\u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["United Arab Emirates","Bahrain","Djibouti","Algeria","Egypt, Arab Rep.","Iran, Islamic Rep.","Iraq","Israel","Jordan","Kuwait","Lebanon","Libya","Morocco","Oman","Pakistan","West Bank and Gaza","Qatar","Saudi Arabia","Tunisia"],"legendgroup":"Middle East, North Africa, Afghanistan & Pakistan","marker":{"color":"#ab63fa","size":{"dtype":"i4","bdata":"J\u002fifAGMQGACwlxEA+2jAAlyt0wZDlGYFgcavAqhIlgBtjK4ArA5KALUYWAC7eW8AeXI\u002fArULTQBvnsAOz9JOACCHKABLQwIC7ym6AA=="},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"Middle East, North Africa, Afghanistan & Pakistan","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"16NwPVZX6EB56SYxiJrcQGq8dJOYaqpAMQisHHr6tECuR+F6lAGrQIGVQ4tMubNAIbByaFFNt0B9PzVeznPpQI\u002fC9Sg8KrNAjZduEn+l4EAzMzMzcyurQHE9CteDirdAy6FFtnPLrUAdWmQ774jUQJ7vp8ZLQZVARrbz\u002fdQurEAAAAAAPpTzQKwcWmSbp+FARIts5zverkA="},"xaxis":"x","y":{"dtype":"f8","bdata":"5dAi2\u002fl+F0B3vp8aL50tQOkmMQisHAxACtejcD0K3z\u002fhehSuR+EDQIGVQ4ts59M\u002f7FG4HoXr\u002f78zMzMzMzMJQJqZmZmZmQxAppvEILBy9D\u002fpJjEIrBwKQOF6FK5H4fw\u002fCKwcWmQ75z9vEoPAyqEnQNv5fmq8dOM\u002fmG4Sg8DK4T8lBoGVQ4vMv1YOLbKd7\u002f0\u002fnMQgsHJo9z8="},"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=East Asia & Pacific\u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Australia","Brunei Darussalam","China","Fiji","Hong Kong SAR, China","Indonesia","Japan","Cambodia","Kiribati","Korea, Rep.","Lao PDR","Macao SAR, China","Marshall Islands","Myanmar","Mongolia","Malaysia","New Caledonia","Naoero","New Zealand","Philippines","Palau","Papua New Guinea","French Polynesia","Singapore","Solomon Islands","Thailand","Timor-Leste","Tonga","Tuvalu","Viet Nam","Vanuatu","Samoa"],"legendgroup":"East Asia & Pacific","marker":{"color":"#FFA15A","size":{"dtype":"i4","bdata":"UsyWAcUABwDwuRVU8RkOAOT9cgCznsIQKvlrBwjeCQGyBQIAaxIVA2H1dACQWwoAq5cAACYEOgM5HjUAGvwXAk5sBABjLgAAgFhPAL8Z2QY\u002fRQAAg4ieAB5KBADQS1oABTUMAKMXRgReHxUAlZgBAFgmAADAQPsFmeMEAFdOAwA="},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"East Asia & Pacific","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"001iEEzE70CwcmiRUQ\u002fgQFg5tMiWS8lA+n5qvDQmt0AlBoGVo6voQIGVQ4tMDLNAppvEIOAx4UBoke18f\u002fuiQOOlm8RgMaFAjZduEkNr4UBmZmZm5iWgQIcW2c4FafBACKwcWmSPukA\u002fNV66yUSTQMdLN4mhzrZA7FG4HgU9xkCBlUOLvHTgQMdLN4lRkcpA5\u002fup8coS6EAj2\u002fl+KritQM3MzMwsbc5AexSuRyEsp0AxCKwcElLVQArXo3DpFvVAf2q8dJNqnUAj2\u002fl+iiq8QKAaL92keZdA001iEJgTtkCkcD0K1xe0QH9qvHTT4rBA46WbxGD4rEBWDi2yvdayQA=="},"xaxis":"x","y":{"dtype":"f8","bdata":"fT81XrpJAEBYObTIdr7Xv5ZDi2zn+9E\u002fEFg5tMh2+j\u002fb+X5qvARAQIlBYOXQIvk\u002fyXa+nxov3T\u002fByqFFtrMiQNV46SYxCPw\u002fUI2XbhKD8D8j2\u002fl+anwmQKrx0k1iEARA7nw\u002fNV66C0Ce76fGSzcCQARWDi2yHSZA5\u002fup8dJNA0CsHFpkO98OQKRwPQrXo+w\u002fBoGVQ4ts+z+8dJMYBFYAQHWTGARW7jxAPzVeukkMwj+JQWDl0CK7vwisHFpkmzhAwcqhRbbzFEArhxbZzvf\u002fPwAAAAAAgBdADi2yne+n6j91kxgEVg7VP4\u002fC9ShcDxFAXrpJDAIr9T8dWmQ730\u002fNPw=="},"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=South Asia\u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Bangladesh","Bhutan","India","Sri Lanka","Maldives","Nepal"],"legendgroup":"South Asia","marker":{"color":"#19d3f3","size":{"dtype":"i4","bdata":"7mA4CtH\u002fCwBcM7dVCEJQAaoGCACWGsUB"},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"South Asia","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"qMZLNwnuo0BmZmZmpu6tQDeJQWDlBKNArkfhetTOrUA5tMh2zpXIQHnpJjGImZVA"},"xaxis":"x","y":{"dtype":"f8","bdata":"Gy\u002fdJAaB1T9vEoPAyqHVP0SLbOf7qek\u002fiUFg5dAi6z9Ei2zn+yknQLKd76fGS8c\u002f"},"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eregion=North America\u003cbr\u003ePIB par habitant ($, log)=%{x}\u003cbr\u003eIDE entrants (% du PIB)=%{y}\u003cbr\u003epopulation=%{marker.size}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Bermuda","Canada","United States"],"legendgroup":"North America","marker":{"color":"#FF6692","size":{"dtype":"i4","bdata":"uvwAAMAZYwJseRIU"},"sizemode":"area","sizeref":898793.4975,"symbol":"circle"},"mode":"markers","name":"North America","orientation":"v","showlegend":true,"x":{"dtype":"f8","bdata":"AiuHFg47AEG+nxov8cfqQPYoXI+sKfRA"},"xaxis":"x","y":{"dtype":"f8","bdata":"PzVeukkM\u002fD8rhxbZzvf\u002fP+kmMQisHPQ\u002f"},"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"PIB par habitant ($, log)"},"type":"log"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"IDE entrants (% du PIB)"}},"legend":{"title":{"text":"region"},"tracegroupgap":0,"itemsizing":"constant"}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('d704ad2a-235a-4eca-81cb-b65cd675df45');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>En survolant les points les plus hauts, on découvre que l’IDE rapporté au PIB est souvent le plus élevé dans de petites économies ou des places financières : la mesure capte autant les flux de passage que l’attractivité productive. C’est une conclusion que l’exploration interactive fait apparaître, et qu’un graphique statique destiné à un rapport devra ensuite énoncer clairement.</p>
+</section>
+<section id="les-graphiques-qui-trompent-sans-mentir" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="les-graphiques-qui-trompent-sans-mentir"><span class="header-section-number">5.8</span> Les graphiques qui trompent sans mentir</h2>
+<p>Trois procédés reviennent dans la presse comme dans les présentations d’entreprise.</p>
+<p><strong>L’axe tronqué.</strong> Une barre encode une longueur ; si l’axe commence à 80 plutôt qu’à 0, un écart de dix pour cent paraît un écart du simple au triple. Les lignes, qui encodent une position, peuvent zoomer sans tromper.</p>
+<p><strong>Le double axe.</strong> Deux séries d’unités différentes sur deux échelles verticales : comme chaque échelle se choisit librement, l’auteur décide où les courbes se croisent. Deux panneaux disent la même chose sans ce pouvoir arbitraire.</p>
+<p><strong>Le camembert en trois dimensions.</strong> Il cumule l’encodage le moins précis (l’angle) et une perspective qui grossit la part du premier plan. Des barres horizontales triées le remplacent toujours avec profit.</p>
+</section>
+<section id="à-retenir" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="à-retenir"><span class="header-section-number">5.9</span> À retenir</h2>
+<ul>
+<li>Une affirmation sur la « valeur » n’est vérifiable qu’une fois la <strong>mesure</strong> choisie, et le graphique rend ce choix visible.</li>
+<li>On <strong>regarde</strong> les données avant de les résumer (Anscombe), et on confie la comparaison principale à la <strong>position</strong> (Cleveland et McGill).</li>
+<li>Une figure remise a un titre-message, des unités, une source et, si possible, un étiquetage direct.</li>
+<li>matplotlib pour le contrôle, seaborn pour la statistique, plotly pour l’exploration.</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-anscombe1973" class="csl-entry" role="listitem">
+Anscombe, F. J. 1973. <span>«&nbsp;Graphs in Statistical Analysis&nbsp;»</span>. <em>The American Statistician</em> 27 (1): 17‑21. <a href="https://doi.org/10.1080/00031305.1973.10478966">https://doi.org/10.1080/00031305.1973.10478966</a>.
+</div>
+<div id="ref-cleveland1984" class="csl-entry" role="listitem">
+Cleveland, William S., et Robert McGill. 1984. <span>«&nbsp;Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods&nbsp;»</span>. <em>Journal of the American Statistical Association</em> 79 (387): 531‑54. <a href="https://doi.org/10.1080/01621459.1984.10478080">https://doi.org/10.1080/01621459.1984.10478080</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./seance-04.html" class="pagination-link" aria-label="Manipuler les données : nettoyer, joindre, remodeler, agréger">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Manipuler les données : nettoyer, joindre, remodeler, agréger</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./seance-06.html" class="pagination-link" aria-label="Statistiques de base : décrire, comparer, relier">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>MGMT 60XXX · HEC Montréal</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/warint/MNGT60439/blob/main/book/seance-05.qmd" class="toc-action"><i class="bi bi-github"></i>Voir la source</a></li><li><a href="https://github.com/warint/MNGT60439/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Construit à partir du dépôt du cours</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

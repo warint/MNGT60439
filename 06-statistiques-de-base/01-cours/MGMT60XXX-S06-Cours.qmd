@@ -1,0 +1,588 @@
+---
+title: "Séance 6 : Statistiques de base"
+subtitle: "Décrire, comparer, relier — et dire ce que l'on ne sait pas"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+jupyter: mgmt60xxx
+execute:
+  echo: true
+  warning: false
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 06 · Thierry Warin, PhD · HEC Montréal"
+---
+
+```{python}
+#| include: false
+# Les exemples s'écrivent comme si on travaillait depuis la racine du dépôt.
+import os, sys
+os.chdir("../..")
+sys.path.insert(0, "slides")
+import numpy as np
+import pandas as pd
+from scipy import stats
+import statsmodels.formula.api as smf
+from plotstyle import setup, CL
+plt = setup()
+
+entreprises = pd.read_csv("data/entreprises.csv")
+entreprises["roa"] = entreprises["resultat_net"] / entreprises["actifs_totaux"]
+entreprises["marge"] = entreprises["resultat_net"] / entreprises["chiffre_affaires"]
+entreprises["intensite_rd"] = entreprises["rd"] / entreprises["chiffre_affaires"]
+e23 = entreprises[entreprises["annee"] == 2023].copy()
+
+_tech = e23.loc[e23["secteur"] == "Technologie", "roa"]
+_autres = e23.loc[e23["secteur"] != "Technologie", "roa"]
+_welch = stats.ttest_ind(_tech, _autres, equal_var=False)
+_x = e23.dropna(subset=["intensite_rd", "marge"])
+_pear = stats.pearsonr(_x["intensite_rd"], _x["marge"])
+_spear = stats.spearmanr(_x["intensite_rd"], _x["marge"])
+_tf = entreprises[entreprises["ticker"].isin(["TSLA", "F"])].pivot(index="annee", columns="ticker", values="marge").dropna()
+_paire = stats.ttest_rel(_tf["TSLA"], _tf["F"])
+_tf21 = _tf.loc[2020:]
+_paire21 = stats.ttest_rel(_tf21["TSLA"], _tf21["F"])
+_panel = entreprises.dropna(subset=["intensite_rd", "roa"])
+_m_naif = smf.ols("roa ~ intensite_rd", data=_panel).fit()
+_m_clu = smf.ols("roa ~ intensite_rd", data=_panel).fit(cov_type="cluster", cov_kwds={"groups": _panel["ticker"]})
+_m_sec = smf.ols("roa ~ intensite_rd + C(secteur)", data=_panel).fit(cov_type="cluster", cov_kwds={"groups": _panel["ticker"]})
+```
+
+## Plan · La séance {.center .scrollable}
+
+1. Deux manchettes, revues avec de l'incertitude
+2. Décrire : centre, dispersion, forme
+3. De l'échantillon à la population : erreur type et intervalle de confiance
+4. Comparer : le test t, et ce qu'une valeur p n'est pas
+5. Relier : corrélation de Pearson et de Spearman
+6. Une première régression
+7. Corrélation n'est pas causalité — et un panel n'est pas un échantillon
+8. Les premiers pas — travail 2
+
+## À quoi sert la séance 6 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Passer de « Tesla est plus rentable que Ford » à « Tesla est plus rentable que Ford **de tant, avec telle marge d'erreur** »
+- Distinguer une **différence** d'une **différence que les données permettent d'affirmer**
+- Dire ce qu'une corrélation entre R-D et rentabilité **ne permet pas** de recommander
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- `describe`, `quantile`, `skew` sur une colonne ou par groupe
+- `scipy.stats` : `t.interval`, `ttest_1samp`, `ttest_ind(equal_var=False)`, `ttest_rel`, `pearsonr`, `spearmanr`
+- `statsmodels.formula.api.ols` : estimer, lire, et regrouper les erreurs par entreprise
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Choisir la moyenne **ou** la médiane, et dire pourquoi
+- Lire une valeur p sans lui faire dire ce qu'elle ne dit pas
+- Repérer les deux pièges classiques : la variable confondante et les observations non indépendantes
+
+::::
+
+:::::
+
+# Deux manchettes, revues {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Où nous en sommes {.scrollable}
+
+À la séance 1, on a vu qu'en 2023 Tesla gardait une plus grande part de chaque dollar de ventes
+que Ford. Aux séances 2 à 5, on a appris à importer, nettoyer, combiner et représenter les données.
+
+Il reste une question : **ce que l'on voit est-il assez solide pour être affirmé ?**
+
+> « Tesla est plus rentable que Ford. »
+
+> « Les entreprises qui investissent en R-D sont plus rentables. »
+
+::: {.warn}
+Une différence observée dans un échantillon peut être réelle, ou être le produit du hasard de
+cet échantillon. La statistique ne supprime pas cette incertitude : elle la **mesure**.
+:::
+
+## Trois indicateurs, construits une fois {.scrollable}
+
+```{python}
+entreprises = pd.read_csv("data/entreprises.csv")
+
+entreprises["roa"] = entreprises["resultat_net"] / entreprises["actifs_totaux"]          # rendement de l'actif
+entreprises["marge"] = entreprises["resultat_net"] / entreprises["chiffre_affaires"]     # marge nette
+entreprises["intensite_rd"] = entreprises["rd"] / entreprises["chiffre_affaires"]        # R-D par dollar de ventes
+
+e23 = entreprises[entreprises["annee"] == 2023].copy()      # une coupe : une ligne par entreprise
+e23[["entreprise", "secteur", "roa", "marge", "intensite_rd"]].head()
+```
+
+::: {.muted}
+`e23` contient **une** observation par entreprise. Retenez-le : la fin de la séance montre ce qui
+se passe quand on l'oublie.
+:::
+
+# Décrire {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Le centre : moyenne ou médiane ? {.scrollable}
+
+```{python}
+ca = e23["chiffre_affaires"]
+print(f"Moyenne : {ca.mean():>10,.0f} M$")
+print(f"Médiane : {ca.median():>10,.0f} M$")
+print(f"Asymétrie (skew) : {ca.skew():.2f}")
+```
+
+La moyenne est le **point d'équilibre** ; la médiane, le **milieu du classement**. Quand quelques
+géants (Walmart, Amazon) tirent la distribution vers la droite, la moyenne les suit et la
+médiane ne bouge presque pas.
+
+::: {.step}
+**Règle pratique.** Variable asymétrique (ventes, actifs, capitalisation) : rapportez la
+médiane, ou la moyenne **et** la médiane. Variable à peu près symétrique (un taux de croissance,
+une marge) : la moyenne suffit.
+:::
+
+## La dispersion : écart type et écart interquartile {.scrollable}
+
+```{python}
+print(e23["roa"].describe().round(3))
+q1, q3 = e23["roa"].quantile([0.25, 0.75])
+print(f"\nÉcart interquartile : {q3 - q1:.3f}")
+```
+
+- L'**écart type** mesure l'éloignement typique par rapport à la moyenne ; il est sensible aux
+  valeurs extrêmes.
+- L'**écart interquartile** (Q3 − Q1) contient la moitié centrale des entreprises ; il ne l'est pas.
+
+## Décrire par groupe {.scrollable}
+
+```{python}
+(e23.groupby("secteur")["roa"]
+    .agg(n="count", moyenne="mean", mediane="median", ecart_type="std")
+    .sort_values("mediane", ascending=False)
+    .round(3))
+```
+
+::: {.warn}
+Un secteur à **deux** entreprises n'a pas d'écart type fiable. Regardez toujours la colonne `n`
+avant de comparer des moyennes.
+:::
+
+## La forme : regarder avant de calculer {.scrollable}
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.2
+fig, (a1, a2) = plt.subplots(2, 1, figsize=(6, 4.2))
+a1.hist(e23["chiffre_affaires"] / 1000, bins=12, color=CL.ink)
+a1.set_title("Chiffre d'affaires 2023 (G$)")
+a2.hist(np.log10(e23["chiffre_affaires"]), bins=12, color=CL.accent)
+a2.set_title("Même variable, échelle log10")
+plt.tight_layout()
+plt.show()
+```
+
+Le logarithme rend la distribution plus symétrique. On l'utilise souvent pour les variables de
+**taille** — à condition de rappeler, en interprétant, que l'on parle alors d'écarts **relatifs**.
+
+# De l'échantillon à la population {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Ce que nos 32 entreprises représentent {.scrollable}
+
+- **Population** : l'ensemble sur lequel on veut conclure (les grandes entreprises cotées aux États-Unis ? toutes les entreprises ?).
+- **Échantillon** : ce que l'on observe (32 entreprises, choisies **par nous**, parce qu'elles sont connues).
+
+::: {.warn}
+Aucun test statistique ne corrige un échantillon mal choisi. Nos 32 entreprises sont de grands
+survivants : ce qui est vrai pour elles ne l'est pas forcément pour une PME québécoise. On le dit
+dans le rapport, à chaque fois.
+:::
+
+## L'erreur type : l'incertitude sur une moyenne {.scrollable}
+
+Si l'on tirait un autre échantillon, la moyenne changerait. L'**erreur type** mesure de combien,
+typiquement :
+
+$$
+\text{ET}(\bar x) = \frac{s}{\sqrt{n}}
+$$
+
+```{python}
+roa = e23["roa"].dropna()
+n, moyenne, s = len(roa), roa.mean(), roa.std()
+erreur_type = s / np.sqrt(n)
+print(f"n = {n}, moyenne = {moyenne:.3f}, écart type = {s:.3f}, erreur type = {erreur_type:.3f}")
+```
+
+Quatre fois plus d'observations divisent l'erreur type par **deux**, pas par quatre.
+
+## L'intervalle de confiance à 95 % {.scrollable}
+
+```{python}
+ic = stats.t.interval(0.95, df=n - 1, loc=moyenne, scale=erreur_type)
+print(f"ROA moyen 2023 : {moyenne:.3f}, IC 95 % : [{ic[0]:.3f} ; {ic[1]:.3f}]")
+```
+
+**Lecture correcte :** si l'on répétait l'échantillonnage un grand nombre de fois, 95 % des
+intervalles construits ainsi contiendraient la vraie moyenne.
+
+::: {.muted}
+Lecture incorrecte, mais courante : « il y a 95 % de chances que la vraie moyenne soit dans
+*cet* intervalle ». La vraie moyenne n'est pas aléatoire ; c'est l'intervalle qui l'est.
+:::
+
+## Le bootstrap : la même idée, sans formule {.scrollable}
+
+On ré-échantillonne **nos propres données**, avec remise, des milliers de fois.
+
+```{python}
+rng = np.random.default_rng(60)
+moyennes = [rng.choice(roa.values, size=n, replace=True).mean() for _ in range(5_000)]
+bas, haut = np.percentile(moyennes, [2.5, 97.5])
+print(f"IC bootstrap 95 % : [{bas:.3f} ; {haut:.3f}]")
+
+mediane_boot = [np.median(rng.choice(roa.values, size=n, replace=True)) for _ in range(5_000)]
+print(f"IC bootstrap de la MÉDIANE : [{np.percentile(mediane_boot, 2.5):.3f} ; {np.percentile(mediane_boot, 97.5):.3f}]")
+```
+
+Utile quand il n'existe pas de formule simple — pour une médiane, par exemple.
+
+# Comparer {background-color="#E3120B" style="color:#F7F4ED"}
+
+## La logique d'un test, en quatre temps {.scrollable}
+
+| | Étape | Exemple |
+|---|---|---|
+| **1** | Une hypothèse nulle $H_0$ | « Le ROA moyen est nul » |
+| **2** | Une statistique qui mesure l'écart à $H_0$ | $t = \bar x / \text{ET}(\bar x)$ |
+| **3** | Sa distribution **si $H_0$ était vraie** | une loi de Student à $n-1$ degrés de liberté |
+| **4** | La valeur p | la probabilité d'un écart au moins aussi grand **si $H_0$ était vraie** |
+
+## Test t sur un seul échantillon {.scrollable}
+
+*Nos grandes entreprises sont-elles, en moyenne, rentables ?*
+
+```{python}
+t1 = stats.ttest_1samp(roa, popmean=0)
+print(f"t = {t1.statistic:.2f}, p = {t1.pvalue:.2g}")
+```
+
+Un ROA moyen nul serait très improbable au vu de ces données. Cela ne surprend personne :
+ces entreprises ont été choisies **parce qu'elles ont réussi**. Le test répond à la question
+posée, pas à celle qu'on aurait dû poser.
+
+## Deux groupes : la technologie est-elle plus rentable ? {.scrollable}
+
+```{python}
+tech = e23.loc[e23["secteur"] == "Technologie", "roa"]
+autres = e23.loc[e23["secteur"] != "Technologie", "roa"]
+print(f"Technologie : n = {len(tech)}, ROA moyen = {tech.mean():.3f}")
+print(f"Autres      : n = {len(autres)}, ROA moyen = {autres.mean():.3f}")
+
+welch = stats.ttest_ind(tech, autres, equal_var=False)    # test de Welch
+print(f"\nt = {welch.statistic:.2f}, p = {welch.pvalue:.3f}")
+```
+
+## Comment lire ce résultat {.scrollable}
+
+L'écart observé est de `{python} f"{_tech.mean() - _autres.mean():.3f}"` (environ
+`{python} f"{100*(_tech.mean() - _autres.mean()):.0f}"` points de ROA), et la valeur p vaut
+`{python} f"{_welch.pvalue:.2f}"`.
+
+- L'écart est **grand en gestion** : c'est énorme en points de rendement.
+- Il est **mal mesuré** : 7 entreprises tech, des ROA très dispersés (Nvidia, Intel).
+- Au seuil conventionnel de 5 %, on **ne rejette pas** l'égalité des moyennes.
+
+::: {.warn}
+« Pas significatif » ne veut pas dire « pas de différence ». Cela veut dire que **ces données**
+ne suffisent pas à l'établir. Un résultat nul bien documenté est un résultat.
+:::
+
+## Pourquoi Welch, et pas le test t « classique » ? {.scrollable}
+
+Le test t de Student classique suppose que les deux groupes ont la **même variance**. Rien ne le
+garantit ici.
+
+```{python}
+print(f"Écart type tech : {tech.std():.3f} · autres : {autres.std():.3f}")
+print(f"Student (variances égales) : p = {stats.ttest_ind(tech, autres).pvalue:.3f}")
+print(f"Welch                      : p = {stats.ttest_ind(tech, autres, equal_var=False).pvalue:.3f}")
+```
+
+::: {.step}
+Dans ce cours, `equal_var=False` **par défaut**. Si les variances sont égales, Welch donne presque
+la même réponse ; si elles ne le sont pas, il vous protège.
+:::
+
+## Tesla contre Ford : des observations appariées {.scrollable}
+
+Les deux entreprises sont observées **les mêmes années** : on compare année par année.
+
+```{python}
+tf = (entreprises[entreprises["ticker"].isin(["TSLA", "F"])]
+      .pivot(index="annee", columns="ticker", values="marge"))
+tf["ecart"] = tf["TSLA"] - tf["F"]
+tf.round(3).T
+```
+
+## Le test apparié, et ce qu'il cache {.scrollable}
+
+```{python}
+p_tout = stats.ttest_rel(tf["TSLA"], tf["F"])
+p_recent = stats.ttest_rel(tf.loc[2020:, "TSLA"], tf.loc[2020:, "F"])
+print(f"2010-2024 : écart moyen = {tf['ecart'].mean():+.3f}, p = {p_tout.pvalue:.3f}")
+print(f"2020-2024 : écart moyen = {tf.loc[2020:, 'ecart'].mean():+.3f}, p = {p_recent.pvalue:.3f}")
+```
+
+Sur quinze ans, Tesla est **moins** rentable que Ford en moyenne (les pertes des années de
+démarrage). Depuis 2020, elle l'est **plus** — mais cinq années ne suffisent pas à l'établir au
+seuil de 5 %.
+
+::: {.warn}
+La réponse dépend de la **période choisie**. Choisir la période après avoir vu les données, puis
+tester, c'est se tester soi-même. Fixez la période **avant**, et justifiez-la.
+:::
+
+## Ce qu'une valeur p n'est pas {.scrollable}
+
+L'American Statistical Association a publié six principes (Wasserstein et Lazar, 2016). Les quatre
+qui comptent pour un gestionnaire :
+
+| Une valeur p… | |
+|---|---|
+| …mesure l'incompatibilité des données avec un modèle précis | ✓ |
+| …n'est **pas** la probabilité que l'hypothèse soit vraie | ✗ |
+| …ne mesure **pas** l'ampleur ni l'importance d'un effet | ✗ |
+| …ne doit **pas** à elle seule fonder une décision | ✗ |
+
+::: {.step}
+Rapportez toujours **l'écart, en unités**, son **intervalle de confiance**, et seulement ensuite
+la valeur p.
+:::
+
+# Relier {background-color="#E3120B" style="color:#F7F4ED"}
+
+## R-D et marge : d'abord, le nuage de points {.scrollable}
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.4
+x = e23.dropna(subset=["intensite_rd", "marge"])
+fig, ax = plt.subplots(figsize=(6, 4.4))
+ax.scatter(x["intensite_rd"], x["marge"], color=CL.ink)
+for _, r in x.iterrows():
+    ax.annotate(r["ticker"], (r["intensite_rd"], r["marge"]),
+                fontsize=8, color=CL.muted,
+                xytext=(3, 3), textcoords="offset points")
+ax.set_xlabel("Intensité de R-D (R-D / ventes)")
+ax.set_ylabel("Marge nette")
+ax.set_title("2023, entreprises qui publient leur R-D")
+plt.show()
+```
+
+## Pearson et Spearman {.scrollable}
+
+```{python}
+pearson = stats.pearsonr(x["intensite_rd"], x["marge"])
+spearman = stats.spearmanr(x["intensite_rd"], x["marge"])
+print(f"n = {len(x)}")
+print(f"Pearson  r   = {pearson.statistic:+.3f}  (p = {pearson.pvalue:.2f})")
+print(f"Spearman rho = {spearman.statistic:+.3f}  (p = {spearman.pvalue:.2f})")
+```
+
+- **Pearson** mesure une relation **linéaire** ; une seule entreprise extrême peut la faire.
+- **Spearman** travaille sur les **rangs** ; il mesure une relation **monotone** et résiste aux extrêmes.
+
+En 2023, sur ces `{python} f"{len(_x)}"` entreprises, les deux sont proches de zéro : **aucune
+relation détectable** entre intensité de R-D et marge.
+
+## La matrice de corrélation {.scrollable}
+
+```{python}
+#| output-location: column
+#| fig-width: 5.6
+#| fig-height: 4.4
+import seaborn as sns
+cols = ["roa", "marge", "intensite_rd", "chiffre_affaires", "actifs_totaux"]
+corr = e23[cols].corr(method="spearman")
+fig, ax = plt.subplots(figsize=(5.6, 4.4))
+sns.heatmap(corr, annot=True, fmt=".2f", cmap="RdBu_r",
+            vmin=-1, vmax=1, ax=ax, cbar=False)
+ax.set_title("Corrélations de Spearman, 2023")
+plt.show()
+```
+
+Ventes et actifs sont fortement liés : ce sont deux mesures de **taille**. Une corrélation forte
+entre deux variables explicatives est un avertissement pour la régression.
+
+# Une première régression {background-color="#E3120B" style="color:#F7F4ED"}
+
+## La droite qui résume un nuage {.scrollable}
+
+$$
+\text{ROA}_i = \beta_0 + \beta_1 \times \text{intensité R-D}_i + \varepsilon_i
+$$
+
+```{python}
+import statsmodels.formula.api as smf
+
+m = smf.ols("roa ~ intensite_rd", data=e23.dropna(subset=["intensite_rd", "roa"])).fit()
+print(m.summary().tables[1])
+print(f"R² = {m.rsquared:.3f}, n = {int(m.nobs)}")
+```
+
+## Lire la sortie, ligne par ligne {.scrollable}
+
+| Élément | Ce qu'il dit | Ici |
+|---|---|---|
+| `Intercept` | ROA prédit quand l'intensité de R-D vaut 0 | une entreprise sans R-D |
+| `intensite_rd` | Variation du ROA quand l'intensité de R-D augmente de **1** (soit 100 points de %) | à diviser par 100 pour « 1 point » |
+| P>\|t\| | Valeur p du test « coefficient = 0 » | |
+| `[0.025 0.975]` | Intervalle de confiance du coefficient | **lisez-le en premier** |
+| `R²` | Part de la variance du ROA expliquée par la droite | |
+
+Le coefficient vaut `{python} f"{m.params['intensite_rd']:.3f}"` mais son intervalle
+contient zéro, et le R² est quasi nul : **en 2023, rien ne relie R-D et ROA dans ces données.**
+
+# Corrélation n'est pas causalité {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Trois histoires derrière une même corrélation {.scrollable}
+
+| Histoire | Mécanisme | Exemple ici |
+|---|---|---|
+| **Causalité** | La R-D crée des produits qui rapportent | ce que la manchette affirme |
+| **Causalité inverse** | Les entreprises rentables *peuvent se permettre* la R-D | Apple, Microsoft |
+| **Variable confondante** | Un troisième facteur cause les deux | le **secteur** : la pharma fait beaucoup de R-D et a ses propres marges |
+
+::: {.warn}
+Une régression ne choisit pas entre ces histoires. C'est le **raisonnement**, et le dispositif
+de recherche, qui le font. Les séances 7 à 11 en montrent plusieurs.
+:::
+
+## Un panel n'est pas un échantillon de 343 entreprises {.scrollable}
+
+Tentation : utiliser **toutes** les années pour avoir plus d'observations.
+
+```{python}
+panel = entreprises.dropna(subset=["intensite_rd", "roa"])
+naif = smf.ols("roa ~ intensite_rd", data=panel).fit()
+print(f"n = {int(naif.nobs)} lignes, mais {panel['ticker'].nunique()} entreprises")
+print(f"Coefficient = {naif.params['intensite_rd']:.3f}, erreur type naïve = {naif.bse['intensite_rd']:.3f}, p = {naif.pvalues['intensite_rd']:.3f}")
+```
+
+La même entreprise, quinze années de suite, n'apporte pas quinze informations **indépendantes** :
+Apple en 2022 ressemble beaucoup à Apple en 2023. L'erreur type naïve est trop optimiste.
+
+## Regrouper les erreurs par entreprise {.scrollable}
+
+```{python}
+grappes = smf.ols("roa ~ intensite_rd", data=panel).fit(
+    cov_type="cluster", cov_kwds={"groups": panel["ticker"]})
+print(f"Erreur type naïve      : {naif.bse['intensite_rd']:.3f}  p = {naif.pvalues['intensite_rd']:.3f}")
+print(f"Erreur type par grappe : {grappes.bse['intensite_rd']:.3f}  p = {grappes.pvalues['intensite_rd']:.3f}")
+```
+
+Même coefficient, mais une incertitude `{python} f"{_m_clu.bse['intensite_rd']/_m_naif.bse['intensite_rd']:.1f}"`
+fois plus grande. Ce qui semblait « significatif » ne l'est plus.
+
+::: {.step}
+Deux solutions honnêtes : **une seule année** (une ligne par entreprise), ou **toutes les années
+avec des erreurs regroupées** par entreprise (`cov_type="cluster"`). Jamais le panel naïf.
+:::
+
+## Contrôler le secteur {.scrollable}
+
+```{python}
+avec_secteur = smf.ols("roa ~ intensite_rd + C(secteur)", data=panel).fit(
+    cov_type="cluster", cov_kwds={"groups": panel["ticker"]})
+print(f"Sans secteur : {grappes.params['intensite_rd']:+.3f}  (p = {grappes.pvalues['intensite_rd']:.3f})")
+print(f"Avec secteur : {avec_secteur.params['intensite_rd']:+.3f}  (p = {avec_secteur.pvalues['intensite_rd']:.2g})")
+```
+
+`C(secteur)` ajoute une constante par secteur : on compare les entreprises **à l'intérieur** de
+leur secteur. Le coefficient change nettement — la preuve que le secteur confondait la relation.
+
+## Et Tesla dans tout ça ? {.scrollable}
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.2
+fig, ax = plt.subplots(figsize=(6, 4.2))
+ax.scatter(panel["intensite_rd"], panel["roa"], color=CL.muted, s=12, label="autres")
+t = panel[panel["ticker"] == "TSLA"]
+ax.scatter(t["intensite_rd"], t["roa"], color=CL.warn, s=30, label="Tesla")
+for _, r in t[t["annee"] <= 2012].iterrows():
+    ax.annotate(int(r["annee"]), (r["intensite_rd"], r["roa"]),
+                fontsize=8, color=CL.warn, xytext=(4, 0), textcoords="offset points")
+ax.set_xlabel("Intensité de R-D"); ax.set_ylabel("ROA")
+ax.legend(frameon=False)
+plt.show()
+```
+
+Quelques années de démarrage de Tesla — beaucoup de R-D, peu de ventes, des pertes — pèsent
+lourd dans une droite. **Regardez toujours le nuage avant de croire un coefficient.**
+
+## Ce que l'on peut écrire, et ce que l'on ne peut pas {.scrollable}
+
+| On peut écrire | On ne peut pas écrire |
+|---|---|
+| « Dans un échantillon de 32 grandes entreprises américaines, en 2023, on ne détecte pas de relation entre intensité de R-D et rentabilité. » | « La R-D ne sert à rien. » |
+| « À l’intérieur d’un même secteur, les observations (entreprise-année) à forte intensité de R-D vont avec un ROA plus faible. » | « Réduire la R-D augmenterait la rentabilité. » |
+| « Depuis 2020, la marge de Tesla dépasse celle de Ford chaque année sauf une. » | « Tesla est plus rentable que Ford » (sans période ni incertitude) |
+
+# Les premiers pas — travail 2 {background-color="#E3120B" style="color:#F7F4ED"}
+
+## Ce que vous remettez {.scrollable}
+
+En équipe de deux, **5 %** de la note :
+
+::: {.tight}
+- Une **question de recherche** en stratégie, en une phrase
+- Une ou deux **sources de données**, importées avec Python (au moins une par URL, API ou paquet)
+- Les étapes de **nettoyage**, dites en clair
+- Au moins **trois statistiques descriptives** et **deux graphiques** soignés
+- **Un test ou une corrélation**, interprété honnêtement — y compris s'il est nul
+- Un fichier `.py` qui s'exécute **de bout en bout** depuis la racine du dépôt
+- Deux pages au maximum, et la déclaration d'usage de l'IA
+:::
+
+::: {.muted}
+Consigne complète et grille : `06-statistiques-de-base/PREMIERS-PAS-TRAVAIL-2.md`.
+:::
+
+## Avant la pratique {.scrollable}
+
+- Les trois indicateurs (`roa`, `marge`, `intensite_rd`) sont calculés
+- Vous savez choisir entre `ttest_ind(..., equal_var=False)` et `ttest_rel`
+- Vous savez pourquoi on n'empile pas quinze années sans regrouper les erreurs
+
+**Pratique :** *Les entreprises qui investissent en R-D sont-elles plus rentables ? Répondez
+avec un écart, un intervalle, et une phrase sur ce que vous ne pouvez pas conclure.*

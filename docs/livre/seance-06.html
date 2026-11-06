@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Statistiques de base : décrire, comparer, relier – Données et stratégie avec Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./seances-07-13.html" rel="next">
+<link href="./seance-05.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-87cceeb0dc72897ec58809a022325911.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-654b0d63ec6aea178ec964394c84683d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./seance-01.html">Python pour la stratégie</a></li><li class="breadcrumb-item"><a href="./seance-06.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Données et stratégie avec Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/warint/MNGT60439/tree/main/book/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Avant-propos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Python pour la stratégie</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installer la plateforme</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Le DataFrame, la table de l’analyste</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Importer des données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Manipuler les données : nettoyer, joindre, remodeler, agréger</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seance-06.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Articles et études de cas</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seances-07-13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Des outils aux questions : les séances 7 à 13</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Annexes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Basculer la section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installation pas à pas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sources-de-donnees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Sources de données</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./aide-memoire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Aide-mémoire Python</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#ce-que-lon-voit-et-ce-que-lon-peut-affirmer" id="toc-ce-que-lon-voit-et-ce-que-lon-peut-affirmer" class="nav-link active" data-scroll-target="#ce-que-lon-voit-et-ce-que-lon-peut-affirmer"><span class="header-section-number">6.1</span> Ce que l’on voit, et ce que l’on peut affirmer</a></li>
+  <li><a href="#décrire" id="toc-décrire" class="nav-link" data-scroll-target="#décrire"><span class="header-section-number">6.2</span> Décrire</a>
+  <ul class="collapse">
+  <li><a href="#le-centre" id="toc-le-centre" class="nav-link" data-scroll-target="#le-centre"><span class="header-section-number">6.2.1</span> Le centre</a></li>
+  <li><a href="#la-dispersion" id="toc-la-dispersion" class="nav-link" data-scroll-target="#la-dispersion"><span class="header-section-number">6.2.2</span> La dispersion</a></li>
+  <li><a href="#la-forme" id="toc-la-forme" class="nav-link" data-scroll-target="#la-forme"><span class="header-section-number">6.2.3</span> La forme</a></li>
+  </ul></li>
+  <li><a href="#de-léchantillon-à-la-population" id="toc-de-léchantillon-à-la-population" class="nav-link" data-scroll-target="#de-léchantillon-à-la-population"><span class="header-section-number">6.3</span> De l’échantillon à la population</a></li>
+  <li><a href="#comparer" id="toc-comparer" class="nav-link" data-scroll-target="#comparer"><span class="header-section-number">6.4</span> Comparer</a>
+  <ul class="collapse">
+  <li><a href="#la-logique-dun-test" id="toc-la-logique-dun-test" class="nav-link" data-scroll-target="#la-logique-dun-test"><span class="header-section-number">6.4.1</span> La logique d’un test</a></li>
+  <li><a href="#deux-groupes-indépendants" id="toc-deux-groupes-indépendants" class="nav-link" data-scroll-target="#deux-groupes-indépendants"><span class="header-section-number">6.4.2</span> Deux groupes indépendants</a></li>
+  <li><a href="#deux-séries-appariées" id="toc-deux-séries-appariées" class="nav-link" data-scroll-target="#deux-séries-appariées"><span class="header-section-number">6.4.3</span> Deux séries appariées</a></li>
+  <li><a href="#ce-quune-valeur-p-nest-pas" id="toc-ce-quune-valeur-p-nest-pas" class="nav-link" data-scroll-target="#ce-quune-valeur-p-nest-pas"><span class="header-section-number">6.4.4</span> Ce qu’une valeur p n’est pas</a></li>
+  </ul></li>
+  <li><a href="#relier" id="toc-relier" class="nav-link" data-scroll-target="#relier"><span class="header-section-number">6.5</span> Relier</a>
+  <ul class="collapse">
+  <li><a href="#corrélations" id="toc-corrélations" class="nav-link" data-scroll-target="#corrélations"><span class="header-section-number">6.5.1</span> Corrélations</a></li>
+  <li><a href="#une-première-régression" id="toc-une-première-régression" class="nav-link" data-scroll-target="#une-première-régression"><span class="header-section-number">6.5.2</span> Une première régression</a></li>
+  </ul></li>
+  <li><a href="#corrélation-nest-pas-causalité" id="toc-corrélation-nest-pas-causalité" class="nav-link" data-scroll-target="#corrélation-nest-pas-causalité"><span class="header-section-number">6.6</span> Corrélation n’est pas causalité</a>
+  <ul class="collapse">
+  <li><a href="#un-panel-nest-pas-un-échantillon-plus-grand" id="toc-un-panel-nest-pas-un-échantillon-plus-grand" class="nav-link" data-scroll-target="#un-panel-nest-pas-un-échantillon-plus-grand"><span class="header-section-number">6.6.1</span> Un panel n’est pas un échantillon plus grand</a></li>
+  <li><a href="#contrôler-le-secteur" id="toc-contrôler-le-secteur" class="nav-link" data-scroll-target="#contrôler-le-secteur"><span class="header-section-number">6.6.2</span> Contrôler le secteur</a></li>
+  </ul></li>
+  <li><a href="#ce-que-lon-peut-écrire" id="toc-ce-que-lon-peut-écrire" class="nav-link" data-scroll-target="#ce-que-lon-peut-écrire"><span class="header-section-number">6.7</span> Ce que l’on peut écrire</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/warint/MNGT60439/blob/main/book/seance-06.qmd" class="toc-action"><i class="bi bi-github"></i>Voir la source</a></li><li><a href="https://github.com/warint/MNGT60439/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./seance-01.html">Python pour la stratégie</a></li><li class="breadcrumb-item"><a href="./seance-06.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Statistiques de base : décrire, comparer, relier</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="ce-que-lon-voit-et-ce-que-lon-peut-affirmer" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="ce-que-lon-voit-et-ce-que-lon-peut-affirmer"><span class="header-section-number">6.1</span> Ce que l’on voit, et ce que l’on peut affirmer</h2>
+<p>Les cinq premiers chapitres ont appris à obtenir des données et à les regarder. Celui-ci pose une question que le regard seul ne tranche pas : <strong>une différence observée est-elle assez solide pour être affirmée ?</strong> Tesla affiche en 2023 une marge nette supérieure à celle de Ford ; les entreprises technologiques semblent plus rentables que les autres ; les grandes dépenses de R-D paraissent aller avec de grands profits. Chacune de ces impressions peut être vraie, ou être un accident de l’échantillon que l’on a sous les yeux.</p>
+<p>La statistique ne supprime pas cette incertitude. Elle la <strong>mesure</strong>, et elle oblige à dire, avec chaque résultat, de combien il pourrait être faux. C’est une discipline plus qu’une technique : la plupart des erreurs de ce chapitre ne sont pas des erreurs de calcul, mais des phrases qui affirment plus que les chiffres ne le permettent.</p>
+<p>Le chapitre travaille sur trois indicateurs construits à partir de <code>data/entreprises.csv</code> : le <strong>rendement de l’actif</strong> (<code>roa</code>, résultat net divisé par les actifs totaux), la <strong>marge nette</strong> (<code>marge</code>, résultat net divisé par le chiffre d’affaires) et l’<strong>intensité de R-D</strong> (<code>intensite_rd</code>, dépenses de R-D divisées par le chiffre d’affaires).</p>
+<div id="5b358e51" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"roa"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"actifs_totaux"</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"marge"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"chiffre_affaires"</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"intensite_rd"</span>] <span class="op">=</span> entreprises[<span class="st">"rd"</span>] <span class="op">/</span> entreprises[<span class="st">"chiffre_affaires"</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>e23 <span class="op">=</span> entreprises[entreprises[<span class="st">"annee"</span>] <span class="op">==</span> <span class="dv">2023</span>].copy()   <span class="co"># une ligne par entreprise</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="décrire" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="décrire"><span class="header-section-number">6.2</span> Décrire</h2>
+<section id="le-centre" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="le-centre"><span class="header-section-number">6.2.1</span> Le centre</h3>
+<p>La <strong>moyenne</strong> est le point d’équilibre d’une distribution ; la <strong>médiane</strong>, le milieu de son classement. Les deux coïncident quand la distribution est symétrique, et divergent quand elle ne l’est pas. Le chiffre d’affaires de nos 32 entreprises en 2023 en donne un exemple net.</p>
+<div id="a83ae0d6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ca <span class="op">=</span> e23[<span class="st">"chiffre_affaires"</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Moyenne : </span><span class="sc">{</span>ca<span class="sc">.</span>mean()<span class="sc">:,.0f}</span><span class="ss"> M$   Médiane : </span><span class="sc">{</span>ca<span class="sc">.</span>median()<span class="sc">:,.0f}</span><span class="ss"> M$   Asymétrie : </span><span class="sc">{</span>ca<span class="sc">.</span>skew()<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Moyenne : 143,776 M$   Médiane : 79,900 M$   Asymétrie : 2.01</code></pre>
+</div>
+</div>
+<p>La moyenne (143,776 millions de dollars) est près de deux fois la médiane (79,900 millions), parce que quelques géants de la distribution — Walmart et Amazon en tête — tirent le point d’équilibre vers eux. Pour une variable de <strong>taille</strong> (ventes, actifs, effectifs, capitalisation), la médiane décrit mieux « l’entreprise typique » ; la moyenne reste utile quand c’est le <strong>total</strong> qui compte. Dans le doute, on rapporte les deux.</p>
+</section>
+<section id="la-dispersion" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="la-dispersion"><span class="header-section-number">6.2.2</span> La dispersion</h3>
+<p>L’<strong>écart type</strong> mesure l’éloignement typique à la moyenne ; il est sensible aux valeurs extrêmes. L’<strong>écart interquartile</strong> (Q3 − Q1) délimite la moitié centrale des observations et y résiste.</p>
+<div id="7b725dc2" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(e23[<span class="st">"roa"</span>].describe().<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count    32.000
+mean      0.103
+std       0.099
+min      -0.138
+25%       0.057
+50%       0.094
+75%       0.144
+max       0.453
+Name: roa, dtype: float64</code></pre>
+</div>
+</div>
+<div id="743a1a9b" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(e23.groupby(<span class="st">"secteur"</span>)[<span class="st">"roa"</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    .agg(n<span class="op">=</span><span class="st">"count"</span>, moyenne<span class="op">=</span><span class="st">"mean"</span>, mediane<span class="op">=</span><span class="st">"median"</span>, ecart_type<span class="op">=</span><span class="st">"std"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">"mediane"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">n</th>
+<th data-quarto-table-cell-role="th">moyenne</th>
+<th data-quarto-table-cell-role="th">mediane</th>
+<th data-quarto-table-cell-role="th">ecart_type</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">secteur</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Technologie</td>
+<td>7</td>
+<td>0.186</td>
+<td>0.170</td>
+<td>0.146</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Restauration</td>
+<td>2</td>
+<td>0.146</td>
+<td>0.146</td>
+<td>0.007</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Biens de consommation</td>
+<td>4</td>
+<td>0.119</td>
+<td>0.116</td>
+<td>0.026</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Médias et divertissement</td>
+<td>1</td>
+<td>0.111</td>
+<td>0.111</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Énergie</td>
+<td>3</td>
+<td>0.097</td>
+<td>0.096</td>
+<td>0.016</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Commerce de détail</td>
+<td>4</td>
+<td>0.070</td>
+<td>0.068</td>
+<td>0.013</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Pharmaceutique</td>
+<td>4</td>
+<td>0.076</td>
+<td>0.046</td>
+<td>0.096</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Industrie</td>
+<td>4</td>
+<td>0.014</td>
+<td>0.038</td>
+<td>0.117</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Automobile</td>
+<td>3</td>
+<td>0.064</td>
+<td>0.036</td>
+<td>0.067</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>La colonne <code>n</code> est la première à lire. Un secteur représenté par deux entreprises n’a pas d’écart type digne de ce nom, et une moyenne sur deux observations n’est qu’une anecdote chiffrée.</p>
+</section>
+<section id="la-forme" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="la-forme"><span class="header-section-number">6.2.3</span> La forme</h3>
+<div id="cell-fig-s06-hist" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, (a1, a2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">3.2</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>a1.hist(e23[<span class="st">"chiffre_affaires"</span>] <span class="op">/</span> <span class="dv">1000</span>, bins<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span>CL.ink)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>a1.set_title(<span class="st">"Ventes (G$)"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>a2.hist(np.log10(e23[<span class="st">"chiffre_affaires"</span>]), bins<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span>CL.accent)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>a2.set_title(<span class="st">"log10(ventes en M$)"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-s06-hist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-s06-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-06_files/figure-html/fig-s06-hist-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: Chiffre d’affaires 2023 des 32 entreprises, en milliards de dollars US (à gauche) et en logarithme décimal (à droite). Le logarithme rend la distribution plus symétrique.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le passage au logarithme est courant pour les variables de taille. Il a un prix : une différence de logarithmes est une différence <strong>relative</strong>. On ne peut plus dire « 10 milliards de plus », mais « tant de pour cent de plus ».</p>
+</section>
+</section>
+<section id="de-léchantillon-à-la-population" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="de-léchantillon-à-la-population"><span class="header-section-number">6.3</span> De l’échantillon à la population</h2>
+<p>Nos 32 entreprises ne sont pas « les entreprises ». Ce sont de grandes sociétés cotées aux États-Unis, choisies parce qu’elles sont connues — c’est-à-dire, pour la plupart, parce qu’elles ont réussi. Toute conclusion porte d’abord sur elles. L’étendre à une population plus large exige un argument, et aucun test statistique ne remplace cet argument.</p>
+<p>Supposons tout de même que ces entreprises soient un tirage dans une population plus vaste. Un autre tirage aurait donné une autre moyenne. L’<strong>erreur type</strong> mesure de combien, typiquement :</p>
+<p><span class="math display">\[
+\text{ET}(\bar x) = \frac{s}{\sqrt{n}}
+\]</span></p>
+<div id="121bfa79" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>roa <span class="op">=</span> e23[<span class="st">"roa"</span>].dropna()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n, moy, s <span class="op">=</span> <span class="bu">len</span>(roa), roa.mean(), roa.std()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>et <span class="op">=</span> s <span class="op">/</span> np.sqrt(n)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>ic <span class="op">=</span> stats.t.interval(<span class="fl">0.95</span>, df<span class="op">=</span>n <span class="op">-</span> <span class="dv">1</span>, loc<span class="op">=</span>moy, scale<span class="op">=</span>et)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ROA moyen = </span><span class="sc">{</span>moy<span class="sc">:.3f}</span><span class="ss">, erreur type = </span><span class="sc">{</span>et<span class="sc">:.3f}</span><span class="ss">, IC 95 % = [</span><span class="sc">{</span>ic[<span class="dv">0</span>]<span class="sc">:.3f}</span><span class="ss"> ; </span><span class="sc">{</span>ic[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">]"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ROA moyen = 0.103, erreur type = 0.018, IC 95 % = [0.067 ; 0.139]</code></pre>
+</div>
+</div>
+<p>L’intervalle de confiance à 95 % se lit ainsi : si l’on répétait l’échantillonnage un grand nombre de fois, 95 % des intervalles construits de cette façon contiendraient la vraie moyenne. Il ne dit pas qu’il y a 95 % de chances que la vraie moyenne soit dans <strong>cet</strong> intervalle-ci ; la vraie moyenne n’est pas aléatoire, c’est l’intervalle qui l’est. La nuance paraît scolastique ; elle devient importante dès que l’on compare deux intervalles.</p>
+<p>Le <strong>bootstrap</strong> reprend la même idée sans formule : on ré-échantillonne nos propres données, avec remise, des milliers de fois, et l’on regarde comment varie la statistique.</p>
+<div id="d650c610" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">60</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>boot_moy <span class="op">=</span> [rng.choice(roa.values, size<span class="op">=</span>n).mean() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>boot_med <span class="op">=</span> [np.median(rng.choice(roa.values, size<span class="op">=</span>n)) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IC bootstrap de la moyenne : [</span><span class="sc">{</span>np<span class="sc">.</span>percentile(boot_moy, <span class="fl">2.5</span>)<span class="sc">:.3f}</span><span class="ss"> ; </span><span class="sc">{</span>np<span class="sc">.</span>percentile(boot_moy, <span class="fl">97.5</span>)<span class="sc">:.3f}</span><span class="ss">]"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IC bootstrap de la médiane : [</span><span class="sc">{</span>np<span class="sc">.</span>percentile(boot_med, <span class="fl">2.5</span>)<span class="sc">:.3f}</span><span class="ss"> ; </span><span class="sc">{</span>np<span class="sc">.</span>percentile(boot_med, <span class="fl">97.5</span>)<span class="sc">:.3f}</span><span class="ss">]"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>IC bootstrap de la moyenne : [0.071 ; 0.137]
+IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
+</div>
+</div>
+<p>Les deux méthodes donnent des intervalles voisins pour la moyenne. Le bootstrap a l’avantage de s’appliquer tel quel à la médiane, pour laquelle il n’existe pas de formule simple.</p>
+</section>
+<section id="comparer" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="comparer"><span class="header-section-number">6.4</span> Comparer</h2>
+<section id="la-logique-dun-test" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="la-logique-dun-test"><span class="header-section-number">6.4.1</span> La logique d’un test</h3>
+<p>Un test statistique part d’une <strong>hypothèse nulle</strong> — « le ROA moyen est nul », « les deux groupes ont la même moyenne » — et calcule la probabilité d’observer un écart au moins aussi grand que celui des données <strong>si cette hypothèse était vraie</strong>. Cette probabilité est la <strong>valeur p</strong>.</p>
+<div id="97f98036" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> stats.ttest_1samp(roa, popmean<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"t = </span><span class="sc">{</span>t1<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>t1<span class="sc">.</span>pvalue<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>t = 5.88, p = 1.8e-06</code></pre>
+</div>
+</div>
+<p>Nos entreprises sont rentables en moyenne, et un ROA nul serait très incompatible avec ces données. Personne n’en doutait : l’échantillon a été construit à partir d’entreprises qui ont réussi. Le test répond rigoureusement à la question posée ; il ne dit rien de la pertinence de la question.</p>
+</section>
+<section id="deux-groupes-indépendants" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="deux-groupes-indépendants"><span class="header-section-number">6.4.2</span> Deux groupes indépendants</h3>
+<p>Les entreprises technologiques sont-elles plus rentables que les autres ?</p>
+<div id="8b707d49" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tech <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">==</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>autres <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">!=</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>welch <span class="op">=</span> stats.ttest_ind(tech, autres, equal_var<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tech : n = </span><span class="sc">{</span><span class="bu">len</span>(tech)<span class="sc">}</span><span class="ss">, moyenne = </span><span class="sc">{</span>tech<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> · Autres : n = </span><span class="sc">{</span><span class="bu">len</span>(autres)<span class="sc">}</span><span class="ss">, moyenne = </span><span class="sc">{</span>autres<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Écart = </span><span class="sc">{</span>tech<span class="sc">.</span>mean() <span class="op">-</span> autres<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, t = </span><span class="sc">{</span>welch<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>welch<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tech : n = 7, moyenne = 0.186 · Autres : n = 25, moyenne = 0.080
+Écart = +0.106, t = 1.85, p = 0.108</code></pre>
+</div>
+</div>
+<p>L’écart est de 11 points de ROA : considérable du point de vue d’un gestionnaire. La valeur p, 0.11, dépasse pourtant le seuil conventionnel de 5 %. Les deux constats ne se contredisent pas. Le groupe technologique compte 7 entreprises seulement, et leurs ROA sont très dispersés : Nvidia et Intel n’ont presque rien en commun en 2023. <strong>Ces données ne suffisent pas à établir l’écart</strong> — ce qui ne veut pas dire que l’écart n’existe pas.</p>
+<p>Le test utilisé est celui de <strong>Welch</strong> (<code>equal_var=False</code>), qui n’exige pas que les deux groupes aient la même variance. Le test de Student classique l’exige ; rien ne la garantit ici. Quand les variances sont égales, les deux tests donnent presque la même réponse ; quand elles ne le sont pas, Welch protège. C’est le choix par défaut de ce cours.</p>
+</section>
+<section id="deux-séries-appariées" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="deux-séries-appariées"><span class="header-section-number">6.4.3</span> Deux séries appariées</h3>
+<p>Tesla et Ford sont observées les mêmes années : on peut les comparer <strong>année par année</strong>, ce qui élimine tout ce que les deux entreprises partagent une année donnée (la conjoncture, les taux, la pandémie).</p>
+<div id="bc484577" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> (entreprises[entreprises[<span class="st">"ticker"</span>].isin([<span class="st">"TSLA"</span>, <span class="st">"F"</span>])]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      .pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"ticker"</span>, values<span class="op">=</span><span class="st">"marge"</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>tf[<span class="st">"ecart"</span>] <span class="op">=</span> tf[<span class="st">"TSLA"</span>] <span class="op">-</span> tf[<span class="st">"F"</span>]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>tf.<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ticker</th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">TSLA</th>
+<th data-quarto-table-cell-role="th">ecart</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">annee</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010</td>
+<td>0.051</td>
+<td>-1.322</td>
+<td>-1.373</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2011</td>
+<td>0.149</td>
+<td>-1.246</td>
+<td>-1.395</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2012</td>
+<td>0.042</td>
+<td>-0.959</td>
+<td>-1.001</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2013</td>
+<td>0.081</td>
+<td>-0.037</td>
+<td>-0.118</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2014</td>
+<td>0.009</td>
+<td>-0.092</td>
+<td>-0.100</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2015</td>
+<td>0.049</td>
+<td>-0.220</td>
+<td>-0.269</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2016</td>
+<td>0.030</td>
+<td>-0.096</td>
+<td>-0.127</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2017</td>
+<td>0.049</td>
+<td>-0.167</td>
+<td>-0.216</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2018</td>
+<td>0.023</td>
+<td>-0.045</td>
+<td>-0.069</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2019</td>
+<td>0.001</td>
+<td>-0.035</td>
+<td>-0.036</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2020</td>
+<td>-0.010</td>
+<td>0.023</td>
+<td>0.033</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2021</td>
+<td>0.132</td>
+<td>0.105</td>
+<td>-0.027</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2022</td>
+<td>-0.013</td>
+<td>0.155</td>
+<td>0.167</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2023</td>
+<td>0.025</td>
+<td>0.155</td>
+<td>0.130</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2024</td>
+<td>0.032</td>
+<td>0.073</td>
+<td>0.041</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="e1fe3e84" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p_tout <span class="op">=</span> stats.ttest_rel(tf[<span class="st">"TSLA"</span>], tf[<span class="st">"F"</span>])</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p_rec <span class="op">=</span> stats.ttest_rel(tf.loc[<span class="dv">2020</span>:, <span class="st">"TSLA"</span>], tf.loc[<span class="dv">2020</span>:, <span class="st">"F"</span>])</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2010-2024 : écart moyen </span><span class="sc">{</span>tf[<span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_tout<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2020-2024 : écart moyen </span><span class="sc">{</span>tf<span class="sc">.</span>loc[<span class="dv">2020</span>:, <span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_rec<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2010-2024 : écart moyen -0.291, p = 0.048
+2020-2024 : écart moyen +0.069, p = 0.121</code></pre>
+</div>
+</div>
+<p>Sur quinze ans, l’écart moyen est <strong>négatif</strong> : les pertes massives des années de démarrage de Tesla dominent la moyenne. Depuis 2020, Tesla dépasse Ford 4 années sur cinq, mais cinq années ne suffisent pas à rejeter l’égalité au seuil de 5 % (p = 0.12). « Tesla est plus rentable que Ford » est donc une phrase incomplète : il lui manque une période, une mesure et une incertitude.</p>
+<p>Elle porte aussi un piège plus subtil. Si l’on choisit la période <strong>après</strong> avoir regardé les données — parce qu’elle donne le résultat espéré —, le test ne teste plus rien : il confirme un choix déjà fait. La période se fixe avant le calcul, et se justifie par un argument (un changement de modèle d’affaires, une première année rentable), pas par la valeur p qu’elle produit.</p>
+</section>
+<section id="ce-quune-valeur-p-nest-pas" class="level3" data-number="6.4.4">
+<h3 data-number="6.4.4" class="anchored" data-anchor-id="ce-quune-valeur-p-nest-pas"><span class="header-section-number">6.4.4</span> Ce qu’une valeur p n’est pas</h3>
+<p>L’American Statistical Association a jugé nécessaire, en 2016, de rappeler six principes sur la valeur p <span class="citation" data-cites="wasserstein2016">(<a href="#ref-wasserstein2016" role="doc-biblioref">Wasserstein et Lazar 2016</a>)</span>. Quatre d’entre eux concernent directement le gestionnaire. Une valeur p mesure l’incompatibilité des données avec un modèle précis ; elle n’est <strong>pas</strong> la probabilité que l’hypothèse étudiée soit vraie ; elle ne mesure <strong>pas</strong> l’ampleur ni l’importance d’un effet ; et elle ne devrait <strong>pas</strong>, à elle seule, fonder une décision.</p>
+<p>Le contresens le plus coûteux est de lire « non significatif » comme « aucun effet ». L’exemple du secteur technologique le montre : un écart de plusieurs points, mesuré sur sept entreprises, peut ne pas être significatif tout en étant important. Le contresens symétrique — « significatif » donc « important » — n’est pas moins répandu, et une littérature entière montre comment la recherche de résultats significatifs, multipliée par la liberté de choisir ses spécifications, remplit les revues de résultats fragiles <span class="citation" data-cites="ioannidis2005">(<a href="#ref-ioannidis2005" role="doc-biblioref">Ioannidis 2005</a>)</span>. En management, Miller et Bamberger plaident pour l’inverse : publier et lire les réplications et les <strong>résultats nuls</strong> comme des découvertes à part entière <span class="citation" data-cites="millerbamberger2016">(<a href="#ref-millerbamberger2016" role="doc-biblioref">Miller et Bamberger 2016</a>)</span>.</p>
+<p>La règle de ce cours en découle : on rapporte d’abord l’<strong>écart en unités</strong>, puis son <strong>intervalle de confiance</strong>, et seulement ensuite la valeur p.</p>
+</section>
+</section>
+<section id="relier" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="relier"><span class="header-section-number">6.5</span> Relier</h2>
+<section id="corrélations" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="corrélations"><span class="header-section-number">6.5.1</span> Corrélations</h3>
+<p>Les entreprises qui investissent en R-D ont-elles de meilleures marges ? Le premier geste est toujours le nuage de points.</p>
+<div id="cell-fig-s06-nuage" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"marge"</span>])</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">4</span>))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>], color<span class="op">=</span>CL.ink)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, r <span class="kw">in</span> x.iterrows():</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    ax.annotate(r[<span class="st">"ticker"</span>], (r[<span class="st">"intensite_rd"</span>], r[<span class="st">"marge"</span>]), fontsize<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>CL.muted, xytext<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Intensité de R-D (R-D / ventes)"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Marge nette"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-s06-nuage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-s06-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-06_files/figure-html/fig-s06-nuage-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: Intensité de R-D et marge nette en 2023, pour les entreprises qui publient leur R-D.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="6fff1864" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pear <span class="op">=</span> stats.pearsonr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>spear <span class="op">=</span> stats.spearmanr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"n = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ss"> · Pearson r = </span><span class="sc">{</span>pear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>pear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">) · Spearman rho = </span><span class="sc">{</span>spear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>spear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>n = 23 · Pearson r = +0.054 (p = 0.81) · Spearman rho = +0.123 (p = 0.58)</code></pre>
+</div>
+</div>
+<p>La corrélation de <strong>Pearson</strong> mesure une relation linéaire, et une seule observation extrême peut la fabriquer ou l’effacer. Celle de <strong>Spearman</strong> travaille sur les rangs : elle mesure une relation monotone, quelle qu’en soit la forme, et résiste aux extrêmes. Ici, sur 23 entreprises, les deux sont proches de zéro (r = +0.05, rho = +0.12) : en 2023, on ne détecte <strong>aucune relation</strong> entre intensité de R-D et marge nette. Neuf entreprises n’entrent pas dans ce calcul, parce qu’elles ne publient pas de ligne de R-D ; la réponse ne porte que sur celles qui le font.</p>
+<div id="cell-fig-s06-corr" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"roa"</span>, <span class="st">"marge"</span>, <span class="st">"intensite_rd"</span>, <span class="st">"chiffre_affaires"</span>, <span class="st">"actifs_totaux"</span>]</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.6</span>, <span class="fl">4.2</span>))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>sns.heatmap(e23[cols].corr(method<span class="op">=</span><span class="st">"spearman"</span>), annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, cbar<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-s06-corr" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-s06-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-06_files/figure-html/fig-s06-corr-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.3: Corrélations de Spearman entre cinq variables, 2023.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="une-première-régression" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="une-première-régression"><span class="header-section-number">6.5.2</span> Une première régression</h3>
+<p>La régression linéaire simple résume le nuage par une droite :</p>
+<p><span class="math display">\[
+\text{ROA}_i = \beta_0 + \beta_1 \times \text{intensité R-D}_i + \varepsilon_i
+\]</span></p>
+<div id="a95e5bb0" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])).fit()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m.summary().tables[<span class="dv">1</span>])</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² = </span><span class="sc">{</span>m<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, n = </span><span class="sc">{</span><span class="bu">int</span>(m.nobs)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>================================================================================
+                   coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------
+Intercept        0.1090      0.034      3.226      0.004       0.039       0.179
+intensite_rd    -0.0288      0.198     -0.145      0.886      -0.441       0.383
+================================================================================
+R² = 0.001, n = 23</code></pre>
+</div>
+</div>
+<p>Le coefficient de <code>intensite_rd</code> est la variation du ROA associée à une hausse d’<strong>une unité</strong> d’intensité de R-D — soit cent points de pourcentage ; pour un point, on le divise par cent. Ici il vaut -0.029, son intervalle de confiance contient largement zéro et le R² est quasi nul. La régression dit, avec d’autres mots, ce que disait la corrélation.</p>
+</section>
+</section>
+<section id="corrélation-nest-pas-causalité" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="corrélation-nest-pas-causalité"><span class="header-section-number">6.6</span> Corrélation n’est pas causalité</h2>
+<p>Même une corrélation solide n’autoriserait pas la recommandation « investissez en R-D pour être plus rentable ». Trois histoires produisent la même corrélation : la R-D crée des produits rentables (<strong>causalité</strong>) ; les entreprises rentables peuvent se permettre la R-D (<strong>causalité inverse</strong>) ; un troisième facteur, comme le <strong>secteur</strong>, détermine les deux (<strong>variable confondante</strong>). La régression ne choisit pas entre elles. C’est le dispositif de recherche qui le fait — et c’est l’objet des articles discutés aux séances 7 à 11.</p>
+<section id="un-panel-nest-pas-un-échantillon-plus-grand" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="un-panel-nest-pas-un-échantillon-plus-grand"><span class="header-section-number">6.6.1</span> Un panel n’est pas un échantillon plus grand</h3>
+<p>Il est tentant d’empiler les quinze années pour gagner des observations.</p>
+<div id="0014e0cd" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>panel <span class="op">=</span> entreprises.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>naif <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit()</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>grappe <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">int</span>(naif.nobs)<span class="sc">}</span><span class="ss"> lignes, </span><span class="sc">{</span>panel[<span class="st">'ticker'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss"> entreprises"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Naïf     : coef = </span><span class="sc">{</span>naif<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, ET = </span><span class="sc">{</span>naif<span class="sc">.</span>bse[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>naif<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Grappes  : coef = </span><span class="sc">{</span>grappe<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, ET = </span><span class="sc">{</span>grappe<span class="sc">.</span>bse[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>grappe<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>343 lignes, 24 entreprises
+Naïf     : coef = -0.167, ET = 0.041, p = 0.000
+Grappes  : coef = -0.167, ET = 0.186, p = 0.369</code></pre>
+</div>
+</div>
+<p>Les 343 lignes ne sont pas 343 informations indépendantes : elles viennent de 24 entreprises, et Apple en 2022 ressemble beaucoup à Apple en 2023. L’erreur type naïve l’ignore et se montre trop optimiste (p = 5e-05). En <strong>regroupant les erreurs par entreprise</strong> (<code>cov_type="cluster"</code>), le coefficient ne change pas, mais l’erreur type est multipliée par 4.6 et la valeur p passe à 0.37. Le résultat « significatif » disparaît.</p>
+</section>
+<section id="contrôler-le-secteur" class="level3" data-number="6.6.2">
+<h3 data-number="6.6.2" class="anchored" data-anchor-id="contrôler-le-secteur"><span class="header-section-number">6.6.2</span> Contrôler le secteur</h3>
+<div id="fc29d052" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>secteur <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd + C(secteur)"</span>, data<span class="op">=</span>panel).fit(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Avec secteur : coef = </span><span class="sc">{</span>secteur<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>secteur<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Avec secteur : coef = -0.421, p = 2.4e-09</code></pre>
+</div>
+</div>
+<p><code>C(secteur)</code> ajoute une constante par secteur : on compare désormais les observations <strong>à l’intérieur</strong> de leur secteur. Le coefficient passe de -0.17 à -0.42, et devient nettement différent de zéro. À secteur égal, les observations (entreprise-année) à forte intensité de R-D vont avec un ROA <strong>plus faible</strong>. Le secteur masquait donc une relation négative.</p>
+<div id="cell-fig-s06-tesla" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">4</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(panel[<span class="st">"intensite_rd"</span>], panel[<span class="st">"roa"</span>], color<span class="op">=</span>CL.muted, s<span class="op">=</span><span class="dv">12</span>, label<span class="op">=</span><span class="st">"autres entreprises-années"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> panel[panel[<span class="st">"ticker"</span>] <span class="op">==</span> <span class="st">"TSLA"</span>]</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>ax.scatter(t[<span class="st">"intensite_rd"</span>], t[<span class="st">"roa"</span>], color<span class="op">=</span>CL.warn, s<span class="op">=</span><span class="dv">30</span>, label<span class="op">=</span><span class="st">"Tesla"</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, r <span class="kw">in</span> t[t[<span class="st">"annee"</span>] <span class="op">&lt;=</span> <span class="dv">2012</span>].iterrows():</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="bu">int</span>(r[<span class="st">"annee"</span>]), (r[<span class="st">"intensite_rd"</span>], r[<span class="st">"roa"</span>]), fontsize<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>CL.warn, xytext<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">0</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Intensité de R-D"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"ROA"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-s06-tesla" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-s06-tesla-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-06_files/figure-html/fig-s06-tesla-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-tesla-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.4: Intensité de R-D et ROA, toutes les années. Les premières années de Tesla, en rouge, se situent loin du reste du nuage.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Faut-il en conclure que la R-D détruit de la rentabilité ? Non. Le graphique montre d’où vient une partie de la relation : des entreprises en phase de démarrage, comme Tesla avant 2013, dépensent beaucoup en R-D par rapport à des ventes encore faibles et perdent de l’argent. La causalité va peut-être de la <strong>phase de croissance</strong> à la fois vers la R-D et vers les pertes. Un coefficient n’est jamais plus solide que le nuage dont il vient.</p>
+</section>
+</section>
+<section id="ce-que-lon-peut-écrire" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="ce-que-lon-peut-écrire"><span class="header-section-number">6.7</span> Ce que l’on peut écrire</h2>
+<p>Le travail de ce chapitre se résume en phrases que l’on peut défendre, et en phrases que l’on ne peut pas écrire.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>On peut écrire</th>
+<th>On ne peut pas écrire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dans un échantillon de 32 grandes entreprises américaines, en 2023, on ne détecte pas de relation entre intensité de R-D et rentabilité.</td>
+<td>La R-D ne sert à rien.</td>
+</tr>
+<tr class="even">
+<td>À secteur égal, les entreprises-années à forte intensité de R-D ont un ROA plus faible, sur 2010-2024.</td>
+<td>Réduire la R-D augmenterait la rentabilité.</td>
+</tr>
+<tr class="odd">
+<td>Depuis 2020, la marge de Tesla dépasse celle de Ford quatre années sur cinq ; l’écart n’est pas statistiquement établi.</td>
+<td>Tesla est plus rentable que Ford.</td>
+</tr>
+</tbody>
+</table>
+<p>La colonne de gauche est moins spectaculaire. C’est la seule qui survit à un lecteur attentif.</p>
+<div class="step">
+<p><strong>Pour aller plus loin.</strong> Le travail 2 des « premiers pas » demande exactement cet exercice sur une question que vous choisissez : une source importée avec Python, des statistiques descriptives interprétées, deux graphiques, un test lu honnêtement, et un fichier de code qui reproduit chaque chiffre. Consigne : <code>06-statistiques-de-base/PREMIERS-PAS-TRAVAIL-2.md</code>.</p>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ioannidis2005" class="csl-entry" role="listitem">
+Ioannidis, John P. A. 2005. <span>«&nbsp;Why Most Published Research Findings Are False&nbsp;»</span>. <em>PLoS Medicine</em> 2 (8): e124. <a href="https://doi.org/10.1371/journal.pmed.0020124">https://doi.org/10.1371/journal.pmed.0020124</a>.
+</div>
+<div id="ref-millerbamberger2016" class="csl-entry" role="listitem">
+Miller, C. Chet, et Peter Bamberger. 2016. <span>«&nbsp;Exploring Emergent and Poorly Understood Phenomena in the Strangest of Places: The Footprint of Discovery in Replications, Meta-Analyses, and Null Findings&nbsp;»</span>. <em>Academy of Management Discoveries</em> 2 (4): 313‑19. <a href="https://doi.org/10.5465/amd.2016.0115">https://doi.org/10.5465/amd.2016.0115</a>.
+</div>
+<div id="ref-wasserstein2016" class="csl-entry" role="listitem">
+Wasserstein, Ronald L., et Nicole A. Lazar. 2016. <span>«&nbsp;The ASA Statement on p-Values: Context, Process, and Purpose&nbsp;»</span>. <em>The American Statistician</em> 70 (2): 129‑33. <a href="https://doi.org/10.1080/00031305.2016.1154108">https://doi.org/10.1080/00031305.2016.1154108</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./seance-05.html" class="pagination-link" aria-label="Représenter les données">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Représenter les données</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./seances-07-13.html" class="pagination-link" aria-label="Des outils aux questions : les séances 7 à 13">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Des outils aux questions : les séances 7 à 13</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>MGMT 60XXX · HEC Montréal</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/warint/MNGT60439/blob/main/book/seance-06.qmd" class="toc-action"><i class="bi bi-github"></i>Voir la source</a></li><li><a href="https://github.com/warint/MNGT60439/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Construit à partir du dépôt du cours</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

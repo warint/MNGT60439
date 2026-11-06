@@ -1,0 +1,29 @@
+# MGMT 60XXX — environnement Python du cours (séances 1 à 6)
+# Installation :  python -m pip install -r requirements.txt
+
+# Le cœur : tableaux de données et calcul
+pandas>=2.2
+numpy>=1.26
+pyarrow>=15.0          # formats parquet et feather
+
+# Importer des données (séance 3)
+requests>=2.31         # interroger une API web
+certifi>=2024.2        # certificats SSL (le piège macOS de la séance 1)
+openpyxl>=3.1          # lire et écrire des fichiers Excel
+lxml>=5.0              # lire des tableaux HTML (pd.read_html)
+yfinance>=0.2.40       # cours boursiers (Yahoo Finance)
+wbgapi>=1.0            # API de la Banque mondiale
+duckdb>=1.0            # SQL directement sur des fichiers
+
+# Représenter les données (séance 5)
+matplotlib>=3.8
+seaborn>=0.13
+plotly>=5.20
+
+# Statistiques (séance 6)
+scipy>=1.11
+statsmodels>=0.14
+
+# Notebooks, si vous les préférez aux scripts
+jupyter>=1.0
+ipykernel>=6.25

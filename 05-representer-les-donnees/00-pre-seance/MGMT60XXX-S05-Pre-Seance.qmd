@@ -1,0 +1,190 @@
+---
+title: "Séance 5 : Avant la séance"
+subtitle: "Un graphique est un argument. Lequel ferez-vous ?"
+author: "Thierry Warin, PhD"
+institute: "HEC Montréal"
+lang: fr
+jupyter: mgmt60xxx
+execute:
+  echo: true
+  warning: false
+filters:
+  - ../../slides/drop-comments.lua
+format:
+  revealjs:
+    theme: [default, ../../slides/economist.scss]
+    embed-resources: true
+    slide-number: c/t
+    slide-level: 2
+    history: false
+    transition: none
+    navigation-mode: linear
+    controls: true
+    progress: true
+    width: 1280
+    height: 760
+    margin: 0.06
+    smaller: true
+    code-overflow: scroll
+    footer: "MGMT 60XXX · Séance 05 pré-séance · Thierry Warin, PhD · HEC Montréal"
+---
+
+```{python}
+#| include: false
+import os, sys
+os.chdir("../..")
+sys.path.insert(0, "slides")
+```
+
+## Plan · Avant le cours {.center .scrollable}
+
+1. Ce qu'il faut faire, et combien de temps cela prend
+2. Lire deux articles courts
+3. Vérifier les paquets graphiques
+4. Un premier graphique à produire chez vous
+5. Autovérification
+6. Utiliser l'IA sur la préparation
+
+## À quoi sert la séance 5 {.scrollable}
+::::: columns
+
+:::: {.column width="33%"}
+
+### La stratégie
+
+- Montrer qu'une même affirmation (« l'Amérique crée plus de valeur ») change de réponse selon la **mesure**
+- Choisir le graphique qu'un comité de direction lira **sans aide**
+- Repérer un graphique qui trompe, même sans mentir
+
+::::
+
+:::: {.column width="33%"}
+
+### Le Python
+
+- Construire une figure avec `fig, ax = plt.subplots()` et l'enregistrer avec `savefig`
+- Produire histogrammes, boîtes, nuages et facettes avec **seaborn**
+- Construire un nuage interactif et une carte avec **plotly express**
+
+::::
+
+:::: {.column width="33%"}
+
+### La méthode
+
+- Partir de la **question**, puis choisir la forme
+- Titrer par le **message**, donner les unités et la source
+- Étiqueter directement plutôt qu'avec une légende
+
+::::
+
+:::::
+
+# Avant la séance {background-color="#E3120B" style="color:#F7F4ED"}
+
+::: {style="margin-top: 1.0em; color:#F7F4ED"}
+### Un graphique est un argument. Lequel ferez-vous ?
+:::
+
+## Ce qu'il faut faire, et combien de temps
+
+| | | |
+|---|---|---|
+| **1** | Lire Anscombe (1973) et Cleveland et McGill (1984), sections 1 et 2 | 45–60 min |
+| **2** | Vérifier `seaborn` et `plotly` | 5 min |
+| **3** | Produire **un** graphique de `data/pays.csv` | 20 min |
+| **4** | Tenter l'autovérification | 15 min |
+
+::: {.warn}
+Le cours suppose les quatre étapes faites. La pratique suppose que vous savez déjà produire
+et **enregistrer** une figure matplotlib.
+:::
+
+## 1 · Lire deux articles courts
+
+**Anscombe, F. J. (1973). Graphs in Statistical Analysis.** *The American Statistician*, 27(1), 17–21.
+[doi.org/10.1080/00031305.1973.10478966](https://doi.org/10.1080/00031305.1973.10478966)
+
+**Cleveland, W. S. et McGill, R. (1984). Graphical Perception.** *JASA*, 79(387), 531–554.
+[doi.org/10.1080/01621459.1984.10478080](https://doi.org/10.1080/01621459.1984.10478080) —
+sections 1 et 2 suffisent.
+
+Annotez quatre choses :
+
+| | |
+|---|---|
+| **1** | L'argument d'Anscombe, en une phrase |
+| **2** | Les six encodages de Cleveland et McGill, dans l'ordre |
+| **3** | Un graphique de presse récent qui viole cet ordre |
+| **4** | Ce que vous changeriez pour le corriger |
+
+## 2 · Vérifier les paquets graphiques
+
+Depuis la racine du dépôt, `.venv` activé :
+
+```bash
+python -c "import matplotlib, seaborn, plotly; print(matplotlib.__version__, seaborn.__version__, plotly.__version__)"
+```
+
+Si une ligne échoue :
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+::: {.muted}
+Dans VS Code, les figures plotly s'ouvrent dans le navigateur quand on exécute un script, et
+dans la fenêtre interactive quand on exécute une cellule `# %%`. Les deux sont normaux.
+:::
+
+## 3 · Un premier graphique, chez vous
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4
+import pandas as pd
+import matplotlib.pyplot as plt
+from pathlib import Path
+
+Path("sorties").mkdir(exist_ok=True)
+pays = pd.read_csv("data/pays.csv")
+usa = pays[pays["iso3"] == "USA"]
+
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.plot(usa["annee"], usa["pib_hab_usd"] / 1000)
+ax.set_title("États-Unis : PIB par habitant")
+ax.set_ylabel("milliers de $ US courants")
+fig.savefig("sorties/usa_pib_hab.png", dpi=200)
+plt.show()
+```
+
+**À faire :** ajoutez le Canada sur la même figure, avec une couleur différente et une
+étiquette au bout de chaque ligne (`ax.text`). Apportez le fichier PNG.
+
+## 4 · Autovérification
+
+Répondez **par écrit** avant le cours. Rien n'est remis, mais le cours suppose que vous avez essayé.
+
+1. Pourquoi Anscombe a-t-il construit quatre jeux de données **identiques** en statistiques résumées ?
+2. Classez du plus précis au moins précis : couleur, position, angle, longueur, aire.
+3. Une barre peut-elle commencer à 50 ? Une ligne ? Pourquoi la réponse diffère-t-elle ?
+4. Pour comparer le PIB de 200 pays, quelle échelle choisir, et pourquoi ?
+5. Quelle est la différence entre `fig` et `ax` dans `fig, ax = plt.subplots()` ?
+
+## Utiliser l'IA sur la préparation
+
+Votre assistant est un partenaire d'étude, pas un corrigé. Requêtes utiles :
+
+- « Explique-moi la différence entre `plt.plot` et `ax.plot`, et pourquoi on préfère la seconde. »
+- « Voici un graphique décrit en mots. Selon Cleveland et McGill, quel encodage utilise-t-il et
+  lequel serait plus précis ? »
+- « Pose-moi cinq questions pour vérifier que je sais lire une boîte à moustaches. »
+
+> **Règle permanente du cours.** Chaque fois que l'IA intervient dans un travail remis, indiquez
+> ce que vous lui avez demandé et **ce que vous avez vérifié, et comment**.
+
+::: {.warn}
+Les IA génèrent souvent du code seaborn ancien (`distplot`, retiré). Si une fonction n'existe
+pas, cherchez son remplaçant dans la documentation : ici, `histplot`.
+:::

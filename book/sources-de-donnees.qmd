@@ -1,0 +1,25 @@
+---
+title: "Sources de données"
+---
+
+```{python}
+#| echo: false
+#| output: asis
+from pathlib import Path
+texte = Path("../data/README.md").read_text(encoding="utf-8").split("\n", 1)[1]
+texte = texte.replace("](../scripts/", "](https://github.com/warint/MNGT60439/blob/main/scripts/")
+print(texte)
+```
+
+## Autres sources utiles pour le projet
+
+| Source | Contenu | Accès |
+|---|---|---|
+| SEC EDGAR | États financiers des sociétés cotées aux États-Unis | API `data.sec.gov` (User-Agent obligatoire) |
+| Banque mondiale — WDI | Indicateurs pays (PIB, IDE, commerce, énergie…) | API v2, paquet `wbgapi` |
+| Our World in Data | Émissions, énergie, santé, démographie | Fichiers CSV sur GitHub |
+| OCDE | Statistiques des pays membres | API SDMX |
+| FRED (Réserve fédérale de St. Louis) | Séries macroéconomiques et financières | API, clé gratuite |
+| Statistique Canada | Tableaux de données canadiens | API Web Data Service |
+| Yahoo Finance | Cours boursiers | Paquet `yfinance` (usage non commercial) |
+| Harvard Dataverse, ICPSR, openICPSR | Données de réplication d'articles | Téléchargement |
