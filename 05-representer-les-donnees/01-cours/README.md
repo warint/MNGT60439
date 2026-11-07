@@ -10,7 +10,7 @@ Environ 90 minutes. Tout le code des diapositives s'exécute depuis la racine du
 | Une manchette, quatre réponses | Le rang des États-Unis selon le PIB total, par habitant, la croissance, l'IDE |
 | Pourquoi un graphique | Le quartet d'Anscombe, reconstruit à partir des valeurs publiées |
 | Ce que l'œil lit bien | La hiérarchie de Cleveland et McGill ; angle contre position |
-| PyStatlas | La galerie : 57 graphiques sur données de sciences sociales ; quelle famille pour quelle question |
+| PyStatlas | La galerie : une soixantaine de graphiques sur données de sciences sociales ; quelle famille pour quelle question |
 | L'anatomie d'un script | Fiche, données, statistique, figure ; `fig, ax`, titre-message, sous-titre statistique ; `pystatlas.mplstyle` |
 | La méthode, en cinq adaptations | Histogramme avec densité (PIB/hab.), nuage de pluie (marges par secteur), nuage avec statistiques (richesse × ouverture), fonctions de répartition (croissance, pays riches contre autres), crêtes (croissance 2007-2023) |
 | Hors galerie | Lignes étiquetées, barres empilées, nuage plotly interactif |

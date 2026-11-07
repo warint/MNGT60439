@@ -239,7 +239,7 @@ plt.show()
 **[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** · code :
 [github.com/warint/pystatlas](https://github.com/warint/pystatlas)
 
-- **57 graphiques statistiques**, rangés par **famille de questions**, chacun avec son script Python complet
+- **Une soixantaine de graphiques statistiques**, rangés par **famille de questions**, chacun avec son script Python complet
 - Pensée d'abord pour les **étudiants en sciences sociales** : on part de la question, pas du code
 - Des exemples sur de **vraies données de sciences sociales** : élections américaines, écoles californiennes, criminalité, fécondité, régimes politiques, récidive — références complètes : [Sources des données](https://warint.github.io/pystatlas/fr/about.html#data)
 - Construite sur ce que vous avez déjà : NumPy, pandas, Matplotlib, SciPy, statsmodels
@@ -264,7 +264,7 @@ Trois principes, qui sont aussi ceux du cours :
 | — | Séries chronologiques, Survie, Multivarié, Inférence | | cas, projets |
 
 ::: {.muted}
-On n'apprend pas 57 graphiques. On apprend à **partir de la question**, à trouver la famille, et à
+On n'apprend pas soixante graphiques. On apprend à **partir de la question**, à trouver la famille, et à
 lire un script assez bien pour le faire travailler sur ses propres données.
 :::
 

@@ -122,7 +122,7 @@ Annotez quatre choses :
 
 ## 2 · Parcourir la galerie PyStatlas
 
-**[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** — 57 graphiques
+**[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** — une soixantaine de graphiques
 statistiques, rangés par famille de questions, chacun avec son code Python complet. Les
 exemples portent sur de vraies données de sciences sociales : élections, écoles, criminalité,
 fécondité, régimes politiques.
