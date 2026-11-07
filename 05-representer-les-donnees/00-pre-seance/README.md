@@ -52,7 +52,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-plt.style.use("05-representer-les-donnees/statlas.mplstyle")
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")
 Path("sorties").mkdir(exist_ok=True)
 pays = pd.read_csv("data/pays.csv")
 usa = pays[pays["iso3"] == "USA"]

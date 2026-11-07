@@ -1223,13 +1223,13 @@ Thierry Warin, PhD
 </section>
 <section id="un-premier-graphique-chez-vous" class="slide level2">
 <h2>4 · Un premier graphique, chez vous</h2>
-<div id="92f90874" class="cell columns column-output-location" data-fig-height="4" data-fig-width="6" data-execution_count="2">
+<div id="55447635" class="cell columns column-output-location" data-fig-height="4" data-fig-width="6" data-execution_count="2">
 <div class="column">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb2-3"><a href></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb2-4"><a href></a></span>
-<span id="cb2-5"><a href></a>plt.style.use(<span class="st">&quot;05-representer-les-donnees/statlas.mplstyle&quot;</span>)</span>
+<span id="cb2-5"><a href></a>plt.style.use(<span class="st">&quot;05-representer-les-donnees/pystatlas.mplstyle&quot;</span>)</span>
 <span id="cb2-6"><a href></a>Path(<span class="st">&quot;sorties&quot;</span>).mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb2-7"><a href></a>pays <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/pays.csv&quot;</span>)</span>
 <span id="cb2-8"><a href></a>usa <span class="op">=</span> pays[pays[<span class="st">&quot;iso3&quot;</span>] <span class="op">==</span> <span class="st">&quot;USA&quot;</span>]</span>

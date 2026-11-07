@@ -74,7 +74,7 @@ go.Figure.show = _montrer
 
 - Lire un script de la galerie **PyStatlas** et l'adapter à nos données
 - Construire une figure avec `fig, ax = plt.subplots()` et l'enregistrer avec `savefig`
-- Appliquer un style commun (`statlas.mplstyle`) ; explorer avec **plotly express**
+- Appliquer un style commun (`pystatlas.mplstyle`) ; explorer avec **plotly express**
 
 ::::
 
@@ -118,7 +118,7 @@ graphique, lui, devra la choisir.
 #| fig-width: 11
 #| fig-height: 4.4
 import matplotlib.pyplot as plt
-plt.style.use("05-representer-les-donnees/statlas.mplstyle")   # le style de la galerie
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # le style de la galerie
 BLEU, ORANGE, VERT, ROUGE, GRIS = "#007AFF", "#FF9500", "#34C759", "#FF3B30", "#8E8E93"
 
 fig, axes = plt.subplots(1, 4, figsize=(11, 4.4))
@@ -324,10 +324,10 @@ fig.savefig("sorties/figure.png")        # 200 dpi et marges ajustées : le styl
 ## Le style : une ligne pour toutes vos figures
 
 ```python
-plt.style.use("05-representer-les-donnees/statlas.mplstyle")
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")
 ```
 
-Le fichier [`statlas.mplstyle`](https://github.com/warint/pystatlas/blob/main/statlas.mplstyle)
+Le fichier [`pystatlas.mplstyle`](https://github.com/warint/pystatlas/blob/main/pystatlas.mplstyle)
 est copié dans le dossier de la séance. Il règle une fois pour toutes :
 
 | Réglage | Effet |
@@ -754,7 +754,7 @@ qui montre **à la fois** chaque observation et le test.
 ## Avant la pratique
 
 - `data/pays.csv` et `data/entreprises.csv` se chargent
-- `plt.style.use("05-representer-les-donnees/statlas.mplstyle")` fonctionne
+- `plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")` fonctionne
 - La galerie est ouverte dans un onglet : [warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)
 - Un dossier `sorties/` existe à la racine du dépôt
 

@@ -31,7 +31,7 @@ RACINE = next(p for p in [Path.cwd(), *Path.cwd().parents] if (p / "data" / "pay
 os.chdir(RACINE)
 Path("sorties").mkdir(exist_ok=True)
 
-plt.style.use("05-representer-les-donnees/statlas.mplstyle")   # le style de la galerie
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # le style de la galerie
 BLEU, ORANGE, VERT, ROUGE, GRIS = "#007AFF", "#FF9500", "#34C759", "#FF3B30", "#8E8E93"
 GRIS_TEXTE = "#6E6E73"                                          # couleur des sous-titres
 

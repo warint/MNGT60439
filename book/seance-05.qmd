@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 from plotstyle import setup, CL
 plt = setup()
-plt.style.use("05-representer-les-donnees/statlas.mplstyle")   # le style de la galerie PyStatlas
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # le style de la galerie PyStatlas
 plt.rcParams["figure.dpi"] = 160
 from scipy import stats
 BLEU, ORANGE, VERT, ROUGE, GRIS = "#007AFF", "#FF9500", "#34C759", "#FF3B30", "#8E8E93"
@@ -196,8 +196,8 @@ Cinq éléments séparent une figure de travail d'une figure que l'on remet :
 - un **étiquetage direct** des séries, qui évite l'aller-retour vers une légende ;
 - un enregistrement avec `fig.savefig("sorties/f.png")`, appelé **avant** `plt.show()`.
 
-La feuille de style de la galerie, `statlas.mplstyle`, est copiée dans le dossier de la séance.
-Une ligne, `plt.style.use("05-representer-les-donnees/statlas.mplstyle")`, règle d'un coup la
+La feuille de style de la galerie, `pystatlas.mplstyle`, est copiée dans le dossier de la séance.
+Une ligne, `plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")`, règle d'un coup la
 grille, les couleurs, la position du titre et la résolution d'enregistrement.
 
 ## La méthode en quatre gestes

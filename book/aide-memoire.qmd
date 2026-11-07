@@ -51,7 +51,7 @@ Les fonctions utilisées dans les séances 1 à 6, une ligne chacune.
 
 | Code | Effet |
 |---|---|
-| `plt.style.use("05-representer-les-donnees/statlas.mplstyle")` | Le style de la galerie PyStatlas |
+| `plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")` | Le style de la galerie PyStatlas |
 | <https://warint.github.io/pystatlas/fr/> : trouver, copier, remplacer les données, réécrire les textes | Graphiques statistiques |
 | `fig, ax = plt.subplots()` · `ax.plot(x, y)` · `fig.savefig("f.png")` | matplotlib |
 | `ax.set_title("Le message", pad=26)` · `ax.text(0, 1.02, "n = … · test", transform=ax.transAxes)` | Titre-message, sous-titre statistique |

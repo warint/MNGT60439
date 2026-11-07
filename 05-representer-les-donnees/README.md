@@ -46,8 +46,8 @@ Rien à télécharger : les deux fichiers sont dans le dépôt.
 ## Outil : la galerie PyStatlas
 
 - Galerie : <https://warint.github.io/pystatlas/fr/> · code : <https://github.com/warint/pystatlas>
-- [`statlas.mplstyle`](statlas.mplstyle) : la feuille de style de la galerie, copiée ici.
-  Une ligne suffit : `plt.style.use("05-representer-les-donnees/statlas.mplstyle")`.
+- [`pystatlas.mplstyle`](pystatlas.mplstyle) : la feuille de style de la galerie, copiée ici.
+  Une ligne suffit : `plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")`.
 
 ---
 

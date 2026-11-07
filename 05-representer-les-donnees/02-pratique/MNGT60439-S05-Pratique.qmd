@@ -70,7 +70,7 @@ figure, le fichier prépare déjà les **données** et la **statistique** ; vous
 bloc **figure** du script de la galerie.
 
 ```python
-plt.style.use("05-representer-les-donnees/statlas.mplstyle")   # déjà dans le fichier
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # déjà dans le fichier
 ```
 
 ## Rappel : les quatre gestes
