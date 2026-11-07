@@ -51,7 +51,11 @@ Les fonctions utilisées dans les séances 1 à 6, une ligne chacune.
 
 | Code | Effet |
 |---|---|
-| `fig, ax = plt.subplots()` · `ax.plot(x, y)` · `fig.savefig("f.png", dpi=150)` | matplotlib |
+| `plt.style.use("05-representer-les-donnees/statlas.mplstyle")` | Le style de la galerie PyStatlas |
+| <https://warint.github.io/pystatlas/fr/> : trouver, copier, remplacer les données, réécrire les textes | Graphiques statistiques |
+| `fig, ax = plt.subplots()` · `ax.plot(x, y)` · `fig.savefig("f.png")` | matplotlib |
+| `ax.set_title("Le message", pad=26)` · `ax.text(0, 1.02, "n = … · test", transform=ax.transAxes)` | Titre-message, sous-titre statistique |
+| `ax.set_xticks([3, 4, 5], ["1 000 $", "10 000 $", "100 000 $"])` | Axe log10 lisible |
 | `sns.histplot`, `sns.boxplot`, `sns.scatterplot(hue=…)`, `sns.relplot(col=…)` | seaborn |
 | `px.scatter(df, x=…, y=…, size=…, hover_name=…)` · `px.choropleth(df, locations="iso3")` | plotly |
 

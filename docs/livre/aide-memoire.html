@@ -413,10 +413,6 @@ ul.task-list li input[type="checkbox"] {
 <section id="représenter" class="level2" data-number="C.5">
 <h2 data-number="C.5" class="anchored" data-anchor-id="représenter"><span class="header-section-number">C.5</span> Représenter</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Code</th>
@@ -425,8 +421,24 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>fig, ax = plt.subplots()</code> · <code>ax.plot(x, y)</code> · <code>fig.savefig("f.png", dpi=150)</code></td>
+<td><code>plt.style.use("05-representer-les-donnees/statlas.mplstyle")</code></td>
+<td>Le style de la galerie PyStatlas</td>
+</tr>
+<tr class="even">
+<td><a href="https://warint.github.io/pystatlas/fr/" class="uri">https://warint.github.io/pystatlas/fr/</a> : trouver, copier, remplacer les données, réécrire les textes</td>
+<td>Graphiques statistiques</td>
+</tr>
+<tr class="odd">
+<td><code>fig, ax = plt.subplots()</code> · <code>ax.plot(x, y)</code> · <code>fig.savefig("f.png")</code></td>
 <td>matplotlib</td>
+</tr>
+<tr class="even">
+<td><code>ax.set_title("Le message", pad=26)</code> · <code>ax.text(0, 1.02, "n = … · test", transform=ax.transAxes)</code></td>
+<td>Titre-message, sous-titre statistique</td>
+</tr>
+<tr class="odd">
+<td><code>ax.set_xticks([3, 4, 5], ["1 000 $", "10 000 $", "100 000 $"])</code></td>
+<td>Axe log10 lisible</td>
 </tr>
 <tr class="even">
 <td><code>sns.histplot</code>, <code>sns.boxplot</code>, <code>sns.scatterplot(hue=…)</code>, <code>sns.relplot(col=…)</code></td>

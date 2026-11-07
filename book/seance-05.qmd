@@ -126,12 +126,24 @@ chapitre s'appuie sur PyStatlas [@warin2026statlas], une galerie de 48 graphique
 familles, chacun accompagné d'un script Python complet
 (<https://warint.github.io/pystatlas/fr/>).
 
-| La question | Famille PyStatlas | Graphiques utilisés ici |
-|---|---|---|
-| Quelle forme a cette variable ? | Distributions | Histogramme avec densité, graphique en crêtes |
-| Ces groupes diffèrent-ils ? | Distributions ; Comparaisons de groupes | Nuage de pluie, fonctions de répartition, comparaison entre groupes |
-| Ces deux variables vont-elles ensemble ? | Corrélation et association | Nuage de points avec statistiques |
-| Qu'est-ce qui explique le résultat ? | Modèles de régression ; Diagnostics | voir la séance 6 et les cas |
+Les dix familles répondent à des questions différentes. Le tableau suivant indique, pour chacune,
+la question qu'elle sert et le moment du cours où elle intervient.
+
+| Famille PyStatlas | La question | Exemples de graphiques | Dans le cours |
+|---|---|---|---|
+| Distributions | Quelle forme a cette variable ? Change-t-elle d'un groupe ou d'une année à l'autre ? | Histogramme avec densité, nuage de pluie, crêtes, fonctions de répartition, Q–Q | **Séance 5** |
+| Comparaisons de groupes | Ces groupes diffèrent-ils, et de combien ? | Comparaison entre groupes, graphique d'estimation, intervalles de Tukey | Séances 5 et 6 |
+| Corrélation et association | Ces deux variables vont-elles ensemble ? | Nuage de points avec statistiques, matrice de corrélation, paires | Séances 5 et 6 |
+| Proportions et enquêtes | Quelle part de chaque groupe ? | Proportions empilées, proportions avec IC, Likert | Cas, projets |
+| Modèles de régression | Qu'est-ce qui explique le résultat, toutes choses égales par ailleurs ? | Graphique de coefficients, effets d'interaction | Séance 6, cas |
+| Diagnostics de modèles | Peut-on faire confiance au modèle ? | Résidus, influence, courbe ROC | Séance 6, cas |
+| Séries chronologiques | Tendance, saisonnalité, prévision | Décomposition STL, ACF, prévision SARIMA | Cas |
+| Analyse de survie | Combien de temps avant l'événement ? | Kaplan–Meier, risques de Cox | Projets |
+| Multivarié et classification | Quels groupes se forment dans des données à nombreuses variables ? | ACP, silhouette, carte de chaleur groupée | Séance 9 (groupes stratégiques) |
+| Inférence et incertitude | Quelle confiance accorder à une estimation ? | Bootstrap, intervalles de confiance, puissance | Séance 6 |
+
+Personne n'apprend 48 graphiques. Ce qui s'apprend, c'est le chemin : **formuler la question,
+trouver la famille, lire un script assez bien pour le faire travailler sur ses propres données.**
 
 Trois principes de la galerie sont aussi ceux du cours. Chaque script est **autonome** : il
 s'exécute tel quel, sans fichier ni fonction cachés. Chaque graphique met **la statistique
@@ -147,6 +159,28 @@ Tous les scripts de la galerie ont la même structure en quatre blocs :
 2. **les données** : une ou deux lignes qui chargent un jeu d'exemple ;
 3. **la statistique** : les quantités et le test qui seront affichés ;
 4. **la figure** : `fig, ax = plt.subplots()`, puis le dessin, le titre et le sous-titre.
+
+Voici le squelette du script *Histogramme avec densité*, réduit à ses lignes essentielles :
+
+```python
+"""
+title: Histogram with density                       # 1. la fiche
+summary: Histogram, kernel density and fitted normal curve, with shape statistics.
+r: ggplot2::geom_histogram() + geom_density()
+"""
+from sklearn.datasets import load_breast_cancer
+x = load_breast_cancer(as_frame=True).frame["mean area"].to_numpy()   # 2. les données
+mean, median, sd = x.mean(), np.median(x), x.std(ddof=1)
+
+skew, kurt = stats.skew(x), stats.kurtosis(x)                          # 3. la statistique
+W, p = stats.shapiro(x)
+
+fig, ax = plt.subplots(figsize=(8, 5))                                 # 4. la figure
+ax.hist(x, bins=40, density=True, ...)
+ax.set_title("Tumour area is strongly right-skewed", pad=26)           #    le message
+ax.text(0, 1.02, f"n = {len(x)} · skewness = {skew:.2f} · ...",        #    la preuve
+        transform=ax.transAxes, fontsize=9.5, color="#6E6E73")
+```
 
 Adapter un script à ses propres données revient à remplacer le bloc 2, puis à réécrire les
 textes du bloc 4. Les blocs 3 et 4 font le reste. La grammaire du bloc 4 est celle de
@@ -166,7 +200,36 @@ La feuille de style de la galerie, `statlas.mplstyle`, est copiée dans le dossi
 Une ligne, `plt.style.use("05-representer-les-donnees/statlas.mplstyle")`, règle d'un coup la
 grille, les couleurs, la position du titre et la résolution d'enregistrement.
 
-## Adapter : trois exemples sur nos données
+## La méthode en quatre gestes
+
+| | Geste | Ce que l'on fait |
+|---|---|---|
+| **1** | **Trouver** | Formuler la question en une phrase ; ouvrir la famille ; choisir le graphique |
+| **2** | **Copier** | Bouton « Copier le code » de la page ; coller dans une cellule `# %%` |
+| **3** | **Remplacer** | Le bloc « données » : `pd.read_csv("data/…")` à la place du jeu d'exemple, en gardant les **noms** de variables du script (`x`, `y`, `data`, `groups`) |
+| **4** | **Réécrire** | Titre-message, axes avec unités, sous-titre en français, source |
+
+Le geste 3 est le plus délicat. Garder les noms de variables du script (`x`, `data`,
+`groups`…) permet de réutiliser les blocs 3 et 4 sans les toucher. Cinq pièges reviennent
+souvent :
+
+- **L'import d'exemple.** Beaucoup de scripts chargent leurs données depuis scikit-learn
+  (`from sklearn.datasets import …`). La ligne disparaît avec le jeu d'exemple ; inutile
+  d'installer le paquet.
+- **Les constantes d'échelle.** Certains réglages sont calibrés pour les données d'exemple :
+  l'espacement des crochets de significativité, les bornes d'un axe, un `np.linspace(0, …)` qui
+  suppose des valeurs positives. Sur une échelle dix fois plus large, il faut multiplier ces
+  constantes par dix.
+- **L'échelle logarithmique.** Si l'on remplace `x` par `np.log10(x)`, les axes et les
+  étiquettes affichent des logarithmes : `ax.set_xticks([3, 4, 5], ["1 000 $", "10 000 $",
+  "100 000 $"])` et `f"{10 ** v:,.0f} $"` les ramènent en dollars.
+- **Les textes en anglais.** Titres, légendes et sous-titres de la galerie sont en anglais. Une
+  figure remise n'en garde aucun.
+- **Les hypothèses du test.** Le test du sous-titre suppose, en général, des observations
+  indépendantes. Sur un panel — la même entreprise observée quinze ans — ce n'est pas le cas :
+  le graphique reste juste, la valeur p devient trop optimiste.
+
+## Adapter : cinq exemples sur nos données
 
 **Une distribution.** Le script *Histogramme avec densité* superpose l'histogramme, une densité
 estimée et la loi normale de même moyenne et même écart type. Appliqué au PIB par habitant, il
@@ -278,6 +341,109 @@ Si la « valeur » de la manchette est la croissance, les économies riches — 
 ne sont pas en tête. Le même jeu de données donne raison et tort à la manchette ; seul le
 graphique choisi décide lequel des deux arguments le lecteur verra.
 
+**Une relation.** Le *nuage de points avec statistiques* — l'équivalent Python de
+`ggscatterstats()` en R — ajoute au nuage la droite des moindres carrés, sa bande de confiance
+à 95 % et le coefficient de Pearson avec son intervalle. Le PIB par habitant passe en échelle
+logarithmique, sans quoi quelques pays très riches écraseraient le reste (@fig-relation).
+
+```{python}
+#| label: fig-relation
+#| fig-cap: "Richesse et ouverture commerciale en 2023 ; adapté du script « Nuage de points avec statistiques » de PyStatlas (histogrammes marginaux retirés). Source : Banque mondiale."
+#| fig-width: 7
+#| fig-height: 4
+import statsmodels.api as sm
+d = p23.dropna(subset=["pib_hab_usd", "commerce_pct_pib"])
+x, y = np.log10(d["pib_hab_usd"].to_numpy()), d["commerce_pct_pib"].to_numpy()
+res = stats.pearsonr(x, y); ci = res.confidence_interval(0.95)
+fit = sm.OLS(y, sm.add_constant(x)).fit()
+grid = np.linspace(x.min(), x.max(), 200)
+band = fit.get_prediction(sm.add_constant(grid)).conf_int(alpha=0.05)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.scatter(x, y, s=16, color=BLEU, alpha=0.45, lw=0)
+ax.fill_between(grid, band[:, 0], band[:, 1], color=ORANGE, alpha=0.25, lw=0)
+ax.plot(grid, fit.params[0] + fit.params[1] * grid, color=ORANGE, lw=2)
+us = d["iso3"].to_numpy() == "USA"
+ax.annotate("États-Unis", (x[us][0], y[us][0]), xytext=(6, -12), textcoords="offset points",
+            color=ROUGE, fontsize=8, fontweight="bold")
+ax.set_xticks([3, 4, 5], ["1 000 $", "10 000 $", "100 000 $"])
+ax.set(xlabel="PIB par habitant (échelle log)", ylabel="Commerce (% du PIB)")
+ax.grid(axis="x")
+ax.set_title("Les pays riches sont plus ouverts — les États-Unis font exception", fontsize=11, pad=20)
+ax.text(0, 1.02, f"r = {res.statistic:.2f}, IC 95 % [{ci.low:.2f}, {ci.high:.2f}] · n = {len(x)}",
+        transform=ax.transAxes, fontsize=8, color="#6E6E73")
+plt.show()
+```
+
+La bande orange décrit l'incertitude sur la **moyenne** du commerce à un niveau de richesse
+donné, pas sur chaque pays : la plupart des points tombent en dehors, et c'est normal. Les
+États-Unis, très riches et très peu ouverts, sont loin sous la droite. Un marché intérieur
+profond réduit le besoin d'échanger ; une petite économie riche, comme Singapour ou le
+Luxembourg, commerce plusieurs fois son PIB.
+
+**Une distribution dans le temps.** Le *graphique en crêtes* empile une densité par groupe ;
+ici, une par année. Les crises se lisent comme des déplacements de toute la distribution vers
+la gauche (@fig-cretes).
+
+```{python}
+#| label: fig-cretes
+#| fig-cap: "Distribution des taux de croissance du PIB réel, un pays par observation, 2007-2023 ; adapté du script « Graphique en crêtes » de PyStatlas. Valeurs hors ±15 % retirées. Source : Banque mondiale."
+#| fig-width: 7
+#| fig-height: 4.6
+annees = list(range(2007, 2024))
+cr = pays[pays["annee"].isin(annees)].dropna(subset=["croissance_pib"])
+cr = cr[cr["croissance_pib"].between(-15, 15)]
+medianes = cr.groupby("annee")["croissance_pib"].median()
+grid = np.linspace(-15, 15, 400)
+cmap, norm = plt.get_cmap("RdBu"), plt.Normalize(-4, 8)
+
+fig, ax = plt.subplots(figsize=(7, 4.6))
+for i, a in enumerate(annees):
+    base = (len(annees) - 1 - i) * 0.6
+    kde = stats.gaussian_kde(cr.loc[cr["annee"] == a, "croissance_pib"])
+    dens = kde(grid)
+    ax.fill_between(grid, base, base + 0.9 * dens / dens.max(), color=cmap(norm(medianes[a])),
+                    alpha=0.9, lw=0, zorder=2 * i)
+    ax.plot(grid, base + 0.9 * dens / dens.max(), color="white", lw=0.8, zorder=2 * i + 1)
+ax.set_yticks([(len(annees) - 1 - i) * 0.6 for i in range(len(annees))], annees, fontsize=7)
+ax.axvline(0, color="#3A3A3C", lw=0.8, zorder=100)
+ax.grid(axis="x"); ax.grid(axis="y", visible=False); ax.spines["left"].set_visible(False)
+ax.set_xlabel("Croissance du PIB réel (%)")
+recul = pays[pays["annee"].isin([2009, 2020])].groupby("annee")["croissance_pib"] \
+    .apply(lambda g: (g.dropna() < 0).mean())
+ax.set_title(f"Deux chocs mondiaux : {recul[2009]:.0%} des pays reculent en 2009, {recul[2020]:.0%} en 2020",
+             fontsize=11, pad=20)
+ax.text(0, 1.02, f"couleur = médiane annuelle · {len(cr)} pays-années", transform=ax.transAxes,
+        fontsize=8, color="#6E6E73")
+plt.show()
+```
+
+La crise financière de 2009 frappe surtout les économies avancées : la moitié des pays
+reculent, l'autre continue de croître. La pandémie de 2020 est un choc **synchrone** : quatre
+pays sur cinq reculent la même année, puis rebondissent ensemble en 2021. Un graphique de la
+seule croissance médiane aurait montré deux creux ; les crêtes montrent qui les a subis.
+
+## Lire les statistiques du sous-titre
+
+Le sous-titre est la partie la plus nouvelle de ces figures, et la séance 6 en reprend chaque
+élément en détail. Pour l'instant, il suffit de savoir ce que chaque chiffre affirme.
+
+| Dans le sous-titre | Ce qu'il mesure | Comment le lire |
+|---|---|---|
+| **n** | Le nombre d'observations | Toujours le vérifier : un graphique sur 12 points ne pèse pas comme sur 200 |
+| **Asymétrie** (*skewness*) | Le déséquilibre de la distribution | 0 = symétrique ; au-delà de 1, longue traîne : préférer la médiane |
+| **Aplatissement** (*excess kurtosis*) | Le poids des valeurs extrêmes | 0 pour une loi normale ; élevé = beaucoup de cas exceptionnels |
+| **Kruskal-Wallis H**, **ε²** | Si plusieurs groupes ont la même distribution, et l'ampleur de l'écart | ε² va de 0 à 1 ; au-delà de 0,26 environ, l'effet est fort |
+| **Welch F**, **ω²** | Si plusieurs moyennes diffèrent, sans supposer des variances égales | ω² : part de la variation expliquée par le groupe |
+| **r de Pearson**, **IC 95 %** | La force d'une relation linéaire, et sa précision | Si l'intervalle contient 0, la relation n'est pas établie |
+| **Kolmogorov-Smirnov D** | Le plus grand écart entre deux fonctions de répartition | De 0 (identiques) à 1 (disjointes) |
+| **p** | La probabilité d'un écart au moins aussi grand si, en réalité, il n'y en avait aucun | Petite = l'écart est difficile à attribuer au hasard ; elle ne dit **pas** s'il est important |
+
+La taille d'effet (ε², ω², r, D) répond à la question du stratège — *de combien ?* —, la valeur
+p à une autre — *est-ce du hasard ?* Un graphique PyStatlas affiche les deux, et montre en
+plus chaque observation : on voit d'un coup si l'écart est grand, s'il est net, et s'il tient à
+deux ou trois points, comme dans le quatrième jeu d'Anscombe.
+
 ## Ce que la galerie ne fait pas pour vous
 
 PyStatlas rassemble des graphiques statistiques. Les trois formes de base de l'analyste —
@@ -348,6 +514,25 @@ panneaux disent la même chose sans ce pouvoir arbitraire.
 perspective qui grossit la part du premier plan. Des barres horizontales triées le remplacent
 toujours avec profit.
 
+**Le test sans le graphique.** « La différence est significative, p < 0,001 » ne dit ni
+l'ampleur de l'écart, ni la forme des distributions, ni si un seul point le fabrique. C'est
+pourquoi les graphiques de la galerie montrent toujours les observations **et** le test.
+
+**L'axe coupé sans le dire.** Retirer des valeurs extrêmes pour lisibilité est légitime —
+la @fig-pluie coupe à −40 % — à condition de l'**écrire** dans la légende ou la note.
+
+## La grille de relecture
+
+Avant de remettre une figure, sept questions :
+
+1. Le **titre** énonce-t-il le message ?
+2. Le **sous-titre** donne-t-il le n et la statistique qui permettent de le vérifier ?
+3. Chaque axe a-t-il une **unité** ? La **source** est-elle indiquée ?
+4. Les barres partent-elles de **zéro** ? Un axe coupé est-il **signalé** ?
+5. Les catégories sont-elles **triées** par valeur ?
+6. Une **légende** peut-elle être remplacée par un étiquetage direct ?
+7. Les chiffres du titre **sortent-ils du code** ? Reste-t-il du texte en anglais ?
+
 ## À retenir
 
 - Une affirmation sur la « valeur » n'est vérifiable qu'une fois la **mesure** choisie, et le
@@ -358,5 +543,9 @@ toujours avec profit.
   fournit le script, que l'on adapte en remplaçant les données et en réécrivant les textes.
 - Une figure remise a un titre-message, un sous-titre statistique, des unités, une source et,
   si possible, un étiquetage direct.
+- Adapter un script, c'est remplacer les **données** et réécrire les **textes** ; surveiller
+  les constantes d'échelle, l'échelle logarithmique et les hypothèses du test.
+- La taille d'effet dit *de combien* ; la valeur p, *si c'est du hasard*. Les deux, avec les
+  observations, sur la même figure.
 - PyStatlas pour la statistique sur la figure, matplotlib pour les formes simples, plotly pour
   l'exploration.
