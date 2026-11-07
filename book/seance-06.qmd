@@ -13,6 +13,9 @@ from scipy import stats
 import statsmodels.formula.api as smf
 from plotstyle import setup, CL
 plt = setup()
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # le style de la galerie
+plt.rcParams["figure.dpi"] = 160
+BLEU, ORANGE, ROUGE, GRIS = "#007AFF", "#FF9500", "#FF3B30", "#8E8E93"
 
 entreprises = pd.read_csv("data/entreprises.csv")
 entreprises["roa"] = entreprises["resultat_net"] / entreprises["actifs_totaux"]
@@ -76,6 +79,21 @@ entreprises["intensite_rd"] = entreprises["rd"] / entreprises["chiffre_affaires"
 
 e23 = entreprises[entreprises["annee"] == 2023].copy()   # une ligne par entreprise
 ```
+
+### Voir la statistique
+
+Chaque notion du chapitre a son graphique dans la galerie PyStatlas [@warin2026statlas],
+présentée au chapitre précédent. La galerie montre déjà ces graphiques sur de vraies données de
+sciences sociales ; le chapitre les adapte à nos entreprises.
+
+| Notion | Graphique de la galerie | L'exemple de la galerie |
+|---|---|---|
+| Forme d'une distribution | [Diagramme Q–Q](https://warint.github.io/pystatlas/fr/distributions/qq-plot/) | revenus de 235 ménages belges (Engel), bruts puis en log |
+| Intervalle de confiance | [Ce que veut dire un IC à 95 %](https://warint.github.io/pystatlas/fr/inference-uncertainty/confidence-intervals/) | âge moyen des répondants de l'enquête électorale américaine de 1996 |
+| Bootstrap | [Distribution bootstrap](https://warint.github.io/pystatlas/fr/inference-uncertainty/bootstrap-distribution/) | criminalité et familles monoparentales dans les 51 États |
+| Comparer deux groupes | [Graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) | criminalité violente des États pauvres et moins pauvres |
+| Relier deux variables | [Nuage avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) | 303 districts scolaires californiens |
+| Régresser | [Graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) | ce qui prédit la criminalité violente des États |
 
 ## Décrire
 
@@ -175,6 +193,41 @@ print(f"IC bootstrap de la médiane : [{np.percentile(boot_med, 2.5):.3f} ; {np.
 Les deux méthodes donnent des intervalles voisins pour la moyenne. Le bootstrap a l'avantage de
 s'appliquer tel quel à la médiane, pour laquelle il n'existe pas de formule simple.
 
+### Ce que « 95 % » veut dire
+
+La lecture correcte d'un intervalle de confiance porte sur la **méthode**, pas sur un intervalle
+particulier. Pour la voir, il faut une population dont on connaît la vraie moyenne. La galerie
+utilise les 944 répondants de l'enquête électorale américaine de 1996 : leur âge moyen est connu,
+et l'on peut y tirer cent sondages de trente personnes (@fig-s06-couverture).
+
+```{python}
+#| label: fig-s06-couverture
+#| fig-cap: "Cent sondages de 30 personnes tirés des 944 répondants de l'enquête électorale américaine de 1996, avec leur intervalle de confiance à 95 % de l'âge moyen. En rouge, les intervalles qui ne contiennent pas la vraie moyenne. Adapté de PyStatlas, « Ce que veut dire un IC à 95 % »."
+#| fig-width: 7
+#| fig-height: 4.6
+import statsmodels.api as sm
+age = sm.datasets.anes96.load_pandas().data["age"].to_numpy()
+rng = np.random.default_rng(2024)
+mu, n_s, reps = age.mean(), 30, 100
+ech = np.array([rng.choice(age, n_s, replace=False) for _ in range(reps)])
+bas_s, haut_s = stats.t.interval(0.95, df=n_s - 1, loc=ech.mean(axis=1),
+                                 scale=ech.std(axis=1, ddof=1) / np.sqrt(n_s))
+rate = (bas_s > mu) | (haut_s < mu)
+fig, ax = plt.subplots(figsize=(7, 4.6))
+y = np.arange(1, reps + 1)
+ax.hlines(y, bas_s, haut_s, color=np.where(rate, ROUGE, "#7FB8FF"), lw=np.where(rate, 2, 1))
+ax.axvline(mu, color="#1D1D1F", ls="--", lw=1)
+ax.set(xlabel="Âge moyen, IC à 95 % (années)", ylabel="Sondage")
+ax.grid(axis="y", visible=False); ax.grid(axis="x")
+ax.set_title(f"{reps - rate.sum()} intervalles sur {reps} contiennent l'âge moyen ({mu:.1f} ans)", fontsize=11)
+plt.show()
+```
+
+Environ 95 intervalles sur 100 contiennent la vraie moyenne ; les autres la ratent sans que rien,
+de l'intérieur, ne les signale. Dans la pratique, on ne dispose que d'**un** sondage — une seule de
+ces lignes. Nos 32 entreprises en sont une, avec une réserve de taille : elles n'ont pas été tirées
+au hasard.
+
 ## Comparer
 
 ### La logique d'un test
@@ -267,6 +320,15 @@ publier et lire les réplications et les **résultats nuls** comme des découver
 La règle de ce cours en découle : on rapporte d'abord l'**écart en unités**, puis son **intervalle
 de confiance**, et seulement ensuite la valeur p.
 
+Le [graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) de la galerie met cette règle en
+image : à gauche, chaque observation des deux groupes ; à droite, l'écart de moyennes, sur un axe
+dont le zéro est la moyenne du premier groupe, avec la distribution bootstrap de l'écart et son
+intervalle. L'exemple de la galerie compare la criminalité violente des États pauvres et moins
+pauvres. Appliqué à nos sept entreprises technologiques, il montre aussi une limite : avec si peu
+d'observations, l'intervalle bootstrap, qui ne connaît que les valeurs observées, est plus étroit
+que celui du test de Welch. Quand deux méthodes honnêtes divergent sur un petit échantillon, la
+conclusion prudente l'emporte.
+
 ## Relier
 
 ### Corrélations
@@ -311,6 +373,8 @@ cols = ["roa", "marge", "intensite_rd", "chiffre_affaires", "actifs_totaux"]
 fig, ax = plt.subplots(figsize=(5.6, 4.2))
 sns.heatmap(e23[cols].corr(method="spearman"), annot=True, fmt=".2f",
             cmap="RdBu_r", vmin=-1, vmax=1, cbar=False, ax=ax)
+ax.tick_params(axis="x", rotation=30)
+ax.grid(False)
 plt.show()
 ```
 
@@ -377,6 +441,31 @@ l'intérieur** de leur secteur. Le coefficient passe de `{python} f"{grappe.para
 à `{python} f"{secteur.params['intensite_rd']:+.2f}"`, et devient nettement différent de zéro. À
 secteur égal, les observations (entreprise-année) à forte intensité de R-D vont avec un ROA **plus
 faible**. Le secteur masquait donc une relation négative.
+
+Le [graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) de la galerie résume ces trois
+estimations d'un coup d'œil : un point par modèle, son intervalle, une ligne verticale à zéro
+(@fig-s06-coefs).
+
+```{python}
+#| label: fig-s06-coefs
+#| fig-cap: "Le coefficient de l'intensité de R-D sur le ROA dans trois modèles, avec son intervalle de confiance à 95 %. Adapté de PyStatlas, « Graphique de coefficients »."
+#| fig-width: 6.5
+#| fig-height: 2.8
+modeles = {"Panel naïf": naif, "Erreurs par entreprise": grappe, "+ secteur": secteur}
+fig, ax = plt.subplots(figsize=(6.5, 2.8))
+for i, (nom, m) in enumerate(modeles.items()):
+    b = m.params["intensite_rd"]
+    bas_c, haut_c = m.conf_int().loc["intensite_rd"]
+    c = BLEU if m.pvalues["intensite_rd"] < 0.05 else "#AEAEB2"
+    ax.hlines(i, bas_c, haut_c, color=c, lw=2.5)
+    ax.scatter(b, i, s=70, color=c, edgecolor="white", lw=1.5, zorder=3)
+ax.axvline(0, color=GRIS, lw=1, ls="--")
+ax.set_yticks(range(len(modeles)), list(modeles))
+ax.set_ylim(len(modeles) - 0.5, -0.5)
+ax.set_xlabel("Effet de l'intensité de R-D sur le ROA, IC 95 %")
+ax.grid(axis="x"); ax.grid(axis="y", visible=False)
+plt.show()
+```
 
 ```{python}
 #| label: fig-s06-tesla

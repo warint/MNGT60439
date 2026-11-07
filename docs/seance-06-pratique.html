@@ -1137,12 +1137,14 @@ Thierry Warin, PhD
 <div class="muted">
 <p>Le fichier ne s’exécute pas tant que les <code>...</code> ne sont pas remplacés : c’est voulu. Avancez cellule par cellule (<code># %%</code>, puis <code>Maj + Entrée</code>).</p>
 </div>
+<p>Gardez la galerie ouverte dans un onglet : <strong><a href="https://warint.github.io/pystatlas/fr/">warint.github.io/pystatlas/fr</a></strong>. Deux de vos résultats se <strong>montrent</strong> avec un graphique de la galerie, adapté comme à la séance 5.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href></a>plt.style.use(<span class="st">&quot;05-representer-les-donnees/pystatlas.mplstyle&quot;</span>)   <span class="co"># déjà dans le fichier</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="décrire-15-min" class="slide level2 scrollable">
 <h2>1 · Décrire — 15 min</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href></a>ANNEE <span class="op">=</span> <span class="dv">2023</span>      <span class="co"># fixée AVANT de regarder les résultats</span></span>
-<span id="cb3-2"><a href></a>coupe <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> ANNEE].copy()</span>
-<span id="cb3-3"><a href></a>coupe[<span class="st">&quot;roa&quot;</span>].agg([<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;std&quot;</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href></a>ANNEE <span class="op">=</span> <span class="dv">2023</span>      <span class="co"># fixée AVANT de regarder les résultats</span></span>
+<span id="cb4-2"><a href></a>coupe <span class="op">=</span> entreprises[entreprises[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> ANNEE].copy()</span>
+<span id="cb4-3"><a href></a>coupe[<span class="st">&quot;roa&quot;</span>].agg([<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;std&quot;</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="step">
 <p>Fixez l’année <strong>avant</strong> de calculer quoi que ce soit, et écrivez pourquoi en commentaire. Changer d’année jusqu’à obtenir un résultat qui vous plaît s’appelle du <em>p-hacking</em>.</p>
 </div>
@@ -1153,7 +1155,7 @@ Thierry Warin, PhD
 <section id="comparer-20-min" class="slide level2 scrollable">
 <h2>2 · Comparer — 20 min</h2>
 <p>Coupez les entreprises qui publient leur R-D en deux groupes autour de la <strong>médiane</strong> de l’intensité de R-D.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href></a>test <span class="op">=</span> stats.ttest_ind(groupe_fort, groupe_faible, equal_var<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href></a>test <span class="op">=</span> stats.ttest_ind(groupe_fort, groupe_faible, equal_var<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Rapportez, dans cet ordre :</p>
 <div class="tight">
 <ol type="1">
@@ -1165,16 +1167,19 @@ Thierry Warin, PhD
 <div class="warn">
 <p>Un groupe de onze entreprises, c’est peu. Si l’intervalle contient zéro, dites-le : c’est la réponse.</p>
 </div>
+<div class="step">
+<p><strong>Montrez-le.</strong> Adaptez le <a href="https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/">graphique d’estimation</a> de la galerie : <code>low</code> et <code>high</code> sont déjà vos deux groupes dans le fichier. Enregistrez <code>sorties/s06_comparer.png</code>.</p>
+</div>
 </section>
 <section id="relier-20-min" class="slide level2 scrollable">
 <h2>3 · Relier — 20 min</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href></a>stats.pearsonr(x[<span class="st">&quot;intensite_rd&quot;</span>], x[<span class="st">&quot;roa&quot;</span>])</span>
-<span id="cb5-2"><a href></a>stats.spearmanr(x[<span class="st">&quot;intensite_rd&quot;</span>], x[<span class="st">&quot;roa&quot;</span>])</span>
-<span id="cb5-3"><a href></a></span>
-<span id="cb5-4"><a href></a>m1 <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd&quot;</span>, data<span class="op">=</span>x).fit()</span>
-<span id="cb5-5"><a href></a>m2 <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd + C(secteur)&quot;</span>, data<span class="op">=</span>x).fit()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href></a>stats.pearsonr(donnees[<span class="st">&quot;intensite_rd&quot;</span>], donnees[<span class="st">&quot;roa&quot;</span>])</span>
+<span id="cb6-2"><a href></a>stats.spearmanr(donnees[<span class="st">&quot;intensite_rd&quot;</span>], donnees[<span class="st">&quot;roa&quot;</span>])</span>
+<span id="cb6-3"><a href></a></span>
+<span id="cb6-4"><a href></a>m1 <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd&quot;</span>, data<span class="op">=</span>donnees).fit()</span>
+<span id="cb6-5"><a href></a>m2 <span class="op">=</span> smf.ols(<span class="st">&quot;roa ~ intensite_rd + C(secteur)&quot;</span>, data<span class="op">=</span>donnees).fit()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="step">
-<p>Faites le <strong>nuage de points</strong> avant de lire un seul coefficient. Nommez les deux entreprises les plus éloignées de la tendance.</p>
+<p>Faites le <strong>nuage de points</strong> avant de lire un seul coefficient — avec le <a href="https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/">nuage de points avec statistiques</a> de la galerie (<code>x</code>, <code>y</code> déjà préparés dans le fichier : collez le script tel quel). Nommez les deux entreprises les plus éloignées de la tendance. Enregistrez <code>sorties/s06_relier.png</code>.</p>
 </div>
 <div class="check">
 <p>Le coefficient change-t-il quand on ajoute le secteur ? Si oui, le secteur confondait la relation — dites dans quel sens.</p>
@@ -1209,6 +1214,9 @@ Thierry Warin, PhD
 </tr>
 </tbody>
 </table>
+<div class="muted">
+<p>Pour (b), le <a href="https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/">graphique de coefficients</a> montre d’un coup d’œil le même coefficient avec deux intervalles — comme la diapositive « Un coefficient, trois incertitudes » du cours.</p>
+</div>
 <div class="check">
 <p>C’est la partie qui compte le plus. Une équipe qui montre comment son résultat s’effondre le comprend ; une équipe qui ne montre que sa solidité ne le sait pas encore.</p>
 </div>
@@ -1218,7 +1226,7 @@ Thierry Warin, PhD
 <p>200 mots dans <code>reponse.md</code>, déposé sur ZoneCours avec votre script :</p>
 <div class="tight">
 <ul>
-<li>L’écart, <strong>en unités</strong>, et son intervalle</li>
+<li>L’écart, <strong>en unités</strong>, et son intervalle — avec vos deux figures (<code>s06_comparer.png</code>, <code>s06_relier.png</code>)</li>
 <li>L’hypothèse que vous avez cassée, et ce qu’elle a fait à votre réponse</li>
 <li>Ce que ce résultat <strong>ne vous autorise pas</strong> à recommander à un dirigeant</li>
 </ul>

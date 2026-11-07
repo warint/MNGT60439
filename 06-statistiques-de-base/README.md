@@ -27,6 +27,8 @@ MNGT 60439 — Données et stratégie : enjeux locaux et mondiaux
 - Estimer et lire une **régression simple** avec `statsmodels`, avec et sans contrôle du secteur.
 - Reconnaître deux pièges : la **variable confondante** et les **observations non indépendantes**
   d'un panel.
+- **Montrer** une statistique avec la galerie [PyStatlas](https://warint.github.io/pystatlas/fr/) : intervalle de confiance,
+  graphique d'estimation, nuage avec statistiques, graphique de coefficients.
 
 ---
 

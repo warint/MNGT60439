@@ -9,10 +9,17 @@ Remplacez chaque « ... » marqué TODO. Le fichier doit s'exécuter de bout en 
 """
 
 # %% 0 · Importations et données
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from scipy import stats
+
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # le style de la galerie
+Path("sorties").mkdir(exist_ok=True)
 
 entreprises = pd.read_csv("data/entreprises.csv")
 
@@ -52,12 +59,32 @@ for _ in range(5_000):
     ...
 print(f"IC bootstrap 95 % : [{np.percentile(ecarts, 2.5):.3f} ; {np.percentile(ecarts, 97.5):.3f}]")
 
+# TODO : montrez l'écart avec le graphique d'estimation de la galerie
+#   https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/
+#   Le script de la galerie compare deux groupes appelés `low` et `high` : ce sont les vôtres.
+#   Collez son bloc « bootstrap » et son bloc « figure », puis réécrivez titres et axes
+#   (ROA en %, noms des groupes). Le script utilise aussi un DataFrame `df` avec une colonne
+#   `group` pour le nuage de points : créez-le à partir de `coupe`. Ses étiquettes d'axe x
+#   parlent de taux de pauvreté (`cut`) : remplacez-les par « Faible R-D » / « Forte R-D ».
+low, high = 100 * groupe_faible, 100 * groupe_fort      # en points de ROA
+# fig.savefig("sorties/s06_comparer.png")
+
 # %% 3 · Relier — 20 min
-x = coupe.dropna(subset=["intensite_rd", "roa"])
-# TODO : corrélations de Pearson et de Spearman entre intensite_rd et roa
+donnees = coupe.dropna(subset=["intensite_rd", "roa"])   # une ligne par entreprise qui publie sa R-D
+
+# TODO : le nuage, AVANT les coefficients — nuage de points avec statistiques de la galerie
+#   https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/
+#   Le script de la galerie attend deux tableaux `x` et `y` : les voici. Collez ses blocs
+#   « statistique » et « figure » tels quels, puis réécrivez titre, axes et sous-titre.
+x = 100 * donnees["intensite_rd"].to_numpy()     # intensité de R-D, en % des ventes
+y = 100 * donnees["roa"].to_numpy()              # ROA, en %
+n = len(x)
+# fig.savefig("sorties/s06_relier.png")
+
+# TODO : corrélations de Pearson et de Spearman entre intensite_rd et roa (sur `donnees`)
 print(...)
 
-# TODO : régression simple roa ~ intensite_rd, puis avec C(secteur)
+# TODO : régression simple roa ~ intensite_rd, puis avec C(secteur) (data=donnees)
 m1 = ...
 m2 = ...
 print(m1.summary().tables[1])
@@ -68,6 +95,8 @@ print(m2.params["intensite_rd"], m2.pvalues["intensite_rd"])
 #   (a) retirez l'entreprise la plus extrême (laquelle ? pourquoi ?) et refaites la section 3
 #   (b) utilisez TOUTES les années, d'abord naïvement, puis avec cov_type="cluster"
 #       et cov_kwds={"groups": panel["ticker"]}
+#       Facultatif : montrez les deux intervalles avec le graphique de coefficients
+#       https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/
 ...
 
 # %% 5 · Écrire — 20 min

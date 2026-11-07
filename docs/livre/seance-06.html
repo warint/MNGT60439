@@ -306,14 +306,20 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#ce-que-lon-voit-et-ce-que-lon-peut-affirmer" id="toc-ce-que-lon-voit-et-ce-que-lon-peut-affirmer" class="nav-link active" data-scroll-target="#ce-que-lon-voit-et-ce-que-lon-peut-affirmer"><span class="header-section-number">6.1</span> Ce que l’on voit, et ce que l’on peut affirmer</a></li>
+  <li><a href="#ce-que-lon-voit-et-ce-que-lon-peut-affirmer" id="toc-ce-que-lon-voit-et-ce-que-lon-peut-affirmer" class="nav-link active" data-scroll-target="#ce-que-lon-voit-et-ce-que-lon-peut-affirmer"><span class="header-section-number">6.1</span> Ce que l’on voit, et ce que l’on peut affirmer</a>
+  <ul class="collapse">
+  <li><a href="#voir-la-statistique" id="toc-voir-la-statistique" class="nav-link" data-scroll-target="#voir-la-statistique"><span class="header-section-number">6.1.1</span> Voir la statistique</a></li>
+  </ul></li>
   <li><a href="#décrire" id="toc-décrire" class="nav-link" data-scroll-target="#décrire"><span class="header-section-number">6.2</span> Décrire</a>
   <ul class="collapse">
   <li><a href="#le-centre" id="toc-le-centre" class="nav-link" data-scroll-target="#le-centre"><span class="header-section-number">6.2.1</span> Le centre</a></li>
   <li><a href="#la-dispersion" id="toc-la-dispersion" class="nav-link" data-scroll-target="#la-dispersion"><span class="header-section-number">6.2.2</span> La dispersion</a></li>
   <li><a href="#la-forme" id="toc-la-forme" class="nav-link" data-scroll-target="#la-forme"><span class="header-section-number">6.2.3</span> La forme</a></li>
   </ul></li>
-  <li><a href="#de-léchantillon-à-la-population" id="toc-de-léchantillon-à-la-population" class="nav-link" data-scroll-target="#de-léchantillon-à-la-population"><span class="header-section-number">6.3</span> De l’échantillon à la population</a></li>
+  <li><a href="#de-léchantillon-à-la-population" id="toc-de-léchantillon-à-la-population" class="nav-link" data-scroll-target="#de-léchantillon-à-la-population"><span class="header-section-number">6.3</span> De l’échantillon à la population</a>
+  <ul class="collapse">
+  <li><a href="#ce-que-95-veut-dire" id="toc-ce-que-95-veut-dire" class="nav-link" data-scroll-target="#ce-que-95-veut-dire"><span class="header-section-number">6.3.1</span> Ce que « 95 % » veut dire</a></li>
+  </ul></li>
   <li><a href="#comparer" id="toc-comparer" class="nav-link" data-scroll-target="#comparer"><span class="header-section-number">6.4</span> Comparer</a>
   <ul class="collapse">
   <li><a href="#la-logique-dun-test" id="toc-la-logique-dun-test" class="nav-link" data-scroll-target="#la-logique-dun-test"><span class="header-section-number">6.4.1</span> La logique d’un test</a></li>
@@ -362,7 +368,7 @@ window.Quarto = {
 <p>Les cinq premiers chapitres ont appris à obtenir des données et à les regarder. Celui-ci pose une question que le regard seul ne tranche pas : <strong>une différence observée est-elle assez solide pour être affirmée ?</strong> Tesla affiche en 2023 une marge nette supérieure à celle de Ford ; les entreprises technologiques semblent plus rentables que les autres ; les grandes dépenses de R-D paraissent aller avec de grands profits. Chacune de ces impressions peut être vraie, ou être un accident de l’échantillon que l’on a sous les yeux.</p>
 <p>La statistique ne supprime pas cette incertitude. Elle la <strong>mesure</strong>, et elle oblige à dire, avec chaque résultat, de combien il pourrait être faux. C’est une discipline plus qu’une technique : la plupart des erreurs de ce chapitre ne sont pas des erreurs de calcul, mais des phrases qui affirment plus que les chiffres ne le permettent.</p>
 <p>Le chapitre travaille sur trois indicateurs construits à partir de <code>data/entreprises.csv</code> : le <strong>rendement de l’actif</strong> (<code>roa</code>, résultat net divisé par les actifs totaux), la <strong>marge nette</strong> (<code>marge</code>, résultat net divisé par le chiffre d’affaires) et l’<strong>intensité de R-D</strong> (<code>intensite_rd</code>, dépenses de R-D divisées par le chiffre d’affaires).</p>
-<div id="f4bbf442" class="cell" data-execution_count="2">
+<div id="d4262748" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entreprises <span class="op">=</span> pd.read_csv(<span class="st">"data/entreprises.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"roa"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"actifs_totaux"</span>]</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>entreprises[<span class="st">"marge"</span>] <span class="op">=</span> entreprises[<span class="st">"resultat_net"</span>] <span class="op">/</span> entreprises[<span class="st">"chiffre_affaires"</span>]</span>
@@ -370,13 +376,58 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>e23 <span class="op">=</span> entreprises[entreprises[<span class="st">"annee"</span>] <span class="op">==</span> <span class="dv">2023</span>].copy()   <span class="co"># une ligne par entreprise</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="voir-la-statistique" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="voir-la-statistique"><span class="header-section-number">6.1.1</span> Voir la statistique</h3>
+<p>Chaque notion du chapitre a son graphique dans la galerie PyStatlas <span class="citation" data-cites="warin2026statlas">(<a href="#ref-warin2026statlas" role="doc-biblioref">Warin 2026</a>)</span>, présentée au chapitre précédent. La galerie montre déjà ces graphiques sur de vraies données de sciences sociales ; le chapitre les adapte à nos entreprises.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Notion</th>
+<th>Graphique de la galerie</th>
+<th>L’exemple de la galerie</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Forme d’une distribution</td>
+<td><a href="https://warint.github.io/pystatlas/fr/distributions/qq-plot/">Diagramme Q–Q</a></td>
+<td>revenus de 235 ménages belges (Engel), bruts puis en log</td>
+</tr>
+<tr class="even">
+<td>Intervalle de confiance</td>
+<td><a href="https://warint.github.io/pystatlas/fr/inference-uncertainty/confidence-intervals/">Ce que veut dire un IC à 95 %</a></td>
+<td>âge moyen des répondants de l’enquête électorale américaine de 1996</td>
+</tr>
+<tr class="odd">
+<td>Bootstrap</td>
+<td><a href="https://warint.github.io/pystatlas/fr/inference-uncertainty/bootstrap-distribution/">Distribution bootstrap</a></td>
+<td>criminalité et familles monoparentales dans les 51 États</td>
+</tr>
+<tr class="even">
+<td>Comparer deux groupes</td>
+<td><a href="https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/">Graphique d’estimation</a></td>
+<td>criminalité violente des États pauvres et moins pauvres</td>
+</tr>
+<tr class="odd">
+<td>Relier deux variables</td>
+<td><a href="https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/">Nuage avec statistiques</a></td>
+<td>303 districts scolaires californiens</td>
+</tr>
+<tr class="even">
+<td>Régresser</td>
+<td><a href="https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/">Graphique de coefficients</a></td>
+<td>ce qui prédit la criminalité violente des États</td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="décrire" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="décrire"><span class="header-section-number">6.2</span> Décrire</h2>
 <section id="le-centre" class="level3" data-number="6.2.1">
 <h3 data-number="6.2.1" class="anchored" data-anchor-id="le-centre"><span class="header-section-number">6.2.1</span> Le centre</h3>
 <p>La <strong>moyenne</strong> est le point d’équilibre d’une distribution ; la <strong>médiane</strong>, le milieu de son classement. Les deux coïncident quand la distribution est symétrique, et divergent quand elle ne l’est pas. Le chiffre d’affaires de nos 32 entreprises en 2023 en donne un exemple net.</p>
-<div id="23866c0f" class="cell" data-execution_count="3">
+<div id="d9256c50" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ca <span class="op">=</span> e23[<span class="st">"chiffre_affaires"</span>]</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Moyenne : </span><span class="sc">{</span>ca<span class="sc">.</span>mean()<span class="sc">:,.0f}</span><span class="ss"> M$   Médiane : </span><span class="sc">{</span>ca<span class="sc">.</span>median()<span class="sc">:,.0f}</span><span class="ss"> M$   Asymétrie : </span><span class="sc">{</span>ca<span class="sc">.</span>skew()<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -388,7 +439,7 @@ window.Quarto = {
 <section id="la-dispersion" class="level3" data-number="6.2.2">
 <h3 data-number="6.2.2" class="anchored" data-anchor-id="la-dispersion"><span class="header-section-number">6.2.2</span> La dispersion</h3>
 <p>L’<strong>écart type</strong> mesure l’éloignement typique à la moyenne ; il est sensible aux valeurs extrêmes. L’<strong>écart interquartile</strong> (Q3 − Q1) délimite la moitié centrale des observations et y résiste.</p>
-<div id="b5ee85de" class="cell" data-execution_count="4">
+<div id="491fae6d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(e23[<span class="st">"roa"</span>].describe().<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>count    32.000
@@ -402,7 +453,7 @@ max       0.453
 Name: roa, dtype: float64</code></pre>
 </div>
 </div>
-<div id="6cf3f653" class="cell" data-execution_count="5">
+<div id="99a85022" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(e23.groupby(<span class="st">"secteur"</span>)[<span class="st">"roa"</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    .agg(n<span class="op">=</span><span class="st">"count"</span>, moyenne<span class="op">=</span><span class="st">"mean"</span>, mediane<span class="op">=</span><span class="st">"median"</span>, ecart_type<span class="op">=</span><span class="st">"std"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">"mediane"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -533,7 +584,7 @@ Figure&nbsp;6.1: Chiffre d’affaires 2023 des 32 entreprises, en milliards de d
 <p><span class="math display">\[
 \text{ET}(\bar x) = \frac{s}{\sqrt{n}}
 \]</span></p>
-<div id="677329fa" class="cell" data-execution_count="7">
+<div id="a0be056b" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>roa <span class="op">=</span> e23[<span class="st">"roa"</span>].dropna()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n, moy, s <span class="op">=</span> <span class="bu">len</span>(roa), roa.mean(), roa.std()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>et <span class="op">=</span> s <span class="op">/</span> np.sqrt(n)</span>
@@ -545,7 +596,7 @@ Figure&nbsp;6.1: Chiffre d’affaires 2023 des 32 entreprises, en milliards de d
 </div>
 <p>L’intervalle de confiance à 95 % se lit ainsi : si l’on répétait l’échantillonnage un grand nombre de fois, 95 % des intervalles construits de cette façon contiendraient la vraie moyenne. Il ne dit pas qu’il y a 95 % de chances que la vraie moyenne soit dans <strong>cet</strong> intervalle-ci ; la vraie moyenne n’est pas aléatoire, c’est l’intervalle qui l’est. La nuance paraît scolastique ; elle devient importante dès que l’on compare deux intervalles.</p>
 <p>Le <strong>bootstrap</strong> reprend la même idée sans formule : on ré-échantillonne nos propres données, avec remise, des milliers de fois, et l’on regarde comment varie la statistique.</p>
-<div id="a434672b" class="cell" data-execution_count="8">
+<div id="fcd95bef" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">60</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>boot_moy <span class="op">=</span> [rng.choice(roa.values, size<span class="op">=</span>n).mean() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>boot_med <span class="op">=</span> [np.median(rng.choice(roa.values, size<span class="op">=</span>n)) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>)]</span>
@@ -557,15 +608,50 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 </div>
 </div>
 <p>Les deux méthodes donnent des intervalles voisins pour la moyenne. Le bootstrap a l’avantage de s’appliquer tel quel à la médiane, pour laquelle il n’existe pas de formule simple.</p>
+<section id="ce-que-95-veut-dire" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="ce-que-95-veut-dire"><span class="header-section-number">6.3.1</span> Ce que « 95 % » veut dire</h3>
+<p>La lecture correcte d’un intervalle de confiance porte sur la <strong>méthode</strong>, pas sur un intervalle particulier. Pour la voir, il faut une population dont on connaît la vraie moyenne. La galerie utilise les 944 répondants de l’enquête électorale américaine de 1996 : leur âge moyen est connu, et l’on peut y tirer cent sondages de trente personnes (<a href="#fig-s06-couverture" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>).</p>
+<div id="cell-fig-s06-couverture" class="cell" data-fig-height="4.6" data-fig-width="7" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>age <span class="op">=</span> sm.datasets.anes96.load_pandas().data[<span class="st">"age"</span>].to_numpy()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">2024</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mu, n_s, reps <span class="op">=</span> age.mean(), <span class="dv">30</span>, <span class="dv">100</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>ech <span class="op">=</span> np.array([rng.choice(age, n_s, replace<span class="op">=</span><span class="va">False</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(reps)])</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>bas_s, haut_s <span class="op">=</span> stats.t.interval(<span class="fl">0.95</span>, df<span class="op">=</span>n_s <span class="op">-</span> <span class="dv">1</span>, loc<span class="op">=</span>ech.mean(axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                                 scale<span class="op">=</span>ech.std(axis<span class="op">=</span><span class="dv">1</span>, ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(n_s))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> (bas_s <span class="op">&gt;</span> mu) <span class="op">|</span> (haut_s <span class="op">&lt;</span> mu)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">4.6</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.arange(<span class="dv">1</span>, reps <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>ax.hlines(y, bas_s, haut_s, color<span class="op">=</span>np.where(rate, ROUGE, <span class="st">"#7FB8FF"</span>), lw<span class="op">=</span>np.where(rate, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>ax.axvline(mu, color<span class="op">=</span><span class="st">"#1D1D1F"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Âge moyen, IC à 95 % (années)"</span>, ylabel<span class="op">=</span><span class="st">"Sondage"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>ax.grid(axis<span class="op">=</span><span class="st">"y"</span>, visible<span class="op">=</span><span class="va">False</span>)<span class="op">;</span> ax.grid(axis<span class="op">=</span><span class="st">"x"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"</span><span class="sc">{</span>reps <span class="op">-</span> rate<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> intervalles sur </span><span class="sc">{</span>reps<span class="sc">}</span><span class="ss"> contiennent l'âge moyen (</span><span class="sc">{</span>mu<span class="sc">:.1f}</span><span class="ss"> ans)"</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-s06-couverture" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-s06-couverture-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-06_files/figure-html/fig-s06-couverture-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-couverture-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: Cent sondages de 30 personnes tirés des 944 répondants de l’enquête électorale américaine de 1996, avec leur intervalle de confiance à 95 % de l’âge moyen. En rouge, les intervalles qui ne contiennent pas la vraie moyenne. Adapté de PyStatlas, « Ce que veut dire un IC à 95 % ».
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Environ 95 intervalles sur 100 contiennent la vraie moyenne ; les autres la ratent sans que rien, de l’intérieur, ne les signale. Dans la pratique, on ne dispose que d’<strong>un</strong> sondage — une seule de ces lignes. Nos 32 entreprises en sont une, avec une réserve de taille : elles n’ont pas été tirées au hasard.</p>
+</section>
 </section>
 <section id="comparer" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="comparer"><span class="header-section-number">6.4</span> Comparer</h2>
 <section id="la-logique-dun-test" class="level3" data-number="6.4.1">
 <h3 data-number="6.4.1" class="anchored" data-anchor-id="la-logique-dun-test"><span class="header-section-number">6.4.1</span> La logique d’un test</h3>
 <p>Un test statistique part d’une <strong>hypothèse nulle</strong> — « le ROA moyen est nul », « les deux groupes ont la même moyenne » — et calcule la probabilité d’observer un écart au moins aussi grand que celui des données <strong>si cette hypothèse était vraie</strong>. Cette probabilité est la <strong>valeur p</strong>.</p>
-<div id="ad784585" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> stats.ttest_1samp(roa, popmean<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"t = </span><span class="sc">{</span>t1<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>t1<span class="sc">.</span>pvalue<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0123520b" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> stats.ttest_1samp(roa, popmean<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"t = </span><span class="sc">{</span>t1<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>t1<span class="sc">.</span>pvalue<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>t = 5.88, p = 1.8e-06</code></pre>
 </div>
@@ -575,12 +661,12 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <section id="deux-groupes-indépendants" class="level3" data-number="6.4.2">
 <h3 data-number="6.4.2" class="anchored" data-anchor-id="deux-groupes-indépendants"><span class="header-section-number">6.4.2</span> Deux groupes indépendants</h3>
 <p>Les entreprises technologiques sont-elles plus rentables que les autres ?</p>
-<div id="e7734351" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tech <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">==</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>autres <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">!=</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>welch <span class="op">=</span> stats.ttest_ind(tech, autres, equal_var<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tech : n = </span><span class="sc">{</span><span class="bu">len</span>(tech)<span class="sc">}</span><span class="ss">, moyenne = </span><span class="sc">{</span>tech<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> · Autres : n = </span><span class="sc">{</span><span class="bu">len</span>(autres)<span class="sc">}</span><span class="ss">, moyenne = </span><span class="sc">{</span>autres<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Écart = </span><span class="sc">{</span>tech<span class="sc">.</span>mean() <span class="op">-</span> autres<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, t = </span><span class="sc">{</span>welch<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>welch<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="79439d58" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tech <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">==</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>autres <span class="op">=</span> e23.loc[e23[<span class="st">"secteur"</span>] <span class="op">!=</span> <span class="st">"Technologie"</span>, <span class="st">"roa"</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>welch <span class="op">=</span> stats.ttest_ind(tech, autres, equal_var<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tech : n = </span><span class="sc">{</span><span class="bu">len</span>(tech)<span class="sc">}</span><span class="ss">, moyenne = </span><span class="sc">{</span>tech<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> · Autres : n = </span><span class="sc">{</span><span class="bu">len</span>(autres)<span class="sc">}</span><span class="ss">, moyenne = </span><span class="sc">{</span>autres<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Écart = </span><span class="sc">{</span>tech<span class="sc">.</span>mean() <span class="op">-</span> autres<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, t = </span><span class="sc">{</span>welch<span class="sc">.</span>statistic<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>welch<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Tech : n = 7, moyenne = 0.186 · Autres : n = 25, moyenne = 0.080
 Écart = +0.106, t = 1.85, p = 0.108</code></pre>
@@ -592,12 +678,12 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <section id="deux-séries-appariées" class="level3" data-number="6.4.3">
 <h3 data-number="6.4.3" class="anchored" data-anchor-id="deux-séries-appariées"><span class="header-section-number">6.4.3</span> Deux séries appariées</h3>
 <p>Tesla et Ford sont observées les mêmes années : on peut les comparer <strong>année par année</strong>, ce qui élimine tout ce que les deux entreprises partagent une année donnée (la conjoncture, les taux, la pandémie).</p>
-<div id="ba363646" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> (entreprises[entreprises[<span class="st">"ticker"</span>].isin([<span class="st">"TSLA"</span>, <span class="st">"F"</span>])]</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      .pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"ticker"</span>, values<span class="op">=</span><span class="st">"marge"</span>))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>tf[<span class="st">"ecart"</span>] <span class="op">=</span> tf[<span class="st">"TSLA"</span>] <span class="op">-</span> tf[<span class="st">"F"</span>]</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>tf.<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div id="2c7576f5" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> (entreprises[entreprises[<span class="st">"ticker"</span>].isin([<span class="st">"TSLA"</span>, <span class="st">"F"</span>])]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>      .pivot(index<span class="op">=</span><span class="st">"annee"</span>, columns<span class="op">=</span><span class="st">"ticker"</span>, values<span class="op">=</span><span class="st">"marge"</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>tf[<span class="st">"ecart"</span>] <span class="op">=</span> tf[<span class="st">"TSLA"</span>] <span class="op">-</span> tf[<span class="st">"F"</span>]</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>tf.<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 
 
@@ -713,11 +799,11 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 </div>
 </div>
 </div>
-<div id="78fa4bb4" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p_tout <span class="op">=</span> stats.ttest_rel(tf[<span class="st">"TSLA"</span>], tf[<span class="st">"F"</span>])</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p_rec <span class="op">=</span> stats.ttest_rel(tf.loc[<span class="dv">2020</span>:, <span class="st">"TSLA"</span>], tf.loc[<span class="dv">2020</span>:, <span class="st">"F"</span>])</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2010-2024 : écart moyen </span><span class="sc">{</span>tf[<span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_tout<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2020-2024 : écart moyen </span><span class="sc">{</span>tf<span class="sc">.</span>loc[<span class="dv">2020</span>:, <span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_rec<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1be0d1d4" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p_tout <span class="op">=</span> stats.ttest_rel(tf[<span class="st">"TSLA"</span>], tf[<span class="st">"F"</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>p_rec <span class="op">=</span> stats.ttest_rel(tf.loc[<span class="dv">2020</span>:, <span class="st">"TSLA"</span>], tf.loc[<span class="dv">2020</span>:, <span class="st">"F"</span>])</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2010-2024 : écart moyen </span><span class="sc">{</span>tf[<span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_tout<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"2020-2024 : écart moyen </span><span class="sc">{</span>tf<span class="sc">.</span>loc[<span class="dv">2020</span>:, <span class="st">'ecart'</span>]<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p_rec<span class="sc">.</span>pvalue<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2010-2024 : écart moyen -0.291, p = 0.048
 2020-2024 : écart moyen +0.069, p = 0.121</code></pre>
@@ -731,6 +817,7 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <p>L’American Statistical Association a jugé nécessaire, en 2016, de rappeler six principes sur la valeur p <span class="citation" data-cites="wasserstein2016">(<a href="#ref-wasserstein2016" role="doc-biblioref">Wasserstein et Lazar 2016</a>)</span>. Quatre d’entre eux concernent directement le gestionnaire. Une valeur p mesure l’incompatibilité des données avec un modèle précis ; elle n’est <strong>pas</strong> la probabilité que l’hypothèse étudiée soit vraie ; elle ne mesure <strong>pas</strong> l’ampleur ni l’importance d’un effet ; et elle ne devrait <strong>pas</strong>, à elle seule, fonder une décision.</p>
 <p>Le contresens le plus coûteux est de lire « non significatif » comme « aucun effet ». L’exemple du secteur technologique le montre : un écart de plusieurs points, mesuré sur sept entreprises, peut ne pas être significatif tout en étant important. Le contresens symétrique — « significatif » donc « important » — n’est pas moins répandu, et une littérature entière montre comment la recherche de résultats significatifs, multipliée par la liberté de choisir ses spécifications, remplit les revues de résultats fragiles <span class="citation" data-cites="ioannidis2005">(<a href="#ref-ioannidis2005" role="doc-biblioref">Ioannidis 2005</a>)</span>. En management, Miller et Bamberger plaident pour l’inverse : publier et lire les réplications et les <strong>résultats nuls</strong> comme des découvertes à part entière <span class="citation" data-cites="millerbamberger2016">(<a href="#ref-millerbamberger2016" role="doc-biblioref">Miller et Bamberger 2016</a>)</span>.</p>
 <p>La règle de ce cours en découle : on rapporte d’abord l’<strong>écart en unités</strong>, puis son <strong>intervalle de confiance</strong>, et seulement ensuite la valeur p.</p>
+<p>Le <a href="https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/">graphique d’estimation</a> de la galerie met cette règle en image : à gauche, chaque observation des deux groupes ; à droite, l’écart de moyennes, sur un axe dont le zéro est la moyenne du premier groupe, avec la distribution bootstrap de l’écart et son intervalle. L’exemple de la galerie compare la criminalité violente des États pauvres et moins pauvres. Appliqué à nos sept entreprises technologiques, il montre aussi une limite : avec si peu d’observations, l’intervalle bootstrap, qui ne connaît que les valeurs observées, est plus étroit que celui du test de Welch. Quand deux méthodes honnêtes divergent sur un petit échantillon, la conclusion prudente l’emporte.</p>
 </section>
 </section>
 <section id="relier" class="level2" data-number="6.5">
@@ -738,16 +825,16 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <section id="corrélations" class="level3" data-number="6.5.1">
 <h3 data-number="6.5.1" class="anchored" data-anchor-id="corrélations"><span class="header-section-number">6.5.1</span> Corrélations</h3>
 <p>Les entreprises qui investissent en R-D ont-elles de meilleures marges ? Le premier geste est toujours le nuage de points.</p>
-<div id="cell-fig-s06-nuage" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"marge"</span>])</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">4</span>))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>], color<span class="op">=</span>CL.ink)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, r <span class="kw">in</span> x.iterrows():</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    ax.annotate(r[<span class="st">"ticker"</span>], (r[<span class="st">"intensite_rd"</span>], r[<span class="st">"marge"</span>]), fontsize<span class="op">=</span><span class="dv">8</span>,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>CL.muted, xytext<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Intensité de R-D (R-D / ventes)"</span>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Marge nette"</span>)</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-fig-s06-nuage" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"marge"</span>])</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">4</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>], color<span class="op">=</span>CL.ink)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, r <span class="kw">in</span> x.iterrows():</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    ax.annotate(r[<span class="st">"ticker"</span>], (r[<span class="st">"intensite_rd"</span>], r[<span class="st">"marge"</span>]), fontsize<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>CL.muted, xytext<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Intensité de R-D (R-D / ventes)"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Marge nette"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-s06-nuage" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -755,28 +842,30 @@ IC bootstrap de la médiane : [0.075 ; 0.121]</code></pre>
 <img src="seance-06_files/figure-html/fig-s06-nuage-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.2: Intensité de R-D et marge nette en 2023, pour les entreprises qui publient leur R-D.
+Figure&nbsp;6.3: Intensité de R-D et marge nette en 2023, pour les entreprises qui publient leur R-D.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div id="4c7342ee" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pear <span class="op">=</span> stats.pearsonr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>spear <span class="op">=</span> stats.spearmanr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"n = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ss"> · Pearson r = </span><span class="sc">{</span>pear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>pear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">) · Spearman rho = </span><span class="sc">{</span>spear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>spear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="afa9cc1a" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pear <span class="op">=</span> stats.pearsonr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>spear <span class="op">=</span> stats.spearmanr(x[<span class="st">"intensite_rd"</span>], x[<span class="st">"marge"</span>])</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"n = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ss"> · Pearson r = </span><span class="sc">{</span>pear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>pear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">) · Spearman rho = </span><span class="sc">{</span>spear<span class="sc">.</span>statistic<span class="sc">:+.3f}</span><span class="ss"> (p = </span><span class="sc">{</span>spear<span class="sc">.</span>pvalue<span class="sc">:.2f}</span><span class="ss">)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>n = 23 · Pearson r = +0.054 (p = 0.81) · Spearman rho = +0.123 (p = 0.58)</code></pre>
 </div>
 </div>
 <p>La corrélation de <strong>Pearson</strong> mesure une relation linéaire, et une seule observation extrême peut la fabriquer ou l’effacer. Celle de <strong>Spearman</strong> travaille sur les rangs : elle mesure une relation monotone, quelle qu’en soit la forme, et résiste aux extrêmes. Ici, sur 23 entreprises, les deux sont proches de zéro (r = +0.05, rho = +0.12) : en 2023, on ne détecte <strong>aucune relation</strong> entre intensité de R-D et marge nette. Neuf entreprises n’entrent pas dans ce calcul, parce qu’elles ne publient pas de ligne de R-D ; la réponse ne porte que sur celles qui le font.</p>
-<div id="cell-fig-s06-corr" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"roa"</span>, <span class="st">"marge"</span>, <span class="st">"intensite_rd"</span>, <span class="st">"chiffre_affaires"</span>, <span class="st">"actifs_totaux"</span>]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.6</span>, <span class="fl">4.2</span>))</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>sns.heatmap(e23[cols].corr(method<span class="op">=</span><span class="st">"spearman"</span>), annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, cbar<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-fig-s06-corr" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"roa"</span>, <span class="st">"marge"</span>, <span class="st">"intensite_rd"</span>, <span class="st">"chiffre_affaires"</span>, <span class="st">"actifs_totaux"</span>]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.6</span>, <span class="fl">4.2</span>))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>sns.heatmap(e23[cols].corr(method<span class="op">=</span><span class="st">"spearman"</span>), annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>            cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, cbar<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>ax.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">False</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-s06-corr" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -784,7 +873,7 @@ Figure&nbsp;6.2: Intensité de R-D et marge nette en 2023, pour les entreprises 
 <img src="seance-06_files/figure-html/fig-s06-corr-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.3: Corrélations de Spearman entre cinq variables, 2023.
+Figure&nbsp;6.4: Corrélations de Spearman entre cinq variables, 2023.
 </figcaption>
 </figure>
 </div>
@@ -797,10 +886,10 @@ Figure&nbsp;6.3: Corrélations de Spearman entre cinq variables, 2023.
 <p><span class="math display">\[
 \text{ROA}_i = \beta_0 + \beta_1 \times \text{intensité R-D}_i + \varepsilon_i
 \]</span></p>
-<div id="45e64826" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])).fit()</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m.summary().tables[<span class="dv">1</span>])</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² = </span><span class="sc">{</span>m<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, n = </span><span class="sc">{</span><span class="bu">int</span>(m.nobs)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4073bc05" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>e23.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])).fit()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m.summary().tables[<span class="dv">1</span>])</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² = </span><span class="sc">{</span>m<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, n = </span><span class="sc">{</span><span class="bu">int</span>(m.nobs)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>================================================================================
                    coef    std err          t      P&gt;|t|      [0.025      0.975]
@@ -820,14 +909,14 @@ R² = 0.001, n = 23</code></pre>
 <section id="un-panel-nest-pas-un-échantillon-plus-grand" class="level3" data-number="6.6.1">
 <h3 data-number="6.6.1" class="anchored" data-anchor-id="un-panel-nest-pas-un-échantillon-plus-grand"><span class="header-section-number">6.6.1</span> Un panel n’est pas un échantillon plus grand</h3>
 <p>Il est tentant d’empiler les quinze années pour gagner des observations.</p>
-<div id="98f4d729" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>panel <span class="op">=</span> entreprises.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>naif <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit()</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>grappe <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit(</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">int</span>(naif.nobs)<span class="sc">}</span><span class="ss"> lignes, </span><span class="sc">{</span>panel[<span class="st">'ticker'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss"> entreprises"</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Naïf     : coef = </span><span class="sc">{</span>naif<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, ET = </span><span class="sc">{</span>naif<span class="sc">.</span>bse[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>naif<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Grappes  : coef = </span><span class="sc">{</span>grappe<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, ET = </span><span class="sc">{</span>grappe<span class="sc">.</span>bse[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>grappe<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f587beec" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>panel <span class="op">=</span> entreprises.dropna(subset<span class="op">=</span>[<span class="st">"intensite_rd"</span>, <span class="st">"roa"</span>])</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>naif <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>grappe <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd"</span>, data<span class="op">=</span>panel).fit(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">int</span>(naif.nobs)<span class="sc">}</span><span class="ss"> lignes, </span><span class="sc">{</span>panel[<span class="st">'ticker'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss"> entreprises"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Naïf     : coef = </span><span class="sc">{</span>naif<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, ET = </span><span class="sc">{</span>naif<span class="sc">.</span>bse[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>naif<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Grappes  : coef = </span><span class="sc">{</span>grappe<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, ET = </span><span class="sc">{</span>grappe<span class="sc">.</span>bse[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>grappe<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>343 lignes, 24 entreprises
 Naïf     : coef = -0.167, ET = 0.041, p = 0.000
@@ -838,26 +927,55 @@ Grappes  : coef = -0.167, ET = 0.186, p = 0.369</code></pre>
 </section>
 <section id="contrôler-le-secteur" class="level3" data-number="6.6.2">
 <h3 data-number="6.6.2" class="anchored" data-anchor-id="contrôler-le-secteur"><span class="header-section-number">6.6.2</span> Contrôler le secteur</h3>
-<div id="16d81e64" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>secteur <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd + C(secteur)"</span>, data<span class="op">=</span>panel).fit(</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Avec secteur : coef = </span><span class="sc">{</span>secteur<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>secteur<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="93b9218c" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>secteur <span class="op">=</span> smf.ols(<span class="st">"roa ~ intensite_rd + C(secteur)"</span>, data<span class="op">=</span>panel).fit(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"cluster"</span>, cov_kwds<span class="op">=</span>{<span class="st">"groups"</span>: panel[<span class="st">"ticker"</span>]})</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Avec secteur : coef = </span><span class="sc">{</span>secteur<span class="sc">.</span>params[<span class="st">'intensite_rd'</span>]<span class="sc">:+.3f}</span><span class="ss">, p = </span><span class="sc">{</span>secteur<span class="sc">.</span>pvalues[<span class="st">'intensite_rd'</span>]<span class="sc">:.2g}</span><span class="ss">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Avec secteur : coef = -0.421, p = 2.4e-09</code></pre>
 </div>
 </div>
 <p><code>C(secteur)</code> ajoute une constante par secteur : on compare désormais les observations <strong>à l’intérieur</strong> de leur secteur. Le coefficient passe de -0.17 à -0.42, et devient nettement différent de zéro. À secteur égal, les observations (entreprise-année) à forte intensité de R-D vont avec un ROA <strong>plus faible</strong>. Le secteur masquait donc une relation négative.</p>
-<div id="cell-fig-s06-tesla" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">4</span>))</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(panel[<span class="st">"intensite_rd"</span>], panel[<span class="st">"roa"</span>], color<span class="op">=</span>CL.muted, s<span class="op">=</span><span class="dv">12</span>, label<span class="op">=</span><span class="st">"autres entreprises-années"</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> panel[panel[<span class="st">"ticker"</span>] <span class="op">==</span> <span class="st">"TSLA"</span>]</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>ax.scatter(t[<span class="st">"intensite_rd"</span>], t[<span class="st">"roa"</span>], color<span class="op">=</span>CL.warn, s<span class="op">=</span><span class="dv">30</span>, label<span class="op">=</span><span class="st">"Tesla"</span>)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, r <span class="kw">in</span> t[t[<span class="st">"annee"</span>] <span class="op">&lt;=</span> <span class="dv">2012</span>].iterrows():</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="bu">int</span>(r[<span class="st">"annee"</span>]), (r[<span class="st">"intensite_rd"</span>], r[<span class="st">"roa"</span>]), fontsize<span class="op">=</span><span class="dv">8</span>,</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>CL.warn, xytext<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">0</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Intensité de R-D"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"ROA"</span>)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Le <a href="https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/">graphique de coefficients</a> de la galerie résume ces trois estimations d’un coup d’œil : un point par modèle, son intervalle, une ligne verticale à zéro (<a href="#fig-s06-coefs" class="quarto-xref">Figure&nbsp;<span>6.5</span></a>).</p>
+<div id="cell-fig-s06-coefs" class="cell" data-fig-height="2.8" data-fig-width="6.5" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>modeles <span class="op">=</span> {<span class="st">"Panel naïf"</span>: naif, <span class="st">"Erreurs par entreprise"</span>: grappe, <span class="st">"+ secteur"</span>: secteur}</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">2.8</span>))</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (nom, m) <span class="kw">in</span> <span class="bu">enumerate</span>(modeles.items()):</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> m.params[<span class="st">"intensite_rd"</span>]</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    bas_c, haut_c <span class="op">=</span> m.conf_int().loc[<span class="st">"intensite_rd"</span>]</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> BLEU <span class="cf">if</span> m.pvalues[<span class="st">"intensite_rd"</span>] <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">"#AEAEB2"</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    ax.hlines(i, bas_c, haut_c, color<span class="op">=</span>c, lw<span class="op">=</span><span class="fl">2.5</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    ax.scatter(b, i, s<span class="op">=</span><span class="dv">70</span>, color<span class="op">=</span>c, edgecolor<span class="op">=</span><span class="st">"white"</span>, lw<span class="op">=</span><span class="fl">1.5</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">0</span>, color<span class="op">=</span>GRIS, lw<span class="op">=</span><span class="dv">1</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>ax.set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(modeles)), <span class="bu">list</span>(modeles))</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="bu">len</span>(modeles) <span class="op">-</span> <span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.5</span>)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Effet de l'intensité de R-D sur le ROA, IC 95 %"</span>)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>ax.grid(axis<span class="op">=</span><span class="st">"x"</span>)<span class="op">;</span> ax.grid(axis<span class="op">=</span><span class="st">"y"</span>, visible<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-s06-coefs" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-s06-coefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="seance-06_files/figure-html/fig-s06-coefs-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-coefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.5: Le coefficient de l’intensité de R-D sur le ROA dans trois modèles, avec son intervalle de confiance à 95 %. Adapté de PyStatlas, « Graphique de coefficients ».
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-s06-tesla" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">4</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>ax.scatter(panel[<span class="st">"intensite_rd"</span>], panel[<span class="st">"roa"</span>], color<span class="op">=</span>CL.muted, s<span class="op">=</span><span class="dv">12</span>, label<span class="op">=</span><span class="st">"autres entreprises-années"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> panel[panel[<span class="st">"ticker"</span>] <span class="op">==</span> <span class="st">"TSLA"</span>]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>ax.scatter(t[<span class="st">"intensite_rd"</span>], t[<span class="st">"roa"</span>], color<span class="op">=</span>CL.warn, s<span class="op">=</span><span class="dv">30</span>, label<span class="op">=</span><span class="st">"Tesla"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, r <span class="kw">in</span> t[t[<span class="st">"annee"</span>] <span class="op">&lt;=</span> <span class="dv">2012</span>].iterrows():</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="bu">int</span>(r[<span class="st">"annee"</span>]), (r[<span class="st">"intensite_rd"</span>], r[<span class="st">"roa"</span>]), fontsize<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span>CL.warn, xytext<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">0</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Intensité de R-D"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"ROA"</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-s06-tesla" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -865,7 +983,7 @@ Grappes  : coef = -0.167, ET = 0.186, p = 0.369</code></pre>
 <img src="seance-06_files/figure-html/fig-s06-tesla-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-s06-tesla-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.4: Intensité de R-D et ROA, toutes les années. Les premières années de Tesla, en rouge, se situent loin du reste du nuage.
+Figure&nbsp;6.6: Intensité de R-D et ROA, toutes les années. Les premières années de Tesla, en rouge, se situent loin du reste du nuage.
 </figcaption>
 </figure>
 </div>
@@ -915,6 +1033,9 @@ Ioannidis, John P. A. 2005. <span>«&nbsp;Why Most Published Research Findings A
 </div>
 <div id="ref-millerbamberger2016" class="csl-entry" role="listitem">
 Miller, C. Chet, et Peter Bamberger. 2016. <span>«&nbsp;Exploring Emergent and Poorly Understood Phenomena in the Strangest of Places: The Footprint of Discovery in Replications, Meta-Analyses, and Null Findings&nbsp;»</span>. <em>Academy of Management Discoveries</em> 2 (4): 313‑19. <a href="https://doi.org/10.5465/amd.2016.0115">https://doi.org/10.5465/amd.2016.0115</a>.
+</div>
+<div id="ref-warin2026statlas" class="csl-entry" role="listitem">
+Warin, Thierry. 2026. <span>«&nbsp;PyStatlas: The Python Gallery of Statistical Graphics&nbsp;»</span>. <a href="https://warint.github.io/pystatlas/" class="uri">https://warint.github.io/pystatlas/</a>.
 </div>
 <div id="ref-wasserstein2016" class="csl-entry" role="listitem">
 Wasserstein, Ronald L., et Nicole A. Lazar. 2016. <span>«&nbsp;The ASA Statement on p-Values: Context, Process, and Purpose&nbsp;»</span>. <em>The American Statistician</em> 70 (2): 129‑33. <a href="https://doi.org/10.1080/00031305.2016.1154108">https://doi.org/10.1080/00031305.2016.1154108</a>.

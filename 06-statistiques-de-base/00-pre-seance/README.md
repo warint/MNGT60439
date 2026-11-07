@@ -3,14 +3,15 @@
 > **[Diapositives de la pré-séance](https://warint.github.io/MNGT60439/seance-06-pre-seance.html)** ·
 > source : [`MNGT60439-S06-Pre-Seance.qmd`](MNGT60439-S06-Pre-Seance.qmd)
 
-> Faites **les quatre étapes** avant le cours. Prévoyez environ 90 minutes.
+> Faites **les cinq étapes** avant le cours. Prévoyez environ 1 h 45.
 
 | | Avant le cours | Durée | Sert, en classe, à |
 |---|---|---|---|
 | **1** | Lire la déclaration de l'ASA sur les valeurs p | 30 min | lire un test sans contresens |
 | **2** | Revoir cinq notions | 30 min | suivre le cours sans redémonstration |
 | **3** | Préparer les données | 15 min | la pratique |
-| **4** | Autovérification | 15 min | le cours |
+| **4** | Lire trois graphiques de la galerie [PyStatlas](https://warint.github.io/pystatlas/fr/) | 15 min | lire les statistiques affichées sur un graphique |
+| **5** | Autovérification | 15 min | le cours |
 
 ---
 
@@ -54,7 +55,16 @@ print(e23[["roa", "marge", "intensite_rd"]].describe().round(3))
 
 Notez combien d'entreprises n'ont pas de R-D publiée en 2023, et lesquelles.
 
-## Étape 4 — Autovérification
+## Étape 4 — Lire trois graphiques de la galerie
+
+- [Ce que veut dire un IC à 95 %](https://warint.github.io/pystatlas/fr/inference-uncertainty/confidence-intervals/) — cent sondages tirés de l'enquête électorale américaine de 1996
+- [Graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) — criminalité violente des États pauvres et moins pauvres
+- [Graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) — ce qui prédit la criminalité violente des États
+
+Pour chacune : la question posée, ce que dit le sous-titre, une phrase que le graphique autorise
+et une qu'il n'autorise pas.
+
+## Étape 5 — Autovérification
 
 Répondez **par écrit** (rien n'est remis) :
 

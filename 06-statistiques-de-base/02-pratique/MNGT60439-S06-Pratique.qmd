@@ -76,6 +76,13 @@ Le fichier ne s'exécute pas tant que les `...` ne sont pas remplacés : c'est v
 cellule par cellule (`# %%`, puis `Maj + Entrée`).
 :::
 
+Gardez la galerie ouverte dans un onglet : **[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)**. Deux de vos
+résultats se **montrent** avec un graphique de la galerie, adapté comme à la séance 5.
+
+```python
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # déjà dans le fichier
+```
+
 ## 1 · Décrire — 15 min {.scrollable}
 
 ```python
@@ -116,19 +123,27 @@ Un groupe de onze entreprises, c'est peu. Si l'intervalle contient zéro, dites-
 réponse.
 :::
 
+::: {.step}
+**Montrez-le.** Adaptez le [graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) de la
+galerie : `low` et `high` sont déjà vos deux groupes dans le fichier. Enregistrez
+`sorties/s06_comparer.png`.
+:::
+
 ## 3 · Relier — 20 min {.scrollable}
 
 ```python
-stats.pearsonr(x["intensite_rd"], x["roa"])
-stats.spearmanr(x["intensite_rd"], x["roa"])
+stats.pearsonr(donnees["intensite_rd"], donnees["roa"])
+stats.spearmanr(donnees["intensite_rd"], donnees["roa"])
 
-m1 = smf.ols("roa ~ intensite_rd", data=x).fit()
-m2 = smf.ols("roa ~ intensite_rd + C(secteur)", data=x).fit()
+m1 = smf.ols("roa ~ intensite_rd", data=donnees).fit()
+m2 = smf.ols("roa ~ intensite_rd + C(secteur)", data=donnees).fit()
 ```
 
 ::: {.step}
-Faites le **nuage de points** avant de lire un seul coefficient. Nommez les deux entreprises les
-plus éloignées de la tendance.
+Faites le **nuage de points** avant de lire un seul coefficient — avec le
+[nuage de points avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) de la galerie (`x`, `y`
+déjà préparés dans le fichier : collez le script tel quel). Nommez les deux entreprises les plus éloignées de la tendance.
+Enregistrez `sorties/s06_relier.png`.
 :::
 
 ::: {.check}
@@ -145,6 +160,12 @@ Choisissez **une** expérience :
 | **a** | Retirez l'entreprise la plus extrême, refaites la section 3 | La robustesse aux valeurs extrêmes |
 | **b** | Empilez **toutes** les années, d'abord naïvement, puis avec `cov_type="cluster"` | L'indépendance des observations |
 
+::: {.muted}
+Pour (b), le [graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) montre d'un coup
+d'œil le même coefficient avec deux intervalles — comme la diapositive « Un coefficient, trois
+incertitudes » du cours.
+:::
+
 ::: {.check}
 C'est la partie qui compte le plus. Une équipe qui montre comment son résultat s'effondre le
 comprend ; une équipe qui ne montre que sa solidité ne le sait pas encore.
@@ -155,7 +176,7 @@ comprend ; une équipe qui ne montre que sa solidité ne le sait pas encore.
 200 mots dans `reponse.md`, déposé sur ZoneCours avec votre script :
 
 ::: {.tight}
-- L'écart, **en unités**, et son intervalle
+- L'écart, **en unités**, et son intervalle — avec vos deux figures (`s06_comparer.png`, `s06_relier.png`)
 - L'hypothèse que vous avez cassée, et ce qu'elle a fait à votre réponse
 - Ce que ce résultat **ne vous autorise pas** à recommander à un dirigeant
 :::

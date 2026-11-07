@@ -80,10 +80,11 @@ format:
 | **1** | Lire la déclaration de l'ASA | 30 min |
 | **2** | Revoir cinq notions | 30 min |
 | **3** | Préparer les données et exécuter le script de vérification | 15 min |
-| **4** | Répondre à l'autovérification | 15 min |
+| **4** | Lire trois graphiques de la galerie PyStatlas | 15 min |
+| **5** | Répondre à l'autovérification | 15 min |
 
 ::: {.warn}
-Le cours suppose les quatre étapes faites. La pratique suppose que votre `.venv` contient `scipy`
+Le cours suppose les cinq étapes faites. La pratique suppose que votre `.venv` contient `scipy`
 et `statsmodels` — c'est le cas si vous avez installé `requirements.txt` à la séance 1.
 :::
 
@@ -143,7 +144,25 @@ Combien d'entreprises ont une `intensite_rd` manquante en 2023 ? Lesquelles ? No
 la première limite de toute analyse de la R-D sur ces données.
 :::
 
-## 4 · Autovérification {.scrollable}
+## 4 · Lire trois graphiques de la galerie {.scrollable}
+
+La galerie PyStatlas, vue à la séance 5, montre chaque notion de la séance 6 sur de vraies données
+de sciences sociales. Ouvrez ces trois pages :
+
+| | Page | L'exemple |
+|---|---|---|
+| **1** | [Ce que veut dire un IC à 95 %](https://warint.github.io/pystatlas/fr/inference-uncertainty/confidence-intervals/) | cent sondages tirés des 944 répondants de l'enquête électorale américaine de 1996 |
+| **2** | [Graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) | criminalité violente des États pauvres et moins pauvres |
+| **3** | [Graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) | ce qui prédit la criminalité violente des États |
+
+Pour chacune, notez : la **question** posée ; ce que dit le **sous-titre** (n, statistique,
+intervalle, p) ; une phrase que le graphique **autorise** et une qu'il **n'autorise pas**.
+
+::: {.muted}
+Inutile d'exécuter ces scripts : on les adaptera en classe à nos entreprises.
+:::
+
+## 5 · Autovérification {.scrollable}
 
 Répondez **par écrit**. Rien n'est remis, mais le cours suppose que vous avez essayé.
 

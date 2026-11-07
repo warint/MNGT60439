@@ -12,8 +12,8 @@ voulu ; avancez cellule par cellule (`# %%`).
 | Minutes | Étape |
 |---|---|
 | 00–15 | **Décrire** : fixer l'année *avant* de calculer ; ROA ; qui publie sa R-D |
-| 15–35 | **Comparer** : forte contre faible R-D (médiane) ; écart en points, IC bootstrap, test de Welch |
-| 35–55 | **Relier** : nuage de points, Pearson, Spearman ; `roa ~ intensite_rd`, puis `+ C(secteur)` |
+| 15–35 | **Comparer** : forte contre faible R-D (médiane) ; écart en points, IC bootstrap, test de Welch ; [graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) → `sorties/s06_comparer.png` |
+| 35–55 | **Relier** : [nuage de points avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) → `sorties/s06_relier.png`, Pearson, Spearman ; `roa ~ intensite_rd`, puis `+ C(secteur)` |
 | 55–70 | **Casser** une hypothèse : retirer l'extrême, *ou* empiler les années avec et sans erreurs regroupées |
 | 70–90 | **Écrire** 200 mots ; deux minutes devant la classe (présentateur tiré au hasard) |
 
@@ -22,7 +22,7 @@ intervalle ; « pas significatif, donc aucun effet » ; un panel traité comme d
 indépendantes ; une causalité tirée d'une corrélation ; une année choisie après avoir vu les
 résultats.
 
-**Remise (ZoneCours) :** `seance06_atelier.py` complété et `reponse.md`. Compte pour la
+**Remise (ZoneCours) :** `seance06_atelier.py` complété, `reponse.md` et les deux figures. Compte pour la
 participation.
 
 [← Retour à la séance 06](../README.md)

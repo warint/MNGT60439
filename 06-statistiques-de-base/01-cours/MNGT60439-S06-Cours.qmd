@@ -41,6 +41,8 @@ from scipy import stats
 import statsmodels.formula.api as smf
 from plotstyle import setup, CL
 plt = setup()
+plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # le style de la galerie (séance 5)
+BLEU, ORANGE, VERT, ROUGE, GRIS = "#007AFF", "#FF9500", "#34C759", "#FF3B30", "#8E8E93"
 
 entreprises = pd.read_csv("data/entreprises.csv")
 entreprises["roa"] = entreprises["resultat_net"] / entreprises["actifs_totaux"]
@@ -66,7 +68,7 @@ _m_sec = smf.ols("roa ~ intensite_rd + C(secteur)", data=_panel).fit(cov_type="c
 
 ## Plan · La séance {.center .scrollable}
 
-1. Deux manchettes, revues avec de l'incertitude
+1. Deux manchettes, revues avec de l'incertitude — et la galerie PyStatlas pour les voir
 2. Décrire : centre, dispersion, forme
 3. De l'échantillon à la population : erreur type et intervalle de confiance
 4. Comparer : le test t, et ce qu'une valeur p n'est pas
@@ -109,6 +111,26 @@ _m_sec = smf.ols("roa ~ intensite_rd + C(secteur)", data=_panel).fit(cov_type="c
 ::::
 
 :::::
+
+## Voir la statistique : la galerie PyStatlas {.scrollable}
+
+À la séance 5, on adaptait la **forme** des graphiques de la galerie. Aujourd'hui, on lit les
+**chiffres** qu'ils affichent. Chaque notion de la séance a son graphique, et la galerie le montre
+déjà sur des données de sciences sociales.
+
+| Notion | Graphique de la galerie | L'exemple de la galerie |
+|---|---|---|
+| La forme d'une distribution | [Diagramme Q–Q](https://warint.github.io/pystatlas/fr/distributions/qq-plot/) | revenus de 235 ménages belges (Engel), bruts puis en log |
+| L'intervalle de confiance | [Ce que veut dire un IC à 95 %](https://warint.github.io/pystatlas/fr/inference-uncertainty/confidence-intervals/) | âge moyen des 944 répondants de l'enquête électorale américaine de 1996 |
+| Le bootstrap | [Distribution bootstrap](https://warint.github.io/pystatlas/fr/inference-uncertainty/bootstrap-distribution/) | criminalité et familles monoparentales, 51 États |
+| Comparer deux groupes | [Graphique d'estimation](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) | criminalité violente des États pauvres et moins pauvres |
+| Relier deux variables | [Nuage avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/), [matrice de corrélation](https://warint.github.io/pystatlas/fr/correlation/correlation-matrix/) | districts scolaires californiens ; criminalité des États |
+| Régresser | [Graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) | ce qui prédit la criminalité violente des États |
+
+::: {.step}
+Dans les diapositives qui suivent, chaque graphique de la galerie est adapté à **nos** entreprises,
+avec les quatre gestes de la séance 5 : trouver, copier, remplacer, réécrire.
+:::
 
 # Deux manchettes, revues {background-color="#E3120B" style="color:#F7F4ED"}
 
@@ -211,6 +233,9 @@ plt.show()
 Le logarithme rend la distribution plus symétrique. On l'utilise souvent pour les variables de
 **taille** — à condition de rappeler, en interprétant, que l'on parle alors d'écarts **relatifs**.
 
+*Exemple de la galerie : [diagramme Q–Q](https://warint.github.io/pystatlas/fr/distributions/qq-plot/) — les revenus de 235 ménages
+belges, très asymétriques, deviennent presque normaux en log. Même leçon, autres données.*
+
 # De l'échantillon à la population {background-color="#E3120B" style="color:#F7F4ED"}
 
 ## Ce que nos 32 entreprises représentent {.scrollable}
@@ -257,6 +282,55 @@ Lecture incorrecte, mais courante : « il y a 95 % de chances que la vraie moyen
 *cet* intervalle ». La vraie moyenne n'est pas aléatoire ; c'est l'intervalle qui l'est.
 :::
 
+## Ce que « 95 % » veut dire : l'exemple de la galerie {.scrollable}
+
+[inference-uncertainty/confidence-intervals](https://warint.github.io/pystatlas/fr/inference-uncertainty/confidence-intervals/) ·
+une **population connue** — les 944 répondants de l'enquête électorale américaine de 1996 — et
+cent sondages de 30 personnes chacun.
+
+```{python}
+#| output-location: slide
+#| fig-width: 10
+#| fig-height: 5.6
+import statsmodels.api as sm
+
+age = sm.datasets.anes96.load_pandas().data["age"].to_numpy()     # la population : 944 personnes
+rng = np.random.default_rng(2024)
+mu, n_s, reps = age.mean(), 30, 100
+echantillons = np.array([rng.choice(age, n_s, replace=False) for _ in range(reps)])
+m_s = echantillons.mean(axis=1)
+et_s = echantillons.std(axis=1, ddof=1) / np.sqrt(n_s)
+bas_s, haut_s = stats.t.interval(0.95, df=n_s - 1, loc=m_s, scale=et_s)
+rate = (bas_s > mu) | (haut_s < mu)
+
+fig, ax = plt.subplots(figsize=(10, 5.6))
+y = np.arange(1, reps + 1)
+couleurs = np.where(rate, ROUGE, "#7FB8FF")
+ax.hlines(y, bas_s, haut_s, color=couleurs, lw=np.where(rate, 2.2, 1.2))
+ax.scatter(m_s, y, s=np.where(rate, 16, 9), color=couleurs, zorder=3, lw=0)
+ax.axvline(mu, color="#1D1D1F", ls="--", lw=1.2)
+ax.set_yticks([1, 25, 50, 75, 100])
+ax.set(xlabel="Âge moyen et son intervalle de confiance à 95 % (années)", ylabel="Sondage")
+ax.grid(axis="y", visible=False); ax.grid(axis="x")
+ax.set_title(f"{reps - rate.sum()} intervalles sur {reps} contiennent le vrai âge moyen ({mu:.1f} ans)", pad=26)
+ax.text(0, 1.02, f"Chaque sondage : n = {n_s} parmi {len(age)} répondants · en rouge, les {rate.sum()} intervalles qui ratent",
+        transform=ax.transAxes, fontsize=10, color="#6E6E73")
+plt.show()
+```
+
+## Ce que montre la figure {.scrollable}
+
+- Chaque ligne est un sondage ; chaque sondage donne un intervalle **différent**.
+- Environ 95 sur 100 contiennent la vraie moyenne ; quelques-uns la ratent, **sans que rien ne
+  les distingue** de l'intérieur.
+- Dans la vraie vie, on n'a qu'**un** sondage — une seule ligne — et on ne sait pas laquelle.
+
+::: {.step}
+Nos 32 entreprises sont **une** de ces lignes. L'intervalle du ROA moyen calculé plus haut est
+fiable au sens de cette figure — à condition que l'échantillon ait été tiré au hasard, ce qui
+n'est pas le cas (diapositive « Ce que nos 32 entreprises représentent »).
+:::
+
 ## Le bootstrap : la même idée, sans formule {.scrollable}
 
 On ré-échantillonne **nos propres données**, avec remise, des milliers de fois.
@@ -272,6 +346,39 @@ print(f"IC bootstrap de la MÉDIANE : [{np.percentile(mediane_boot, 2.5):.3f} ; 
 ```
 
 Utile quand il n'existe pas de formule simple — pour une médiane, par exemple.
+
+## Voir le bootstrap {.scrollable}
+
+[inference-uncertainty/bootstrap-distribution](https://warint.github.io/pystatlas/fr/inference-uncertainty/bootstrap-distribution/) ·
+adapté à la médiane du ROA de nos 32 entreprises.
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 4.4
+mediane_boot = np.array(mediane_boot)
+bas_m, haut_m = np.percentile(mediane_boot, [2.5, 97.5])
+fig, ax = plt.subplots(figsize=(6, 4.4))
+compte, bords, barres = ax.hist(mediane_boot, bins=40,
+                                color="#C7C7CC", edgecolor="white")
+for b, g in zip(barres, bords[:-1]):          # en bleu : l'intervalle à 95 %
+    if bas_m <= g <= haut_m:
+        b.set_facecolor(BLEU); b.set_alpha(0.75)
+ax.axvline(roa.median(), color=ORANGE, lw=2)
+ax.set(xlabel="Médiane du ROA, échantillon rééchantillonné",
+       ylabel="Rééchantillons")
+ax.set_title(f"Médiane {roa.median():.3f}, IC 95 % "
+             f"[{bas_m:.3f} ; {haut_m:.3f}]", pad=20)
+ax.text(0, 1.02, f"5 000 rééchantillons · n = {n} entreprises",
+        transform=ax.transAxes, fontsize=9, color="#6E6E73")
+plt.show()
+```
+
+La distribution est **irrégulière** : avec 32 entreprises, la médiane ne peut prendre que
+quelques valeurs. Le bootstrap le montre au lieu de le cacher.
+
+*Exemple de la galerie : la corrélation entre criminalité et familles monoparentales dans les
+51 États, avec deux intervalles bootstrap (percentile et BCa) côte à côte.*
 
 # Comparer {background-color="#E3120B" style="color:#F7F4ED"}
 
@@ -322,6 +429,81 @@ L'écart observé est de `{python} f"{_tech.mean() - _autres.mean():.3f}"` (envi
 ::: {.warn}
 « Pas significatif » ne veut pas dire « pas de différence ». Cela veut dire que **ces données**
 ne suffisent pas à l'établir. Un résultat nul bien documenté est un résultat.
+:::
+
+## Montrer l'écart, pas seulement p : le graphique d'estimation {.scrollable}
+
+[group-comparisons/estimation-plot](https://warint.github.io/pystatlas/fr/group-comparisons/estimation-plot/) · dans la galerie :
+la criminalité des États pauvres et moins pauvres. Ici : le ROA de la technologie et des autres
+secteurs.
+
+```{python}
+#| output-location: slide
+#| fig-width: 10
+#| fig-height: 5.4
+import seaborn as sns
+
+df = e23.dropna(subset=["roa"]).assign(
+    groupe=lambda d: np.where(d["secteur"] == "Technologie", "Technologie", "Autres"),
+    roa_pct=lambda d: 100 * d["roa"])
+low = df.loc[df.groupe == "Autres", "roa_pct"].to_numpy()       # les noms du script de la galerie
+high = df.loc[df.groupe == "Technologie", "roa_pct"].to_numpy()
+
+diff = lambda a, b, axis=-1: np.mean(b, axis=axis) - np.mean(a, axis=axis)
+boot = stats.bootstrap((low, high), diff, n_resamples=5000, method="BCa",
+                       random_state=np.random.default_rng(1))
+lo, hi = boot.confidence_interval
+delta = high.mean() - low.mean()
+
+fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10, 5.4), width_ratios=[2.2, 1], layout="none")
+fig.subplots_adjust(wspace=0.12, top=0.84)
+sns.swarmplot(data=df, x="groupe", y="roa_pct", hue="groupe", palette=[GRIS, BLEU], size=7,
+              order=["Autres", "Technologie"], hue_order=["Autres", "Technologie"], legend=False, ax=ax)
+for i, d in enumerate([low, high]):
+    ax.vlines(i + 0.32, d.mean() - d.std(ddof=1), d.mean() + d.std(ddof=1), color="#3A3A3C", lw=1.5)
+    ax.scatter(i + 0.32, d.mean(), s=30, color="white", edgecolor="#3A3A3C", lw=1.5, zorder=3)
+ax.set(xlabel="", ylabel="ROA 2023 (%)")
+ax.set_xticks([0, 1], [f"Autres secteurs\n(n = {len(low)})", f"Technologie\n(n = {len(high)})"])
+ax.set_xlim(-0.55, 1.6)
+ymin, ymax = ax.get_ylim()
+ax2.set_ylim(ymin - low.mean(), ymax - low.mean())      # le zéro aligné sur la moyenne des autres
+ax2.axhline(0, color="#3A3A3C", lw=1)
+v = ax2.violinplot(boot.bootstrap_distribution, positions=[0], widths=0.8, showextrema=False, side="high")
+v["bodies"][0].set(facecolor=BLEU, alpha=0.3, edgecolor="none")
+ax2.vlines(0, lo, hi, color="#1D1D1F", lw=2.5)
+ax2.scatter(0, delta, s=70, color="#1D1D1F", zorder=3)
+ax2.annotate(f"Δ = {delta:+.1f} points\n[{lo:.1f} ; {hi:.1f}]", (0, hi), xytext=(-6, 8),
+             textcoords="offset points", ha="right", fontsize=10, fontweight="semibold", color=BLEU)
+ax2.set_xlim(-0.6, 0.6); ax2.set_xticks([0], ["Tech − autres"])
+ax2.yaxis.tick_right(); ax2.yaxis.set_label_position("right")
+ax2.set_ylabel("Écart de moyennes (points de ROA)"); ax2.grid(False)
+ax.set_title(f"La technologie rapporte {delta:.1f} points de ROA de plus — mais l'intervalle est large", pad=26)
+ax.text(0, 1.02, f"IC bootstrap BCa à 95 % [{lo:.1f} ; {hi:.1f}] · test de Welch p = {welch.pvalue:.2f} · 2023",
+        transform=ax.transAxes, fontsize=10, color="#6E6E73")
+plt.show()
+```
+
+## Lire un graphique d'estimation {.scrollable}
+
+| Panneau | Ce qu'il montre |
+|---|---|
+| **Gauche** | Chaque entreprise, la moyenne et l'écart type de chaque groupe |
+| **Droite** | L'**écart** de moyennes, sur un axe dont le zéro est la moyenne des « autres » |
+| **Le violon bleu** | Les 5 000 écarts bootstrap : l'incertitude, visible |
+| **Le trait noir** | L'intervalle à 95 % de l'écart |
+
+::: {.step}
+C'est la règle de la diapositive « Ce qu'une valeur p n'est pas », mise en image : l'**écart en
+unités** d'abord, son **intervalle** ensuite, la valeur p en dernier.
+:::
+
+::: {.warn}
+Ici, l'intervalle bootstrap exclut zéro, alors que le test de Welch donne p = `{python} f"{_welch.pvalue:.2f}"`.
+Avec **7** entreprises tech, le bootstrap ne connaît que ces 7 valeurs : il **sous-estime**
+l'incertitude. L'intervalle de Welch, lui, va de
+`{python} f"{100*_welch.confidence_interval()[0]:.1f}"` à `{python} f"{100*_welch.confidence_interval()[1]:.1f}"` points.
+Quand deux méthodes honnêtes divergent sur un si petit échantillon, la conclusion prudente
+l'emporte : l'écart n'est **pas établi**.
 :::
 
 ## Pourquoi Welch, et pas le test t « classique » ? {.scrollable}
@@ -420,6 +602,11 @@ print(f"Spearman rho = {spearman.statistic:+.3f}  (p = {spearman.pvalue:.2f})")
 - **Pearson** mesure une relation **linéaire** ; une seule entreprise extrême peut la faire.
 - **Spearman** travaille sur les **rangs** ; il mesure une relation **monotone** et résiste aux extrêmes.
 
+*Pour la figure du rapport : le [nuage de points avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/)
+de la galerie ajoute au nuage la droite, sa bande de confiance, et r avec son intervalle en
+sous-titre. L'exemple de la galerie : 303 districts scolaires californiens, r = −0,83 entre la
+part d'élèves défavorisés et les résultats en maths.*
+
 En 2023, sur ces `{python} f"{len(_x)}"` entreprises, les deux sont proches de zéro : **aucune
 relation détectable** entre intensité de R-D et marge.
 
@@ -436,11 +623,16 @@ fig, ax = plt.subplots(figsize=(5.6, 4.4))
 sns.heatmap(corr, annot=True, fmt=".2f", cmap="RdBu_r",
             vmin=-1, vmax=1, ax=ax, cbar=False)
 ax.set_title("Corrélations de Spearman, 2023")
+ax.tick_params(axis="x", rotation=30)
+ax.grid(False)
 plt.show()
 ```
 
 Ventes et actifs sont fortement liés : ce sont deux mesures de **taille**. Une corrélation forte
 entre deux variables explicatives est un avertissement pour la régression.
+
+*La [matrice de corrélation](https://warint.github.io/pystatlas/fr/correlation/correlation-matrix/) de la galerie ajoute les valeurs p
+et masque les cases non significatives — exemple : les indicateurs sociaux des 50 États.*
 
 # Une première régression {background-color="#E3120B" style="color:#F7F4ED"}
 
@@ -528,6 +720,41 @@ print(f"Avec secteur : {avec_secteur.params['intensite_rd']:+.3f}  (p = {avec_se
 
 `C(secteur)` ajoute une constante par secteur : on compare les entreprises **à l'intérieur** de
 leur secteur. Le coefficient change nettement — la preuve que le secteur confondait la relation.
+
+## Un coefficient, trois incertitudes {.scrollable}
+
+[regression-models/coefficient-plot](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) · dans la galerie :
+ce qui prédit la criminalité violente des États. Ici : le même coefficient, trois modèles.
+
+```{python}
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 3.8
+modeles = {"Panel naïf": naif, "Erreurs par entreprise": grappes,
+            "+ secteur, par entreprise": avec_secteur}
+fig, ax = plt.subplots(figsize=(6, 3.8))
+for i, (nom, m) in enumerate(modeles.items()):
+    b = m.params["intensite_rd"]
+    bas_c, haut_c = m.conf_int().loc["intensite_rd"]
+    c = BLEU if m.pvalues["intensite_rd"] < 0.05 else "#AEAEB2"
+    ax.hlines(i, bas_c, haut_c, color=c, lw=2.5)
+    ax.scatter(b, i, s=80, color=c, edgecolor="white", lw=1.5, zorder=3)
+    ax.annotate(f"{b:+.2f}", (haut_c, i), xytext=(8, 0),
+                textcoords="offset points", va="center")
+ax.axvline(0, color=GRIS, lw=1, ls="--")
+ax.set_yticks(range(len(modeles)), list(modeles))
+ax.set_ylim(len(modeles) - 0.5, -0.5)
+ax.set_xlabel("Effet de l'intensité de R-D sur le ROA, IC 95 %")
+ax.grid(axis="x"); ax.grid(axis="y", visible=False)
+ax.margins(x=0.25)
+ax.set_title("Mêmes données, trois réponses", pad=20)
+ax.text(0, 1.02, "bleu : p < 0,05 · gris : l'intervalle contient 0",
+        transform=ax.transAxes, fontsize=9, color="#6E6E73")
+plt.show()
+```
+
+Le graphique de coefficients se lit comme celui de la galerie : un point, un intervalle, une ligne
+verticale à zéro. Il rend visible ce que les sorties de `summary()` disent en chiffres.
 
 ## Et Tesla dans tout ça ? {.scrollable}
 
