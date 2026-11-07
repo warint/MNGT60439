@@ -45,7 +45,7 @@ Le cours se déroule en trois blocs :
 | 02 | Le DataFrame | TW | Sélection, filtres, nouvelles variables, `groupby` | McKinney (2010) ; McKinney (2022), ch. 5 |
 | 03 | Importer des données | TW | CSV, Excel, URL, paquets, API, SQLite/DuckDB | Bosma et van Witteloostuijn (2024) |
 | 04 | Manipuler les données | TW | Nettoyage, jointures, remodelage, agrégation, séries temporelles | Wickham (2014) |
-| 05 | Représenter les données | TW | matplotlib, seaborn, plotly ; choix du graphique | Cleveland et McGill (1984) ; Anscombe (1973) |
+| 05 | Représenter les données | TW | Galerie PyStatlas : adapter un graphique statistique ; matplotlib, plotly ; choix du graphique | Cleveland et McGill (1984) ; Anscombe (1973) |
 | 06 | Statistiques de base | TW | Descriptives, intervalles de confiance, tests t, corrélation, MCO simple | Wasserstein et Lazar (2016) ; Miller et Bamberger (2016) |
 | 07 | Fusions-acquisitions et création de valeur | MAB | Étude d'événement ; performance de marché et comptable | MacKinlay (1997) ; Kengelbach et al. (2023) |
 | 08 | ESG et écoblanchiment | MAB | Corrélation, MCO | *à compléter* |

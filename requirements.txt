@@ -20,7 +20,7 @@ matplotlib>=3.8
 seaborn>=0.13
 plotly>=5.20
 
-# Statistiques (séance 6)
+# Statistiques (séance 6 ; dès la séance 5, les graphiques PyStatlas affichent leurs tests)
 scipy>=1.11
 statsmodels>=0.14
 

@@ -11,8 +11,12 @@ import pandas as pd
 import numpy as np
 from plotstyle import setup, CL
 plt = setup()
-import seaborn as sns
+plt.style.use("05-representer-les-donnees/statlas.mplstyle")   # le style de la galerie PyStatlas
+plt.rcParams["figure.dpi"] = 160
+from scipy import stats
+BLEU, ORANGE, VERT, ROUGE, GRIS = "#007AFF", "#FF9500", "#34C759", "#FF3B30", "#8E8E93"
 pays = pd.read_csv("data/pays.csv")
+pays["region"] = pays["region"].str.strip()
 ent = pd.read_csv("data/entreprises.csv")
 p23 = pays[pays["annee"] == 2023]
 ```
@@ -63,10 +67,10 @@ ys = {"I":   [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]
 fig, axes = plt.subplots(1, 4, figsize=(8, 2.6), sharex=True, sharey=True)
 for ax, (jeu, y) in zip(axes, ys.items()):
     xx = x4 if jeu == "IV" else x
-    ax.scatter(xx, y, color=CL.ink, s=12)
+    ax.scatter(xx, y, color=BLEU, s=12)
     b, a = np.polyfit(xx, y, 1)
-    ax.plot([3, 20], [a + 3 * b, a + 20 * b], color=CL.accent, lw=1.2)
-    ax.set_title(f"Jeu {jeu}  ·  r = {np.corrcoef(xx, y)[0, 1]:.2f}", loc="left", fontsize=8)
+    ax.plot([3, 20], [a + 3 * b, a + 20 * b], color=ORANGE, lw=1.2)
+    ax.set_title(f"Jeu {jeu}  ·  r = {np.corrcoef(xx, y)[0, 1]:.2f}", fontsize=8)
 plt.show()
 ```
 
@@ -103,9 +107,9 @@ top5 = p23.nlargest(5, "pib_milliards_usd").set_index("pays")["pib_milliards_usd
 total = p23["pib_milliards_usd"].sum()
 parts = pd.concat([top5, pd.Series({"Reste du monde": total - top5.sum()})]) / total
 fig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 3))
-a1.pie(parts, labels=parts.index, colors=CL.ramp, textprops={"fontsize": 7})
+a1.pie(parts, labels=parts.index, textprops={"fontsize": 7})
 s = parts.sort_values() * 100
-a2.barh(s.index, s, color=CL.accent)
+a2.barh(s.index, s, color=BLEU)
 for i, v in enumerate(s):
     a2.text(v + 0.5, i, f"{v:.0f} %", va="center", fontsize=7)
 a2.set_xlabel("Part du PIB mondial (%)")
@@ -113,29 +117,180 @@ plt.show()
 print(f"Part des États-Unis : {parts['United States']:.1%}")
 ```
 
-## L'anatomie d'une figure
+## Une galerie rangée par question
 
-En matplotlib, une figure se construit en deux objets : `fig`, la page, et `ax`, le système
-d'axes où l'on dessine. Écrire `fig, ax = plt.subplots()` puis appeler les méthodes de `ax`
-plutôt que les fonctions `plt.*` garde chaque instruction attachée à un panneau précis — ce qui
-devient indispensable dès qu'il y en a plusieurs.
+Le bon graphique se choisit à partir de la question, jamais à partir du menu d'un logiciel.
+Encore faut-il savoir quelles formes existent. Pour les graphiques **statistiques** — ceux qui
+montrent une distribution, une différence entre groupes, une relation, une incertitude — ce
+chapitre s'appuie sur PyStatlas [@warin2026statlas], une galerie de 48 graphiques rangés en dix
+familles, chacun accompagné d'un script Python complet
+(<https://warint.github.io/pystatlas/fr/>).
+
+| La question | Famille PyStatlas | Graphiques utilisés ici |
+|---|---|---|
+| Quelle forme a cette variable ? | Distributions | Histogramme avec densité, graphique en crêtes |
+| Ces groupes diffèrent-ils ? | Distributions ; Comparaisons de groupes | Nuage de pluie, fonctions de répartition, comparaison entre groupes |
+| Ces deux variables vont-elles ensemble ? | Corrélation et association | Nuage de points avec statistiques |
+| Qu'est-ce qui explique le résultat ? | Modèles de régression ; Diagnostics | voir la séance 6 et les cas |
+
+Trois principes de la galerie sont aussi ceux du cours. Chaque script est **autonome** : il
+s'exécute tel quel, sans fichier ni fonction cachés. Chaque graphique met **la statistique
+d'abord** : le nombre d'observations, le test, la taille d'effet figurent sur la figure. Et
+chaque graphique est **un dossier**, `gallery/<famille>/<graphique>/plot.py`, que l'on lit,
+copie et adapte.
+
+## L'anatomie d'un script
+
+Tous les scripts de la galerie ont la même structure en quatre blocs :
+
+1. **la fiche** (docstring) : ce que montre le graphique, son équivalent R, ses mots-clés ;
+2. **les données** : une ou deux lignes qui chargent un jeu d'exemple ;
+3. **la statistique** : les quantités et le test qui seront affichés ;
+4. **la figure** : `fig, ax = plt.subplots()`, puis le dessin, le titre et le sous-titre.
+
+Adapter un script à ses propres données revient à remplacer le bloc 2, puis à réécrire les
+textes du bloc 4. Les blocs 3 et 4 font le reste. La grammaire du bloc 4 est celle de
+matplotlib : `fig` est la page, `ax` le système d'axes où l'on dessine ; appeler les méthodes de
+`ax` plutôt que les fonctions `plt.*` garde chaque instruction attachée à un panneau précis.
 
 Cinq éléments séparent une figure de travail d'une figure que l'on remet :
 
 - un **titre qui énonce le message** (« L'écart entre les États-Unis et le Canada se creuse »),
   plutôt que le sujet (« PIB par habitant ») ;
-- une **unité** sur chaque axe ;
-- la **source**, en petit, sous la figure ;
+- un **sous-titre statistique** — n, statistique, test — qui permet de vérifier le titre ;
+- une **unité** sur chaque axe et la **source** sous la figure ;
 - un **étiquetage direct** des séries, qui évite l'aller-retour vers une légende ;
-- un enregistrement à la bonne résolution : `fig.savefig("sorties/f.png", dpi=200)`, appelé
-  **avant** `plt.show()`.
+- un enregistrement avec `fig.savefig("sorties/f.png")`, appelé **avant** `plt.show()`.
+
+La feuille de style de la galerie, `statlas.mplstyle`, est copiée dans le dossier de la séance.
+Une ligne, `plt.style.use("05-representer-les-donnees/statlas.mplstyle")`, règle d'un coup la
+grille, les couleurs, la position du titre et la résolution d'enregistrement.
+
+## Adapter : trois exemples sur nos données
+
+**Une distribution.** Le script *Histogramme avec densité* superpose l'histogramme, une densité
+estimée et la loi normale de même moyenne et même écart type. Appliqué au PIB par habitant, il
+montre à quel point la variable s'écarte d'une loi normale (@fig-distribution).
+
+```{python}
+#| label: fig-distribution
+#| fig-cap: "Distribution du PIB par habitant en 2023, adaptée du script « Histogramme avec densité » de PyStatlas. Source : Banque mondiale."
+#| fig-width: 7
+#| fig-height: 3.6
+x = p23["pib_hab_usd"].dropna().to_numpy() / 1000          # le bloc « données », remplacé
+mean, median, sd = x.mean(), np.median(x), x.std(ddof=1)
+skew = stats.skew(x)
+
+fig, ax = plt.subplots(figsize=(7, 3.6))
+ax.hist(x, bins=40, density=True, color=BLEU, alpha=0.25, edgecolor="white")
+grid = np.linspace(0, x.max() * 1.05, 400)
+ax.plot(grid, stats.gaussian_kde(x)(grid), color=BLEU, lw=2, label="Densité (noyau)")
+ax.plot(grid, stats.norm.pdf(grid, mean, sd), color=GRIS, lw=1.4, ls="--", label="Loi normale")
+for v, nom, c in [(mean, "moyenne", ORANGE), (median, "médiane", VERT)]:
+    ax.axvline(v, color=c, lw=1.4, ymax=0.9, label=f"{nom} : {v:,.1f} k$")
+ax.set_xlim(0, 150); ax.set_yticks([])
+ax.set(xlabel="PIB par habitant (milliers de $ US)", ylabel="Densité")
+ax.legend(fontsize=8)
+ax.set_title("La moyenne décrit un pays qui n'existe pas", fontsize=11, pad=20)
+ax.text(0, 1.02, f"n = {len(x)} économies · asymétrie = {skew:.2f}", transform=ax.transAxes,
+        fontsize=8, color="#6E6E73")
+plt.show()
+usa = p23.loc[p23["iso3"] == "USA", "pib_hab_usd"].iloc[0]
+print(f"pays devant les États-Unis : {(p23['pib_hab_usd'] > usa).sum()}")
+```
+
+L'écart entre la moyenne et la médiane est à lui seul un diagnostic : quelques économies très
+riches tirent la moyenne vers le haut. Et plusieurs des pays qui devancent les États-Unis sont
+de petits territoires — micro-États, places financières — dont le PIB par habitant dit peu de
+chose sur une stratégie d'implantation. En échelle logarithmique, la même distribution devient
+presque symétrique : c'est l'échelle qu'il faut pour comparer des pays.
+
+**Des groupes.** Le *nuage de pluie* empile trois vues d'une même variable par groupe : une
+demi-densité (le nuage), une boîte à moustaches, et chaque observation (la pluie). Rien n'est
+caché. Appliqué aux marges nettes des entreprises du cours, il oppose deux modèles d'affaires
+(@fig-pluie).
+
+```{python}
+#| label: fig-pluie
+#| fig-cap: "Marge nette par secteur, 2010-2024, une observation par entreprise-année ; adapté du script « Graphique en nuage de pluie » de PyStatlas. Axe coupé à −40 %. Source : SEC EDGAR."
+#| fig-width: 7.5
+#| fig-height: 4
+ent["marge"] = ent["resultat_net"] / ent["chiffre_affaires"] * 100
+choix = ["Commerce de détail", "Automobile", "Industrie", "Pharmaceutique", "Technologie"]
+data = [ent.loc[ent["secteur"] == g, "marge"].dropna().to_numpy() for g in choix]
+H, p = stats.kruskal(*data)
+
+fig, ax = plt.subplots(figsize=(7.5, 4))
+rng = np.random.default_rng(7)
+for i, (d, c) in enumerate(zip(data, [GRIS, ROUGE, ORANGE, VERT, BLEU])):
+    g = np.linspace(max(d.min(), -40), d.max() + 2, 300)
+    dens = stats.gaussian_kde(d)(g)
+    ax.fill_between(g, i, i + 0.55 * dens / dens.max(), color=c, alpha=0.3, lw=0)
+    ax.boxplot(d, positions=[i - 0.1], widths=0.09, vert=False, showfliers=False,
+               medianprops=dict(color=c, lw=2), capprops=dict(visible=False))
+    ax.scatter(d, i - 0.3 + rng.uniform(-0.08, 0.08, len(d)), s=6, color=c, alpha=0.5, lw=0)
+ax.set_yticks(range(len(choix)), [f"{g}\nmédiane {np.median(d):.1f} %" for g, d in zip(choix, data)], fontsize=8)
+ax.set_xlim(-40, 60); ax.axvline(0, color=GRIS, lw=0.8)
+ax.grid(axis="x"); ax.grid(axis="y", visible=False)
+ax.set_xlabel("Marge nette (%)")
+ax.set_title("Deux modèles d'affaires : marges épaisses, marges minces", fontsize=11, pad=20)
+ax.text(0, 1.02, f"Kruskal-Wallis H(4) = {H:.0f}, p < 0,001", transform=ax.transAxes, fontsize=8, color="#6E6E73")
+plt.show()
+```
+
+Le commerce de détail travaille sur des marges minces, la technologie et la pharmacie sur des
+marges épaisses : ce sont deux modèles d'affaires, pas deux niveaux de compétence. Le test du
+sous-titre traite chaque entreprise-année comme une observation indépendante, ce qu'elle n'est
+pas : Apple en 2015 et Apple en 2016 se ressemblent. La valeur p est donc trop optimiste ; la
+séance 6 montre comment corriger l'inférence sur un panel.
+
+**Deux groupes, toute la distribution.** Les *fonctions de répartition empiriques* donnent,
+pour chaque valeur, la part des observations en dessous. Elles se passent de classes et
+montrent d'un coup tous les quantiles. Le plus grand écart vertical entre deux courbes est la
+statistique D de Kolmogorov-Smirnov (@fig-ecdf).
+
+```{python}
+#| label: fig-ecdf
+#| fig-cap: "Croissance annuelle moyenne du PIB 2014-2023, pays à revenu élevé et autres pays ; adapté du script « Comparaison de fonctions de répartition empiriques » de PyStatlas. Source : Banque mondiale."
+#| fig-width: 7
+#| fig-height: 3.6
+croiss = (pays[pays["annee"].between(2014, 2023)].groupby(["iso3", "revenu"])["croissance_pib"]
+          .mean().reset_index().dropna())
+groupes = {"Revenu élevé": croiss.loc[croiss["revenu"] == "High income", "croissance_pib"],
+           "Autres pays": croiss.loc[croiss["revenu"] != "High income", "croissance_pib"]}
+ks = stats.ks_2samp(*groupes.values())
+
+fig, ax = plt.subplots(figsize=(7, 3.6))
+for (nom, g), c in zip(groupes.items(), [BLEU, ORANGE]):
+    f = stats.ecdf(g).cdf
+    ax.step(np.r_[-4, f.quantiles, 9], np.r_[0, f.probabilities, 1], where="post", color=c,
+            label=f"{nom} (n = {len(g)}, médiane {g.median():.1f} %)")
+ax.set_xlim(-4, 9)
+ax.set(xlabel="Croissance annuelle moyenne, 2014-2023 (%)", ylabel="Part cumulée des pays")
+ax.legend(loc="lower right", fontsize=8)
+ax.set_title("Les pays riches croissent moins vite", fontsize=11, pad=20)
+ax.text(0, 1.02, f"Kolmogorov-Smirnov D = {ks.statistic:.2f}, p = {ks.pvalue:.3f}",
+        transform=ax.transAxes, fontsize=8, color="#6E6E73")
+plt.show()
+```
+
+Si la « valeur » de la manchette est la croissance, les économies riches — États-Unis compris —
+ne sont pas en tête. Le même jeu de données donne raison et tort à la manchette ; seul le
+graphique choisi décide lequel des deux arguments le lecteur verra.
+
+## Ce que la galerie ne fait pas pour vous
+
+PyStatlas rassemble des graphiques statistiques. Les trois formes de base de l'analyste —
+barres horizontales triées pour **comparer**, lignes étiquetées pour **suivre une évolution**,
+barres empilées pour une **composition** — s'écrivent en quelques lignes de matplotlib, avec le
+même style (@fig-voisins).
 
 ```{python}
 #| label: fig-voisins
 #| fig-cap: "PIB par habitant, en milliers de dollars US courants, 2000-2023. Source : Banque mondiale."
 #| fig-width: 7
 #| fig-height: 3.6
-choix = {"USA": CL.warn, "CAN": CL.accent, "JPN": CL.good, "MEX": CL.muted}
+choix = {"USA": ROUGE, "CAN": BLEU, "JPN": VERT, "MEX": GRIS}
 fig, ax = plt.subplots(figsize=(7, 3.6))
 for iso, coul in choix.items():
     d = pays[pays["iso3"] == iso].dropna(subset=["pib_hab_usd"])
@@ -143,8 +298,8 @@ for iso, coul in choix.items():
     fin = d.iloc[-1]
     ax.text(fin["annee"] + 0.4, fin["pib_hab_usd"] / 1000, fin["pays"], color=coul,
             va="center", fontsize=8)
-ax.set_xlim(2000, 2027)
-ax.set_title("L'écart entre les États-Unis et le Canada se creuse depuis 2014", loc="left")
+ax.set_xlim(2000, 2028)
+ax.set_title("L'écart entre les États-Unis et le Canada se creuse depuis 2014", fontsize=11)
 ax.set_ylabel("milliers de $ US courants")
 plt.show()
 ecart = pays[pays["iso3"].isin(["USA", "CAN"]) & pays["annee"].isin([2014, 2023])] \
@@ -152,82 +307,11 @@ ecart = pays[pays["iso3"].isin(["USA", "CAN"]) & pays["annee"].isin([2014, 2023]
 print((ecart["USA"] - ecart["CAN"]).round(0))
 ```
 
-## Choisir le graphique selon la question
-
-Le bon graphique se choisit à partir de la question, jamais à partir du menu d'un logiciel.
-Cinq questions couvrent l'essentiel du travail d'un analyste en stratégie.
-
-| Question | Forme | En Python |
-|---|---|---|
-| Comparer des catégories | Barres horizontales triées | `ax.barh`, `sns.barplot` |
-| Suivre une évolution | Ligne | `ax.plot`, `sns.lineplot` |
-| Voir une distribution | Histogramme, boîte à moustaches | `sns.histplot`, `sns.boxplot` |
-| Voir une relation | Nuage de points, souvent en échelle log | `sns.scatterplot` |
-| Montrer une composition | Barres empilées | `df.plot.barh(stacked=True)` |
-
-La distribution du PIB par habitant illustre pourquoi l'échelle compte. Sur une échelle
-linéaire, presque tous les pays s'écrasent dans la première classe ; sur une échelle
-logarithmique, la forme apparaît (@fig-distribution).
-
-```{python}
-#| label: fig-distribution
-#| fig-cap: "Distribution du PIB par habitant en 2023, échelle linéaire et logarithmique. Source : Banque mondiale."
-#| fig-width: 8
-#| fig-height: 2.8
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(8, 2.8))
-sns.histplot(p23["pib_hab_usd"] / 1000, bins=30, ax=a1, color=CL.accent)
-a1.set(xlabel="milliers de $", ylabel="pays")
-sns.histplot(p23["pib_hab_usd"], bins=30, log_scale=True, ax=a2, color=CL.accent)
-a2.set(xlabel="$ (échelle log)", ylabel="")
-usa = p23.loc[p23["iso3"] == "USA", "pib_hab_usd"].iloc[0]
-a2.axvline(usa, color=CL.warn)
-plt.show()
-print(f"moyenne {p23['pib_hab_usd'].mean():,.0f} $ · médiane {p23['pib_hab_usd'].median():,.0f} $ · "
-      f"pays devant les États-Unis : {(p23['pib_hab_usd'] > usa).sum()}")
-```
-
-L'écart entre la moyenne et la médiane est à lui seul un diagnostic : quelques économies très
-riches tirent la moyenne vers le haut. Et plusieurs des pays qui devancent les États-Unis sont
-de petits territoires — micro-États, places financières — dont le PIB par habitant dit peu de
-chose sur une stratégie d'implantation.
-
-## seaborn : la statistique en une ligne
-
-seaborn s'appuie sur matplotlib et parle directement le langage des DataFrames : on lui donne
-`data=`, puis les noms de colonnes pour `x`, `y`, `hue` (la couleur), `col` (les panneaux).
-La boîte à moustaches par secteur résume quinze ans de marges nettes pour les 32 entreprises
-du cours (@fig-boites).
-
-```{python}
-#| label: fig-boites
-#| fig-cap: "Marge nette (résultat net / chiffre d'affaires) par secteur, 32 entreprises, 2010-2024. Source : SEC EDGAR."
-#| fig-width: 7.5
-#| fig-height: 3.6
-ent["marge"] = ent["resultat_net"] / ent["chiffre_affaires"] * 100
-ordre = ent.groupby("secteur")["marge"].median().sort_values().index
-fig, ax = plt.subplots(figsize=(7.5, 3.6))
-sns.boxplot(data=ent, y="secteur", x="marge", order=ordre, color=CL.line, ax=ax, fliersize=2)
-ax.axvline(0, color=CL.warn, lw=1)
-ax.set(xlim=(-30, 60), xlabel="Marge nette (%)", ylabel="")
-plt.show()
-ent.groupby("secteur")["marge"].median().sort_values().round(1)
-```
-
-Le trait central est la médiane ; la boîte couvre la moitié centrale des observations ; les
-points isolés sont des années exceptionnelles. Le commerce de détail travaille sur des marges
-minces, la technologie et la pharmacie sur des marges épaisses : ce sont deux modèles
-d'affaires, pas deux niveaux de compétence.
-
-Les **petits multiples** — un panneau par groupe, avec `sns.relplot(..., col="secteur")` —
-permettent de comparer des formes d'évolution sans superposer trente lignes. Le choix
-`sharey=True` ou `False` change la lecture : une échelle commune compare les niveaux, une
-échelle libre compare les formes.
-
 ## plotly : explorer avant de conclure
 
-Pour explorer, un graphique interactif vaut mieux qu'un graphique figé : on survole un point
-pour savoir quel pays il représente, on zoome sur un groupe. `plotly.express` produit ces
-figures avec la même syntaxe que seaborn.
+Les figures de la galerie sont faites pour un rapport. Pour explorer, un graphique interactif
+vaut mieux qu'un graphique figé : on survole un point pour savoir quel pays il représente, on
+zoome sur un groupe. `plotly.express` produit ces figures en une instruction.
 
 ::: {.content-visible when-format="html"}
 ```{python}
@@ -270,6 +354,9 @@ toujours avec profit.
   graphique rend ce choix visible.
 - On **regarde** les données avant de les résumer (Anscombe), et on confie la comparaison
   principale à la **position** (Cleveland et McGill).
-- Une figure remise a un titre-message, des unités, une source et, si possible, un
-  étiquetage direct.
-- matplotlib pour le contrôle, seaborn pour la statistique, plotly pour l'exploration.
+- On part de la **question** pour trouver la famille de graphiques ; la galerie PyStatlas
+  fournit le script, que l'on adapte en remplaçant les données et en réécrivant les textes.
+- Une figure remise a un titre-message, un sous-titre statistique, des unités, une source et,
+  si possible, un étiquetage direct.
+- PyStatlas pour la statistique sur la figure, matplotlib pour les formes simples, plotly pour
+  l'exploration.

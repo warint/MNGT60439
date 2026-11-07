@@ -16,9 +16,10 @@
 - Montrer qu'une même affirmation stratégique change de réponse selon la **mesure** retenue, et le dire dans un graphique.
 - Expliquer, avec Anscombe (1973), pourquoi on **regarde** les données avant de les résumer.
 - Classer les encodages visuels selon Cleveland et McGill (1984), et confier la comparaison principale à la **position**.
-- Construire une figure matplotlib complète (`fig, ax`), avec titre-message, unités, source, étiquetage direct, et l'enregistrer avec `savefig`.
-- Choisir la forme selon la question : comparaison, évolution, distribution, relation, composition.
-- Produire histogrammes, boîtes, nuages, lignes et petits multiples avec **seaborn**, et un nuage interactif et une carte avec **plotly express**.
+- Partir de la question pour trouver la bonne famille dans la galerie **[PyStatlas](https://warint.github.io/pystatlas/fr/)** : distribution, comparaison de groupes, relation.
+- Lire un script de la galerie (fiche, données, statistique, figure) et l'**adapter** à nos données : remplacer le bloc données, réécrire titre, axes et sous-titre.
+- Construire une figure matplotlib complète (`fig, ax`), avec titre-message, sous-titre statistique, unités, source, et l'enregistrer avec `savefig`.
+- Produire un histogramme avec densité, un nuage de pluie, un nuage de points avec statistiques, des fonctions de répartition et des crêtes ; un nuage interactif avec **plotly express**.
 - Repérer un axe tronqué, un double axe ou un camembert en 3D, et les corriger.
 
 ---
@@ -27,9 +28,9 @@
 
 | Temps | Quand | Quoi | Où |
 |---|---|---|---|
-| **Pré-séance** | Avant le cours | Deux lectures, vérification des paquets, un premier graphique | [`00-pre-seance/`](00-pre-seance/README.md) |
-| **Cours** (~90 min) | En classe | Anscombe, Cleveland et McGill, matplotlib, seaborn, plotly, les graphiques qui trompent | [`01-cours/`](01-cours/README.md) |
-| **Pratique** (~90 min) | En classe | Le graphique qui défend la manchette, et ceux qui la réfutent | [`02-pratique/`](02-pratique/README.md) |
+| **Pré-séance** | Avant le cours | Deux lectures, un tour de la galerie PyStatlas, un script exécuté tel quel, un premier graphique | [`00-pre-seance/`](00-pre-seance/README.md) |
+| **Cours** (~90 min) | En classe | Anscombe, Cleveland et McGill, la galerie PyStatlas et ses scripts, cinq adaptations sur nos données, plotly, les graphiques qui trompent | [`01-cours/`](01-cours/README.md) |
+| **Pratique** (~90 min) | En classe | Le graphique qui défend la manchette, et ceux qui la réfutent — adaptés de la galerie | [`02-pratique/`](02-pratique/README.md) |
 
 ---
 
@@ -41,6 +42,12 @@
 | [`data/entreprises.csv`](../data/entreprises.csv) | 32 grandes entreprises cotées aux États-Unis × 2010-2024 : chiffre d'affaires, résultat net, actifs, R-D | SEC EDGAR (domaine public) |
 
 Rien à télécharger : les deux fichiers sont dans le dépôt.
+
+## Outil : la galerie PyStatlas
+
+- Galerie : <https://warint.github.io/pystatlas/fr/> · code : <https://github.com/warint/pystatlas>
+- [`statlas.mplstyle`](statlas.mplstyle) : la feuille de style de la galerie, copiée ici.
+  Une ligne suffit : `plt.style.use("05-representer-les-donnees/statlas.mplstyle")`.
 
 ---
 
@@ -56,6 +63,7 @@ présentation orale en fin de séance. Ces figures alimentent **« Les premiers 
 
 - Anscombe, F. J. (1973). Graphs in Statistical Analysis. *The American Statistician*, 27(1), 17–21. <https://doi.org/10.1080/00031305.1973.10478966>
 - Cleveland, W. S. et McGill, R. (1984). Graphical Perception. *Journal of the American Statistical Association*, 79(387), 531–554. <https://doi.org/10.1080/01621459.1984.10478080>
+- Warin, T. (2026). *PyStatlas : la galerie Python des graphiques statistiques*. <https://warint.github.io/pystatlas/fr/>
 
 Chapitre du livre : [`book/seance-05.qmd`](../book/seance-05.qmd).
 

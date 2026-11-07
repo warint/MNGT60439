@@ -40,10 +40,11 @@ sys.path.insert(0, "slides")
 
 1. Ce qu'il faut faire, et combien de temps cela prend
 2. Lire deux articles courts
-3. Vérifier les paquets graphiques
-4. Un premier graphique à produire chez vous
-5. Autovérification
-6. Utiliser l'IA sur la préparation
+3. Parcourir la galerie PyStatlas
+4. Vérifier les paquets et exécuter un script de la galerie
+5. Un premier graphique à produire chez vous
+6. Autovérification
+7. Utiliser l'IA sur la préparation
 
 ## À quoi sert la séance 5 {.scrollable}
 ::::: columns
@@ -62,9 +63,9 @@ sys.path.insert(0, "slides")
 
 ### Le Python
 
+- Lire un script de la galerie **PyStatlas** et l'adapter à nos données
 - Construire une figure avec `fig, ax = plt.subplots()` et l'enregistrer avec `savefig`
-- Produire histogrammes, boîtes, nuages et facettes avec **seaborn**
-- Construire un nuage interactif et une carte avec **plotly express**
+- Explorer avec **plotly express**
 
 ::::
 
@@ -72,9 +73,9 @@ sys.path.insert(0, "slides")
 
 ### La méthode
 
-- Partir de la **question**, puis choisir la forme
-- Titrer par le **message**, donner les unités et la source
-- Étiqueter directement plutôt qu'avec une légende
+- Partir de la **question**, puis choisir la famille de graphiques
+- Titrer par le **message** ; mettre la **statistique** en sous-titre
+- Unités, source, étiquetage direct
 
 ::::
 
@@ -91,13 +92,14 @@ sys.path.insert(0, "slides")
 | | | |
 |---|---|---|
 | **1** | Lire Anscombe (1973) et Cleveland et McGill (1984), sections 1 et 2 | 45–60 min |
-| **2** | Vérifier `seaborn` et `plotly` | 5 min |
-| **3** | Produire **un** graphique de `data/pays.csv` | 20 min |
-| **4** | Tenter l'autovérification | 15 min |
+| **2** | Parcourir la galerie PyStatlas | 15 min |
+| **3** | Vérifier les paquets, exécuter **un** script de la galerie tel quel | 10 min |
+| **4** | Produire **un** graphique de `data/pays.csv` | 20 min |
+| **5** | Tenter l'autovérification | 15 min |
 
 ::: {.warn}
-Le cours suppose les quatre étapes faites. La pratique suppose que vous savez déjà produire
-et **enregistrer** une figure matplotlib.
+Le cours suppose les cinq étapes faites. La pratique suppose que vous savez déjà lire un script
+de la galerie, produire une figure matplotlib et l'**enregistrer**.
 :::
 
 ## 1 · Lire deux articles courts
@@ -118,26 +120,47 @@ Annotez quatre choses :
 | **3** | Un graphique de presse récent qui viole cet ordre |
 | **4** | Ce que vous changeriez pour le corriger |
 
-## 2 · Vérifier les paquets graphiques
+## 2 · Parcourir la galerie PyStatlas
+
+**[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** — 48 graphiques
+statistiques en 10 familles, chacun avec son code Python complet.
+
+Ouvrez trois pages de la famille **Distributions** et une de **Corrélation et association**.
+Pour chacune, notez :
+
+| | |
+|---|---|
+| **1** | La **question** à laquelle le graphique répond, en une phrase |
+| **2** | La ligne du script qui charge les **données** — celle que vous remplacerez |
+| **3** | La **statistique** affichée en sous-titre (n, test, taille d'effet) |
+| **4** | Le **titre** : décrit-il le sujet, ou affirme-t-il un message ? |
+
+::: {.muted}
+Le texte des pages est en français ; le code et les figures sont en anglais. Les adapter en
+français fait partie du travail.
+:::
+
+## 3 · Vérifier les paquets, exécuter un script
 
 Depuis la racine du dépôt, `.venv` activé :
 
 ```bash
-python -c "import matplotlib, seaborn, plotly; print(matplotlib.__version__, seaborn.__version__, plotly.__version__)"
+python -c "import matplotlib, seaborn, plotly, scipy, statsmodels; print('ok')"
 ```
 
-Si une ligne échoue :
+En cas d'erreur : `python -m pip install -r requirements.txt`.
 
-```bash
-python -m pip install -r requirements.txt
-```
+Puis ouvrez le **[graphique en crêtes](https://warint.github.io/pystatlas/fr/distributions/ridgeline/)**,
+cliquez sur « Copier le code », collez-le dans un fichier `sorties/cretes.py` et exécutez-le
+**sans rien changer**. Il n'utilise que NumPy, SciPy et statsmodels.
 
 ::: {.muted}
-Dans VS Code, les figures plotly s'ouvrent dans le navigateur quand on exécute un script, et
-dans la fenêtre interactive quand on exécute une cellule `# %%`. Les deux sont normaux.
+Beaucoup d'autres scripts de la galerie chargent leurs données d'exemple depuis
+**scikit-learn**, qui n'est pas installé dans le cours. Inutile de l'ajouter : en séance, cette
+ligne est justement celle que l'on remplace par nos données.
 :::
 
-## 3 · Un premier graphique, chez vous
+## 4 · Un premier graphique, chez vous
 
 ```{python}
 #| output-location: column
@@ -147,6 +170,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+plt.style.use("05-representer-les-donnees/statlas.mplstyle")
 Path("sorties").mkdir(exist_ok=True)
 pays = pd.read_csv("data/pays.csv")
 usa = pays[pays["iso3"] == "USA"]
@@ -155,36 +179,37 @@ fig, ax = plt.subplots(figsize=(6, 4))
 ax.plot(usa["annee"], usa["pib_hab_usd"] / 1000)
 ax.set_title("États-Unis : PIB par habitant")
 ax.set_ylabel("milliers de $ US courants")
-fig.savefig("sorties/usa_pib_hab.png", dpi=200)
+fig.savefig("sorties/usa_pib_hab.png")
 plt.show()
 ```
 
 **À faire :** ajoutez le Canada sur la même figure, avec une couleur différente et une
-étiquette au bout de chaque ligne (`ax.text`). Apportez le fichier PNG.
+étiquette au bout de chaque ligne (`ax.text`). Réécrivez le titre pour qu'il **affirme** quelque
+chose. Apportez le fichier PNG.
 
-## 4 · Autovérification
+## 5 · Autovérification
 
 Répondez **par écrit** avant le cours. Rien n'est remis, mais le cours suppose que vous avez essayé.
 
 1. Pourquoi Anscombe a-t-il construit quatre jeux de données **identiques** en statistiques résumées ?
 2. Classez du plus précis au moins précis : couleur, position, angle, longueur, aire.
 3. Une barre peut-elle commencer à 50 ? Une ligne ? Pourquoi la réponse diffère-t-elle ?
-4. Pour comparer le PIB de 200 pays, quelle échelle choisir, et pourquoi ?
+4. Dans un script PyStatlas, quels sont les quatre blocs, et lequel changez-vous pour vos données ?
 5. Quelle est la différence entre `fig` et `ax` dans `fig, ax = plt.subplots()` ?
 
 ## Utiliser l'IA sur la préparation
 
 Votre assistant est un partenaire d'étude, pas un corrigé. Requêtes utiles :
 
-- « Explique-moi la différence entre `plt.plot` et `ax.plot`, et pourquoi on préfère la seconde. »
+- « Voici le script PyStatlas du nuage de pluie. Explique-moi chaque bloc, ligne par ligne. »
 - « Voici un graphique décrit en mots. Selon Cleveland et McGill, quel encodage utilise-t-il et
   lequel serait plus précis ? »
-- « Pose-moi cinq questions pour vérifier que je sais lire une boîte à moustaches. »
+- « Que mesure le test de Kruskal-Wallis affiché en sous-titre, en deux phrases ? »
 
 > **Règle permanente du cours.** Chaque fois que l'IA intervient dans un travail remis, indiquez
 > ce que vous lui avez demandé et **ce que vous avez vérifié, et comment**.
 
 ::: {.warn}
-Les IA génèrent souvent du code seaborn ancien (`distplot`, retiré). Si une fonction n'existe
-pas, cherchez son remplaçant dans la documentation : ici, `histplot`.
+Les IA génèrent souvent du code seaborn ancien (`distplot`, retiré). Partir d'un script de la
+galerie, qui s'exécute tel quel, évite ce piège.
 :::

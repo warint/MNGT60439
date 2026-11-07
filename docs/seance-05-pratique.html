@@ -1053,7 +1053,7 @@ margin-right: 0; }
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Séance 5 : Pratique</h1>
-  <p class="subtitle">Le graphique qui défend, le graphique qui réfute</p>
+  <p class="subtitle">Le graphique qui défend, le graphique qui réfute — à partir de la galerie PyStatlas</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -1072,9 +1072,9 @@ Thierry Warin, PhD
 <ol type="1">
 <li>Quatre-vingt-dix minutes</li>
 <li>Avant de commencer</li>
-<li>Défendre la manchette — 20 min</li>
-<li>La réfuter — 25 min</li>
-<li>Les entreprises : où se crée la marge ? — 20 min</li>
+<li>Défendre la manchette — 15 min</li>
+<li>La réfuter, avec deux graphiques de la galerie — 30 min</li>
+<li>Les entreprises : une comparaison entre groupes — 20 min</li>
 <li>Explorer, puis rédiger — 25 min</li>
 <li>Ce qui coûte des points</li>
 </ol>
@@ -1091,35 +1091,41 @@ Thierry Warin, PhD
 <h2>Quatre-vingt-dix minutes</h2>
 <table class="caption-top">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
 </colgroup>
 <tbody>
 <tr class="odd">
-<td><strong>00–20</strong></td>
+<td><strong>00–15</strong></td>
 <td>Défendre</td>
-<td>le graphique qui donne raison à la manchette</td>
+<td>barres triées, en matplotlib</td>
+<td><code>fig1.png</code></td>
 </tr>
 <tr class="even">
-<td><strong>20–45</strong></td>
+<td><strong>15–45</strong></td>
 <td>Réfuter</td>
-<td>deux graphiques qui lui donnent tort</td>
+<td><em>Histogramme avec densité</em> et <em>Nuage de points avec statistiques</em></td>
+<td><code>fig2.png</code>, <code>fig3.png</code></td>
 </tr>
 <tr class="odd">
 <td><strong>45–65</strong></td>
 <td>Entreprises</td>
-<td>la marge nette par secteur, en petits multiples</td>
+<td><em>Comparaison entre groupes</em></td>
+<td><code>fig4.png</code></td>
 </tr>
 <tr class="even">
 <td><strong>65–80</strong></td>
 <td>Explorer</td>
-<td>une figure plotly interactive</td>
+<td>un nuage plotly interactif</td>
+<td><code>fig5.html</code></td>
 </tr>
 <tr class="odd">
 <td><strong>80–90</strong></td>
 <td>Rédiger</td>
 <td>200 mots, puis deux minutes devant la salle</td>
+<td><code>note_seance05.md</code></td>
 </tr>
 </tbody>
 </table>
@@ -1129,78 +1135,147 @@ Thierry Warin, PhD
 </section>
 <section id="avant-de-commencer" class="slide level2">
 <h2>Avant de commencer</h2>
-<p>Ouvrez le dossier du dépôt dans VS Code, activez <code>.venv</code>, puis copiez le fichier de départ :</p>
+<p>Ouvrez la galerie dans un onglet : <strong><a href="https://warint.github.io/pystatlas/fr/">warint.github.io/pystatlas/fr</a></strong>.</p>
+<p>Dans VS Code, <code>.venv</code> activé, copiez le fichier de départ :</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href></a><span class="fu">cp</span> 05-representer-les-donnees/02-pratique/starter/seance05_atelier.py sorties/</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Travaillez dans <strong>votre copie</strong>, cellule par cellule (<code># %%</code>, puis <code>Maj + Entrée</code>). Chaque figure est enregistrée dans <code>sorties/</code> : c’est ce que vous remettrez.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a><span class="im">import</span> pandas <span class="im">as</span> pd, matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns, plotly.express <span class="im">as</span> px</span>
-<span id="cb2-2"><a href></a>pays <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/pays.csv&quot;</span>)</span>
-<span id="cb2-3"><a href></a>ent <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/entreprises.csv&quot;</span>)</span>
-<span id="cb2-4"><a href></a>p23 <span class="op">=</span> pays[pays[<span class="st">&quot;annee&quot;</span>] <span class="op">==</span> <span class="dv">2023</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Travaillez dans <strong>votre copie</strong>, cellule par cellule (<code># %%</code>, puis <code>Maj + Entrée</code>). Pour chaque figure, le fichier prépare déjà les <strong>données</strong> et la <strong>statistique</strong> ; vous collez et adaptez le bloc <strong>figure</strong> du script de la galerie.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a>plt.style.use(<span class="st">&quot;05-representer-les-donnees/statlas.mplstyle&quot;</span>)   <span class="co"># déjà dans le fichier</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="défendre-20-min" class="slide level2">
-<h2>1 · Défendre — 20 min</h2>
-<p><strong>Figure 1.</strong> Les quinze plus grandes économies en 2023, en <strong>barres horizontales triées</strong>, PIB total en milliers de milliards de dollars.</p>
+<section id="rappel-les-quatre-gestes" class="slide level2">
+<h2>Rappel : les quatre gestes</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Geste</th>
+<th>Dans l’atelier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>1</strong></td>
+<td><strong>Trouver</strong></td>
+<td>La page de la galerie est indiquée en tête de chaque cellule</td>
+</tr>
+<tr class="even">
+<td><strong>2</strong></td>
+<td><strong>Copier</strong></td>
+<td>« Copier le code », puis ne gardez que le bloc qui commence à <code>fig, ax = ...</code></td>
+</tr>
+<tr class="odd">
+<td><strong>3</strong></td>
+<td><strong>Remplacer</strong></td>
+<td>Les noms de variables du script (<code>x</code>, <code>data</code>, <code>groups</code>…) par ceux de la cellule</td>
+</tr>
+<tr class="even">
+<td><strong>4</strong></td>
+<td><strong>Réécrire</strong></td>
+<td>Titre-message, axes avec unités, sous-titre statistique en français, source</td>
+</tr>
+</tbody>
+</table>
+<div class="muted">
+<p>Si le script de la galerie importe <code>sklearn</code>, supprimez la ligne : vos données remplacent son jeu d’exemple.</p>
+</div>
+</section>
+<section id="défendre-15-min" class="slide level2">
+<h2>1 · Défendre — 15 min</h2>
+<p><strong>Figure 1.</strong> Les quinze plus grandes économies en 2023, en <strong>barres horizontales triées</strong>, PIB total en milliers de milliards de dollars. Pas de galerie ici : c’est du matplotlib simple.</p>
 <ul>
-<li>Les États-Unis en couleur d’accent, les autres en gris</li>
+<li>Les États-Unis en rouge (<code>&quot;#FF3B30&quot;</code>), les autres en gris (<code>&quot;#8E8E93&quot;</code>)</li>
 <li>Une étiquette de valeur au bout de chaque barre</li>
 <li>Un titre qui énonce le message ; la source en bas</li>
 </ul>
 <div class="step">
-<p>Ajoutez une ligne de texte : la <strong>part</strong> des États-Unis dans le PIB mondial en 2023, calculée, pas recopiée.</p>
+<p>En sous-titre (<code>ax.text(0, 1.02, ..., transform=ax.transAxes)</code>) : la <strong>part</strong> des États-Unis dans le PIB mondial en 2023, calculée, pas recopiée.</p>
 </div>
 </section>
-<section id="réfuter-25-min" class="slide level2">
-<h2>2 · Réfuter — 25 min</h2>
-<p><strong>Figure 2.</strong> La <strong>distribution</strong> du PIB par habitant (histogramme, échelle log), avec une ligne verticale pour les États-Unis. Combien de pays sont au-dessus ?</p>
-<p><strong>Figure 3.</strong> Une <strong>relation</strong> : PIB par habitant (log) contre croissance moyenne 2014-2023, une bulle par pays. Où sont les États-Unis ?</p>
+<section id="réfuter-la-distribution-15-min" class="slide level2">
+<h2>2 · Réfuter : la distribution — 15 min</h2>
+<p><strong>Figure 2.</strong> <a href="https://warint.github.io/pystatlas/fr/distributions/histogram-density/">Histogramme avec densité</a> du PIB par habitant en <strong>échelle logarithmique</strong> (<code>np.log10</code>).</p>
+<ul>
+<li>Gardez la densité, la loi normale, la moyenne et la médiane du script</li>
+<li>Ajoutez une ligne verticale rouge pour les <strong>États-Unis</strong>, annotée</li>
+<li>Le titre dit <strong>combien</strong> de pays sont devant les États-Unis — le nombre sort du code</li>
+</ul>
 <div class="muted">
-<p>Pour la croissance moyenne : <code>pays[pays[&quot;annee&quot;].between(2014, 2023)].groupby(&quot;iso3&quot;)[&quot;croissance_pib&quot;].mean()</code>, puis <code>merge</code> avec <code>p23</code>.</p>
+<p>Comparez l’asymétrie à celle du cours (3,3 en dollars). En log, que devient-elle ? Pourquoi la loi normale colle-t-elle mieux ?</p>
+</div>
+</section>
+<section id="réfuter-la-relation-15-min" class="slide level2">
+<h2>3 · Réfuter : la relation — 15 min</h2>
+<p><strong>Figure 3.</strong> <a href="https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/">Nuage de points avec statistiques</a> : PIB par habitant (log) contre <strong>croissance moyenne 2014-2023</strong>, un point par pays.</p>
+<ul>
+<li>Gardez la droite, sa bande de confiance et les histogrammes marginaux</li>
+<li>Annotez les États-Unis</li>
+<li>Sous-titre : r de Pearson, son IC à 95 %, p, n</li>
+</ul>
+<div class="step">
+<p>Si la droite est presque plate et l’intervalle de r contient zéro, <strong>c’est un résultat</strong>, pas un échec. Que veut-il dire pour la manchette ?</p>
 </div>
 </section>
 <section id="les-entreprises-20-min" class="slide level2">
-<h2>3 · Les entreprises — 20 min</h2>
-<p><strong>Figure 4.</strong> Avec <code>sns.relplot(..., col=&quot;secteur&quot;, col_wrap=3, kind=&quot;line&quot;)</code>, la marge nette médiane par secteur de 2010 à 2024.</p>
+<h2>4 · Les entreprises — 20 min</h2>
+<p><strong>Figure 4.</strong> <a href="https://warint.github.io/pystatlas/fr/group-comparisons/between-groups-violin/">Comparaison entre groupes</a> : la marge nette de trois secteurs — <strong>Technologie, Pharmaceutique, Biens de consommation</strong>.</p>
 <ul>
-<li>Une échelle commune (<code>sharey=True</code>), puis une échelle libre : <strong>laquelle choisiriez-vous pour un conseil d’administration ?</strong> Écrivez pourquoi en une phrase.</li>
-<li>Repérez une année où un secteur entier passe sous zéro, et proposez une explication.</li>
+<li>Violon, boîte, chaque entreprise-année, moyenne de chaque groupe</li>
+<li>Sous-titre : ANOVA de Welch et ω², déjà calculés dans la cellule</li>
+<li>Crochets : tests de Welch deux à deux, corrigés de Holm (le script les dessine)</li>
 </ul>
+<div class="warn">
+<p>Écrivez en une phrase pourquoi la valeur p est <strong>trop optimiste</strong> ici (indice : Apple 2015 et Apple 2016). La séance 6 y revient.</p>
+</div>
 </section>
 <section id="explorer-15-min" class="slide level2">
-<h2>4 · Explorer — 15 min</h2>
+<h2>5 · Explorer — 15 min</h2>
 <p><strong>Figure 5.</strong> Avec <code>px.scatter</code>, PIB par habitant contre IDE entrants (% du PIB), taille = population, couleur = région, <code>hover_name=&quot;pays&quot;</code>. Enregistrez-la avec <code>fig.write_html(&quot;sorties/fig5.html&quot;)</code>.</p>
 <p>Survolez les points extrêmes. <strong>Lesquels sont des paradis fiscaux ou des places financières ?</strong> Que dit cela de l’IDE comme mesure d’« attractivité » ?</p>
 </section>
 <section id="rédiger-10-min" class="slide level2">
-<h2>5 · Rédiger — 10 min</h2>
+<h2>6 · Rédiger — 10 min</h2>
 <p>Dans <code>sorties/note_seance05.md</code>, <strong>200 mots</strong> :</p>
 <ol type="1">
 <li>La manchette est-elle vraie ? Selon <strong>quelle</strong> mesure ?</li>
 <li>La figure que vous montreriez à un comité de direction, et pourquoi celle-là</li>
 <li>Une figure <strong>trompeuse</strong> que vous auriez pu faire avec les mêmes données</li>
+<li>Une ligne : quels scripts de la galerie avez-vous adaptés, et qu’avez-vous changé</li>
 </ol>
 </section>
 <section id="ce-qui-coûte-des-points" class="slide level2">
 <h2>Ce qui coûte des points</h2>
 <table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <tbody>
 <tr class="odd">
 <td>Un titre qui décrit (« PIB par pays ») au lieu d’affirmer</td>
 <td></td>
 </tr>
 <tr class="even">
+<td>Un sous-titre resté en anglais, ou une statistique sans n</td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Un axe sans unité, une figure sans source</td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Des barres non triées, ou qui ne partent pas de zéro</td>
 <td></td>
 </tr>
-<tr class="even">
-<td>Une légende de quinze couleurs</td>
+<tr class="odd">
+<td>Un chiffre dans le titre ou la note qui ne sort pas du code</td>
 <td></td>
 </tr>
-<tr class="odd">
-<td>Un chiffre dans le texte qui ne sort pas du code</td>
+<tr class="even">
+<td>Une figure de la galerie copiée <strong>sans</strong> avoir remplacé ses données</td>
 <td></td>
 </tr>
 </tbody>

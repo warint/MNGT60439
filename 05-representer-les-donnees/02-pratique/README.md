@@ -8,9 +8,9 @@ qui défend la manchette, puis ceux qui la réfutent.
 
 | Minutes | Étape | Figure |
 |---|---|---|
-| 00–20 | Défendre | `fig1.png` — les 15 plus grandes économies, barres triées, part des États-Unis calculée |
-| 20–45 | Réfuter | `fig2.png` — distribution du PIB/hab. (log) ; `fig3.png` — richesse × croissance 2014-2023 |
-| 45–65 | Entreprises | `fig4.png` — marge nette médiane par secteur, petits multiples |
+| 00–15 | Défendre | `fig1.png` — les 15 plus grandes économies, barres triées, part des États-Unis calculée |
+| 15–45 | Réfuter | `fig2.png` — *Histogramme avec densité* du PIB/hab. (log) ; `fig3.png` — *Nuage de points avec statistiques*, richesse × croissance 2014-2023 |
+| 45–65 | Entreprises | `fig4.png` — *Comparaison entre groupes* : marge nette de trois secteurs, ANOVA de Welch |
 | 65–80 | Explorer | `fig5.html` — nuage plotly PIB/hab. × IDE entrants |
 | 80–90 | Rédiger | `note_seance05.md` — 200 mots |
 
@@ -22,7 +22,9 @@ cp 05-representer-les-donnees/02-pratique/starter/seance05_atelier.py sorties/
 
 Ouvrez `sorties/seance05_atelier.py` dans VS Code et exécutez-le cellule par cellule
 (`# %%`, puis `Maj + Entrée`). Le fichier se place lui-même à la racine du dépôt ; remplacez
-chaque `TODO`.
+chaque `TODO`. Pour les figures 2 à 4, les données et la statistique sont prêtes : collez le
+bloc figure du script de la [galerie PyStatlas](https://warint.github.io/pystatlas/fr/) indiqué
+dans la cellule, puis adaptez noms de variables et textes.
 
 ## Remettre
 
@@ -30,7 +32,7 @@ Les cinq figures, la note et votre script, qui doit tout reproduire en une exéc
 
 ## Ce qui coûte des points
 
-Un titre qui décrit au lieu d'affirmer ; un axe sans unité ; une figure sans source ; des
+Un titre qui décrit au lieu d'affirmer ; un sous-titre resté en anglais ; un axe sans unité ; une figure sans source ; des
 barres non triées ou qui ne partent pas de zéro ; une légende de quinze couleurs ; un chiffre
 dans la note qui ne sort pas du code.
 

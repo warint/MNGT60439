@@ -1,6 +1,6 @@
 ---
 title: "Séance 5 : Pratique"
-subtitle: "Le graphique qui défend, le graphique qui réfute"
+subtitle: "Le graphique qui défend, le graphique qui réfute — à partir de la galerie PyStatlas"
 author: "Thierry Warin, PhD"
 institute: "HEC Montréal"
 lang: fr
@@ -29,9 +29,9 @@ format:
 
 1. Quatre-vingt-dix minutes
 2. Avant de commencer
-3. Défendre la manchette — 20 min
-4. La réfuter — 25 min
-5. Les entreprises : où se crée la marge ? — 20 min
+3. Défendre la manchette — 15 min
+4. La réfuter, avec deux graphiques de la galerie — 30 min
+5. Les entreprises : une comparaison entre groupes — 20 min
 6. Explorer, puis rédiger — 25 min
 7. Ce qui coûte des points
 
@@ -43,13 +43,13 @@ format:
 
 ## Quatre-vingt-dix minutes
 
-| | | |
-|---|---|---|
-| **00–20** | Défendre | le graphique qui donne raison à la manchette |
-| **20–45** | Réfuter | deux graphiques qui lui donnent tort |
-| **45–65** | Entreprises | la marge nette par secteur, en petits multiples |
-| **65–80** | Explorer | une figure plotly interactive |
-| **80–90** | Rédiger | 200 mots, puis deux minutes devant la salle |
+| | | | |
+|---|---|---|---|
+| **00–15** | Défendre | barres triées, en matplotlib | `fig1.png` |
+| **15–45** | Réfuter | *Histogramme avec densité* et *Nuage de points avec statistiques* | `fig2.png`, `fig3.png` |
+| **45–65** | Entreprises | *Comparaison entre groupes* | `fig4.png` |
+| **65–80** | Explorer | un nuage plotly interactif | `fig5.html` |
+| **80–90** | Rédiger | 200 mots, puis deux minutes devant la salle | `note_seance05.md` |
 
 ::: {.warn}
 Travail en équipe de deux. La personne qui présente est tirée **au hasard** : préparez-vous tous les deux.
@@ -57,59 +57,93 @@ Travail en équipe de deux. La personne qui présente est tirée **au hasard** :
 
 ## Avant de commencer
 
-Ouvrez le dossier du dépôt dans VS Code, activez `.venv`, puis copiez le fichier de départ :
+Ouvrez la galerie dans un onglet : **[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)**.
+
+Dans VS Code, `.venv` activé, copiez le fichier de départ :
 
 ```bash
 cp 05-representer-les-donnees/02-pratique/starter/seance05_atelier.py sorties/
 ```
 
-Travaillez dans **votre copie**, cellule par cellule (`# %%`, puis `Maj + Entrée`). Chaque
-figure est enregistrée dans `sorties/` : c'est ce que vous remettrez.
+Travaillez dans **votre copie**, cellule par cellule (`# %%`, puis `Maj + Entrée`). Pour chaque
+figure, le fichier prépare déjà les **données** et la **statistique** ; vous collez et adaptez le
+bloc **figure** du script de la galerie.
 
 ```python
-import pandas as pd, matplotlib.pyplot as plt, seaborn as sns, plotly.express as px
-pays = pd.read_csv("data/pays.csv")
-ent = pd.read_csv("data/entreprises.csv")
-p23 = pays[pays["annee"] == 2023]
+plt.style.use("05-representer-les-donnees/statlas.mplstyle")   # déjà dans le fichier
 ```
 
-## 1 · Défendre — 20 min
+## Rappel : les quatre gestes
+
+| | Geste | Dans l'atelier |
+|---|---|---|
+| **1** | **Trouver** | La page de la galerie est indiquée en tête de chaque cellule |
+| **2** | **Copier** | « Copier le code », puis ne gardez que le bloc qui commence à `fig, ax = ...` |
+| **3** | **Remplacer** | Les noms de variables du script (`x`, `data`, `groups`…) par ceux de la cellule |
+| **4** | **Réécrire** | Titre-message, axes avec unités, sous-titre statistique en français, source |
+
+::: {.muted}
+Si le script de la galerie importe `sklearn`, supprimez la ligne : vos données remplacent
+son jeu d'exemple.
+:::
+
+## 1 · Défendre — 15 min
 
 **Figure 1.** Les quinze plus grandes économies en 2023, en **barres horizontales triées**,
-PIB total en milliers de milliards de dollars.
+PIB total en milliers de milliards de dollars. Pas de galerie ici : c'est du matplotlib simple.
 
-- Les États-Unis en couleur d'accent, les autres en gris
+- Les États-Unis en rouge (`"#FF3B30"`), les autres en gris (`"#8E8E93"`)
 - Une étiquette de valeur au bout de chaque barre
 - Un titre qui énonce le message ; la source en bas
 
 ::: {.step}
-Ajoutez une ligne de texte : la **part** des États-Unis dans le PIB mondial en 2023, calculée,
-pas recopiée.
+En sous-titre (`ax.text(0, 1.02, ..., transform=ax.transAxes)`) : la **part** des États-Unis
+dans le PIB mondial en 2023, calculée, pas recopiée.
 :::
 
-## 2 · Réfuter — 25 min
+## 2 · Réfuter : la distribution — 15 min
 
-**Figure 2.** La **distribution** du PIB par habitant (histogramme, échelle log), avec une ligne
-verticale pour les États-Unis. Combien de pays sont au-dessus ?
+**Figure 2.** [Histogramme avec densité](https://warint.github.io/pystatlas/fr/distributions/histogram-density/)
+du PIB par habitant en **échelle logarithmique** (`np.log10`).
 
-**Figure 3.** Une **relation** : PIB par habitant (log) contre croissance moyenne 2014-2023,
-une bulle par pays. Où sont les États-Unis ?
+- Gardez la densité, la loi normale, la moyenne et la médiane du script
+- Ajoutez une ligne verticale rouge pour les **États-Unis**, annotée
+- Le titre dit **combien** de pays sont devant les États-Unis — le nombre sort du code
 
 ::: {.muted}
-Pour la croissance moyenne : `pays[pays["annee"].between(2014, 2023)].groupby("iso3")["croissance_pib"].mean()`,
-puis `merge` avec `p23`.
+Comparez l'asymétrie à celle du cours (3,3 en dollars). En log, que devient-elle ? Pourquoi la
+loi normale colle-t-elle mieux ?
 :::
 
-## 3 · Les entreprises — 20 min
+## 3 · Réfuter : la relation — 15 min
 
-**Figure 4.** Avec `sns.relplot(..., col="secteur", col_wrap=3, kind="line")`, la marge nette
-médiane par secteur de 2010 à 2024.
+**Figure 3.** [Nuage de points avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) :
+PIB par habitant (log) contre **croissance moyenne 2014-2023**, un point par pays.
 
-- Une échelle commune (`sharey=True`), puis une échelle libre : **laquelle choisiriez-vous pour un
-  conseil d'administration ?** Écrivez pourquoi en une phrase.
-- Repérez une année où un secteur entier passe sous zéro, et proposez une explication.
+- Gardez la droite, sa bande de confiance et les histogrammes marginaux
+- Annotez les États-Unis
+- Sous-titre : r de Pearson, son IC à 95 %, p, n
 
-## 4 · Explorer — 15 min
+::: {.step}
+Si la droite est presque plate et l'intervalle de r contient zéro, **c'est un résultat**, pas un
+échec. Que veut-il dire pour la manchette ?
+:::
+
+## 4 · Les entreprises — 20 min
+
+**Figure 4.** [Comparaison entre groupes](https://warint.github.io/pystatlas/fr/group-comparisons/between-groups-violin/) :
+la marge nette de trois secteurs — **Technologie, Pharmaceutique, Biens de consommation**.
+
+- Violon, boîte, chaque entreprise-année, moyenne de chaque groupe
+- Sous-titre : ANOVA de Welch et ω², déjà calculés dans la cellule
+- Crochets : tests de Welch deux à deux, corrigés de Holm (le script les dessine)
+
+::: {.warn}
+Écrivez en une phrase pourquoi la valeur p est **trop optimiste** ici (indice : Apple 2015 et
+Apple 2016). La séance 6 y revient.
+:::
+
+## 5 · Explorer — 15 min
 
 **Figure 5.** Avec `px.scatter`, PIB par habitant contre IDE entrants (% du PIB), taille =
 population, couleur = région, `hover_name="pays"`. Enregistrez-la avec
@@ -118,23 +152,25 @@ population, couleur = région, `hover_name="pays"`. Enregistrez-la avec
 Survolez les points extrêmes. **Lesquels sont des paradis fiscaux ou des places financières ?**
 Que dit cela de l'IDE comme mesure d'« attractivité » ?
 
-## 5 · Rédiger — 10 min
+## 6 · Rédiger — 10 min
 
 Dans `sorties/note_seance05.md`, **200 mots** :
 
 1. La manchette est-elle vraie ? Selon **quelle** mesure ?
 2. La figure que vous montreriez à un comité de direction, et pourquoi celle-là
 3. Une figure **trompeuse** que vous auriez pu faire avec les mêmes données
+4. Une ligne : quels scripts de la galerie avez-vous adaptés, et qu'avez-vous changé
 
 ## Ce qui coûte des points
 
 | | |
 |---|---|
 | Un titre qui décrit (« PIB par pays ») au lieu d'affirmer | |
+| Un sous-titre resté en anglais, ou une statistique sans n | |
 | Un axe sans unité, une figure sans source | |
 | Des barres non triées, ou qui ne partent pas de zéro | |
-| Une légende de quinze couleurs | |
-| Un chiffre dans le texte qui ne sort pas du code | |
+| Un chiffre dans le titre ou la note qui ne sort pas du code | |
+| Une figure de la galerie copiée **sans** avoir remplacé ses données | |
 
 ## Remettre
 
