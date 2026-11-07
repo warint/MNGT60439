@@ -132,6 +132,10 @@ Dans les diapositives qui suivent, chaque graphique de la galerie est adapté à
 avec les quatre gestes de la séance 5 : trouver, copier, remplacer, réécrire.
 :::
 
+::: {.muted}
+Références complètes de ces données : [Sources des données](https://warint.github.io/pystatlas/fr/about.html#data) de la galerie.
+:::
+
 # Deux manchettes, revues {background-color="#E3120B" style="color:#F7F4ED"}
 
 ## Où nous en sommes {.scrollable}
@@ -315,6 +319,8 @@ ax.grid(axis="y", visible=False); ax.grid(axis="x")
 ax.set_title(f"{reps - rate.sum()} intervalles sur {reps} contiennent le vrai âge moyen ({mu:.1f} ans)", pad=26)
 ax.text(0, 1.02, f"Chaque sondage : n = {n_s} parmi {len(age)} répondants · en rouge, les {rate.sum()} intervalles qui ratent",
         transform=ax.transAxes, fontsize=10, color="#6E6E73")
+fig.text(0.01, -0.03, "Source : ANES 1996 Time Series Study (Rosenstone, Kinder, Miller et al., ICPSR 6896, v6), "
+         "sous-ensemble distribué avec statsmodels · adapté de PyStatlas", fontsize=8, color=GRIS)
 plt.show()
 ```
 

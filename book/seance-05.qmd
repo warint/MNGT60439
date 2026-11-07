@@ -127,7 +127,8 @@ famille de questions, chacun accompagné d'un script Python complet
 (<https://warint.github.io/pystatlas/fr/>). La galerie a été pensée d'abord pour les étudiants en
 sciences sociales, et ses exemples reposent sur de vraies données du domaine : l'enquête
 électorale américaine de 1996, les districts scolaires de Californie, la criminalité des États
-américains, la fécondité des pays, la durée des régimes politiques, la récidive.
+américains, la fécondité des pays, la durée des régimes politiques, la récidive. Leurs références
+complètes figurent sur la page [Sources des données](https://warint.github.io/pystatlas/fr/about.html#data) de la galerie.
 
 Chaque famille répond à une question différente. Le tableau suivant présente celles qui servent
 le cours, avec la question à laquelle elles répondent et le moment où elles interviennent.

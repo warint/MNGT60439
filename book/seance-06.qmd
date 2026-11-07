@@ -95,6 +95,8 @@ sciences sociales ; le chapitre les adapte à nos entreprises.
 | Relier deux variables | [Nuage avec statistiques](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) | 303 districts scolaires californiens |
 | Régresser | [Graphique de coefficients](https://warint.github.io/pystatlas/fr/regression-models/coefficient-plot/) | ce qui prédit la criminalité violente des États |
 
+Les références complètes de ces données — étude originale, distributeur, conditions d'usage — figurent sur la page [Sources des données](https://warint.github.io/pystatlas/fr/about.html#data) de la galerie. Les exemples y illustrent des méthodes ; leurs conclusions de fond appartiennent aux études citées.
+
 ## Décrire
 
 ### Le centre
@@ -202,7 +204,7 @@ et l'on peut y tirer cent sondages de trente personnes (@fig-s06-couverture).
 
 ```{python}
 #| label: fig-s06-couverture
-#| fig-cap: "Cent sondages de 30 personnes tirés des 944 répondants de l'enquête électorale américaine de 1996, avec leur intervalle de confiance à 95 % de l'âge moyen. En rouge, les intervalles qui ne contiennent pas la vraie moyenne. Adapté de PyStatlas, « Ce que veut dire un IC à 95 % »."
+#| fig-cap: "Cent sondages de 30 personnes tirés des 944 répondants de l'enquête électorale américaine de 1996, avec leur intervalle de confiance à 95 % de l'âge moyen. En rouge, les intervalles qui ne contiennent pas la vraie moyenne. Données : ANES 1996 [@anes1996], sous-ensemble distribué avec statsmodels. Adapté de PyStatlas, « Ce que veut dire un IC à 95 % »."
 #| fig-width: 7
 #| fig-height: 4.6
 import statsmodels.api as sm

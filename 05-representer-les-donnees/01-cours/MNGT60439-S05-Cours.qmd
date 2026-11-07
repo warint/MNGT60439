@@ -241,7 +241,7 @@ plt.show()
 
 - **57 graphiques statistiques**, rangés par **famille de questions**, chacun avec son script Python complet
 - Pensée d'abord pour les **étudiants en sciences sociales** : on part de la question, pas du code
-- Des exemples sur de **vraies données de sciences sociales** : élections américaines, écoles californiennes, criminalité, fécondité, régimes politiques, récidive
+- Des exemples sur de **vraies données de sciences sociales** : élections américaines, écoles californiennes, criminalité, fécondité, régimes politiques, récidive — références complètes : [Sources des données](https://warint.github.io/pystatlas/fr/about.html#data)
 - Construite sur ce que vous avez déjà : NumPy, pandas, Matplotlib, SciPy, statsmodels
 
 Trois principes, qui sont aussi ceux du cours :
