@@ -12,4 +12,7 @@
 
 *Questions de discussion : à compléter.*
 
+Pour montrer les résultats en plénière, voir la table « Montrer les résultats : la galerie
+PyStatlas » dans le [README de la séance](../README.md#montrer-les-résultats--la-galerie-pystatlas).
+
 [← Retour à la séance 07](../README.md)

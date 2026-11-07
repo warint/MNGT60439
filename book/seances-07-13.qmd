@@ -13,7 +13,7 @@ déjà faire.
 
 | Séance | Question | Méthode | Déjà vu dans ce livre |
 |---|---|---|---|
-| 07 · Fusions-acquisitions | Les F&A créent-elles réellement de la valeur ? | Étude d'événement [@mackinlay1997] ; performance de marché et comptable | Rendements autour d'une annonce (chapitre 4) |
+| 07 · Fusions-acquisitions | Les F&A créent-elles réellement de la valeur ? | Étude d'événement [@mackinlay1997] ; performance de marché et comptable | Rendements autour d'une annonce (chapitre 4) ; galerie PyStatlas : distributions, graphique d'estimation, comparaison intra-sujets, coefficients (chapitres 5 et 6) |
 | 08 · ESG et écoblanchiment | Les mieux notés en ESG aident-ils vraiment la planète ? | Corrélation, MCO | Importer des émissions (chapitre 3) ; corrélation et MCO (chapitre 6) |
 | 09 · Groupes stratégiques | Qui sont mes véritables concurrents ? | Analyse de grappes | Écart à la moyenne du secteur (chapitre 4) |
 | 10 · Rémunération des dirigeants | Les incitatifs de long terme poussent-ils à la R-D ? | Panel : effets fixes et aléatoires ; endogénéité | Intensité de R-D ; dépendance des observations d'une même entreprise (chapitre 6) |
