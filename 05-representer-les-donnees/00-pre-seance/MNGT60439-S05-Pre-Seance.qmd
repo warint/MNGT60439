@@ -122,8 +122,10 @@ Annotez quatre choses :
 
 ## 2 · Parcourir la galerie PyStatlas
 
-**[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** — 48 graphiques
-statistiques en 10 familles, chacun avec son code Python complet.
+**[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** — 57 graphiques
+statistiques, rangés par famille de questions, chacun avec son code Python complet. Les
+exemples portent sur de vraies données de sciences sociales : élections, écoles, criminalité,
+fécondité, régimes politiques.
 
 Ouvrez trois pages de la famille **Distributions** et une de **Corrélation et association**.
 Pour chacune, notez :
@@ -152,12 +154,12 @@ En cas d'erreur : `python -m pip install -r requirements.txt`.
 
 Puis ouvrez le **[graphique en crêtes](https://warint.github.io/pystatlas/fr/distributions/ridgeline/)**,
 cliquez sur « Copier le code », collez-le dans un fichier `sorties/cretes.py` et exécutez-le
-**sans rien changer**. Il n'utilise que NumPy, SciPy et statsmodels.
+**sans rien changer**. Il n'utilise que NumPy, SciPy et statsmodels, déjà installés.
 
 ::: {.muted}
-Beaucoup d'autres scripts de la galerie chargent leurs données d'exemple depuis
-**scikit-learn**, qui n'est pas installé dans le cours. Inutile de l'ajouter : en séance, cette
-ligne est justement celle que l'on remplace par nos données.
+Ce script montre l'évolution de la fécondité des pays, de 1960 à 2010. Quelques scripts
+chargent leurs données avec **lifelines**, qui n'est pas installé dans le cours : inutile de
+l'ajouter, en séance c'est précisément la ligne des données que l'on remplace par les nôtres.
 :::
 
 ## 4 · Un premier graphique, chez vous

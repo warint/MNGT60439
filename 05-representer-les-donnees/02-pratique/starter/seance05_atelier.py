@@ -126,8 +126,11 @@ raw_p = [stats.ttest_ind(data[i], data[j], equal_var=False).pvalue for i, j in p
 adj_p = multipletests(raw_p, method="holm")[1]
 
 # FIGURE — TODO : collez le bloc figure de la galerie, puis :
-#   - les crochets sont calibrés pour une échelle de 11 à 15 ; les marges vont de −35 à 55.
-#     Multipliez par 10 leurs constantes : 0.3 → 3, step = 0.42 → 4, 0.08 → 0.8, 0.04 → 0.4, 0.1 → 1
+#   - le script de la galerie porte sur des écoles (pourcentages de 0 à 100) ; les crochets
+#     conviennent tels quels à nos marges, mais supprimez les lignes propres aux écoles :
+#     `lowinc = df.groupby(...)` et `ax.set_yticks(range(0, 101, 20))`
+#   - étiquettes des groupes : ax.set_xticks(range(k), [f"{g}\n(n = {len(d)})" for g, d in zip(groups, data)])
+#   - l'étiquette de moyenne affiche « % » : f"μ = {d.mean():.1f} %"
 #   - ax.set_ylabel("Marge nette (%)"), titre-message, sous-titre en français, source SEC EDGAR
 fig.savefig("sorties/fig4.png")
 plt.show()

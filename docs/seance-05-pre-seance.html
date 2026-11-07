@@ -1181,7 +1181,7 @@ Thierry Warin, PhD
 </section>
 <section id="parcourir-la-galerie-pystatlas" class="slide level2">
 <h2>2 · Parcourir la galerie PyStatlas</h2>
-<p><strong><a href="https://warint.github.io/pystatlas/fr/">warint.github.io/pystatlas/fr</a></strong> — 48 graphiques statistiques en 10 familles, chacun avec son code Python complet.</p>
+<p><strong><a href="https://warint.github.io/pystatlas/fr/">warint.github.io/pystatlas/fr</a></strong> — 57 graphiques statistiques, rangés par famille de questions, chacun avec son code Python complet. Les exemples portent sur de vraies données de sciences sociales : élections, écoles, criminalité, fécondité, régimes politiques.</p>
 <p>Ouvrez trois pages de la famille <strong>Distributions</strong> et une de <strong>Corrélation et association</strong>. Pour chacune, notez :</p>
 <table class="caption-top">
 <colgroup>
@@ -1216,14 +1216,14 @@ Thierry Warin, PhD
 <p>Depuis la racine du dépôt, <code>.venv</code> activé :</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">&quot;import matplotlib, seaborn, plotly, scipy, statsmodels; print(&#39;ok&#39;)&quot;</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>En cas d’erreur : <code>python -m pip install -r requirements.txt</code>.</p>
-<p>Puis ouvrez le <strong><a href="https://warint.github.io/pystatlas/fr/distributions/ridgeline/">graphique en crêtes</a></strong>, cliquez sur « Copier le code », collez-le dans un fichier <code>sorties/cretes.py</code> et exécutez-le <strong>sans rien changer</strong>. Il n’utilise que NumPy, SciPy et statsmodels.</p>
+<p>Puis ouvrez le <strong><a href="https://warint.github.io/pystatlas/fr/distributions/ridgeline/">graphique en crêtes</a></strong>, cliquez sur « Copier le code », collez-le dans un fichier <code>sorties/cretes.py</code> et exécutez-le <strong>sans rien changer</strong>. Il n’utilise que NumPy, SciPy et statsmodels, déjà installés.</p>
 <div class="muted">
-<p>Beaucoup d’autres scripts de la galerie chargent leurs données d’exemple depuis <strong>scikit-learn</strong>, qui n’est pas installé dans le cours. Inutile de l’ajouter : en séance, cette ligne est justement celle que l’on remplace par nos données.</p>
+<p>Ce script montre l’évolution de la fécondité des pays, de 1960 à 2010. Quelques scripts chargent leurs données avec <strong>lifelines</strong>, qui n’est pas installé dans le cours : inutile de l’ajouter, en séance c’est précisément la ligne des données que l’on remplace par les nôtres.</p>
 </div>
 </section>
 <section id="un-premier-graphique-chez-vous" class="slide level2">
 <h2>4 · Un premier graphique, chez vous</h2>
-<div id="55447635" class="cell columns column-output-location" data-fig-height="4" data-fig-width="6" data-execution_count="2">
+<div id="cb839abb" class="cell columns column-output-location" data-fig-height="4" data-fig-width="6" data-execution_count="2">
 <div class="column">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>

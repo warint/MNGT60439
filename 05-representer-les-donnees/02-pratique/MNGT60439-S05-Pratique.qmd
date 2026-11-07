@@ -83,8 +83,8 @@ plt.style.use("05-representer-les-donnees/pystatlas.mplstyle")   # déjà dans l
 | **4** | **Réécrire** | Titre-message, axes avec unités, sous-titre statistique en français, source |
 
 ::: {.muted}
-Si le script de la galerie importe `sklearn`, supprimez la ligne : vos données remplacent
-son jeu d'exemple.
+Supprimez les lignes qui chargent l'exemple de la galerie (`sm.datasets…`,
+`lifelines.datasets…`) : vos données le remplacent. Les noms de variables, eux, restent.
 :::
 
 ## 1 · Défendre — 15 min

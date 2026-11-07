@@ -41,9 +41,9 @@ python -c "import matplotlib, seaborn, plotly, scipy, statsmodels; print('ok')"
 En cas d'erreur : `python -m pip install -r requirements.txt`.
 
 Copiez le code du [graphique en crêtes](https://warint.github.io/pystatlas/fr/distributions/ridgeline/)
-dans `sorties/cretes.py` et exécutez-le sans rien changer. (Beaucoup d'autres scripts chargent
-leurs données d'exemple depuis scikit-learn, non installé : en séance, c'est précisément la
-ligne que l'on remplace.)
+dans `sorties/cretes.py` et exécutez-le sans rien changer : il montre la fécondité des pays de
+1960 à 2010. (Quelques scripts chargent leurs données avec lifelines, non installé : en séance,
+c'est précisément la ligne des données que l'on remplace.)
 
 ## Étape 4 — Un premier graphique
 

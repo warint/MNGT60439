@@ -122,12 +122,15 @@ print(f"Part des États-Unis : {parts['United States']:.1%}")
 Le bon graphique se choisit à partir de la question, jamais à partir du menu d'un logiciel.
 Encore faut-il savoir quelles formes existent. Pour les graphiques **statistiques** — ceux qui
 montrent une distribution, une différence entre groupes, une relation, une incertitude — ce
-chapitre s'appuie sur PyStatlas [@warin2026statlas], une galerie de 48 graphiques rangés en dix
-familles, chacun accompagné d'un script Python complet
-(<https://warint.github.io/pystatlas/fr/>).
+chapitre s'appuie sur PyStatlas [@warin2026statlas], une galerie de 57 graphiques rangés par
+famille de questions, chacun accompagné d'un script Python complet
+(<https://warint.github.io/pystatlas/fr/>). La galerie a été pensée d'abord pour les étudiants en
+sciences sociales, et ses exemples reposent sur de vraies données du domaine : l'enquête
+électorale américaine de 1996, les districts scolaires de Californie, la criminalité des États
+américains, la fécondité des pays, la durée des régimes politiques, la récidive.
 
-Les dix familles répondent à des questions différentes. Le tableau suivant indique, pour chacune,
-la question qu'elle sert et le moment du cours où elle intervient.
+Chaque famille répond à une question différente. Le tableau suivant présente celles qui servent
+le cours, avec la question à laquelle elles répondent et le moment où elles interviennent.
 
 | Famille PyStatlas | La question | Exemples de graphiques | Dans le cours |
 |---|---|---|---|
@@ -142,7 +145,7 @@ la question qu'elle sert et le moment du cours où elle intervient.
 | Multivarié et classification | Quels groupes se forment dans des données à nombreuses variables ? | ACP, silhouette, carte de chaleur groupée | Séance 9 (groupes stratégiques) |
 | Inférence et incertitude | Quelle confiance accorder à une estimation ? | Bootstrap, intervalles de confiance, puissance | Séance 6 |
 
-Personne n'apprend 48 graphiques. Ce qui s'apprend, c'est le chemin : **formuler la question,
+Personne n'apprend 57 graphiques. Ce qui s'apprend, c'est le chemin : **formuler la question,
 trouver la famille, lire un script assez bien pour le faire travailler sur ses propres données.**
 
 Trois principes de la galerie sont aussi ceux du cours. Chaque script est **autonome** : il
@@ -168,16 +171,17 @@ title: Histogram with density                       # 1. la fiche
 summary: Histogram, kernel density and fitted normal curve, with shape statistics.
 r: ggplot2::geom_histogram() + geom_density()
 """
-from sklearn.datasets import load_breast_cancer
-x = load_breast_cancer(as_frame=True).frame["mean area"].to_numpy()   # 2. les données
+wb = sm.datasets.fertility.load_pandas().data                         # 2. les données
+x = wb["2011"].dropna().to_numpy()            # fécondité de chaque pays en 2011
 mean, median, sd = x.mean(), np.median(x), x.std(ddof=1)
 
 skew, kurt = stats.skew(x), stats.kurtosis(x)                          # 3. la statistique
 W, p = stats.shapiro(x)
 
 fig, ax = plt.subplots(figsize=(8, 5))                                 # 4. la figure
-ax.hist(x, bins=40, density=True, ...)
-ax.set_title("Tumour area is strongly right-skewed", pad=26)           #    le message
+ax.hist(x, bins=30, density=True, ...)
+ax.set_title(f"Fertility is right-skewed: median {median:.1f} births per woman, "
+             f"{(x > 5).sum()} countries above 5", pad=26)            #    le message
 ax.text(0, 1.02, f"n = {len(x)} · skewness = {skew:.2f} · ...",        #    la preuve
         transform=ax.transAxes, fontsize=9.5, color="#6E6E73")
 ```
@@ -213,13 +217,13 @@ Le geste 3 est le plus délicat. Garder les noms de variables du script (`x`, `d
 `groups`…) permet de réutiliser les blocs 3 et 4 sans les toucher. Cinq pièges reviennent
 souvent :
 
-- **L'import d'exemple.** Beaucoup de scripts chargent leurs données depuis scikit-learn
-  (`from sklearn.datasets import …`). La ligne disparaît avec le jeu d'exemple ; inutile
-  d'installer le paquet.
+- **Les lignes d'exemple.** Les scripts chargent leurs données d'exemple avec statsmodels
+  (`sm.datasets…`) ou lifelines (`lifelines.datasets…`). Ces lignes disparaissent avec le jeu
+  d'exemple ; inutile d'installer lifelines pour adapter un script.
 - **Les constantes d'échelle.** Certains réglages sont calibrés pour les données d'exemple :
-  l'espacement des crochets de significativité, les bornes d'un axe, un `np.linspace(0, …)` qui
-  suppose des valeurs positives. Sur une échelle dix fois plus large, il faut multiplier ces
-  constantes par dix.
+  l'espacement des crochets de significativité, les bornes et graduations d'un axe (un
+  `set_yticks(range(0, 101, 20))` pensé pour des pourcentages), un `np.linspace(0, …)` qui
+  suppose des valeurs positives. Sur une autre échelle, il faut ajuster ces constantes.
 - **L'échelle logarithmique.** Si l'on remplace `x` par `np.log10(x)`, les axes et les
   étiquettes affichent des logarithmes : `ax.set_xticks([3, 4, 5], ["1 000 $", "10 000 $",
   "100 000 $"])` et `f"{10 ** v:,.0f} $"` les ramènent en dollars.

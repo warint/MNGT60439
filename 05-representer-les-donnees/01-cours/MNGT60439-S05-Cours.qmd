@@ -239,9 +239,10 @@ plt.show()
 **[warint.github.io/pystatlas/fr](https://warint.github.io/pystatlas/fr/)** · code :
 [github.com/warint/pystatlas](https://github.com/warint/pystatlas)
 
-- **48 graphiques statistiques**, rangés en **10 familles**, chacun avec son script Python complet
-- Le pendant Python de la *R Graph Gallery*, de `ggstats` et de `ggstatsplot`
-- Construit sur ce que vous avez déjà : NumPy, pandas, Matplotlib, seaborn, SciPy, statsmodels
+- **57 graphiques statistiques**, rangés par **famille de questions**, chacun avec son script Python complet
+- Pensée d'abord pour les **étudiants en sciences sociales** : on part de la question, pas du code
+- Des exemples sur de **vraies données de sciences sociales** : élections américaines, écoles californiennes, criminalité, fécondité, régimes politiques, récidive
+- Construite sur ce que vous avez déjà : NumPy, pandas, Matplotlib, SciPy, statsmodels
 
 Trois principes, qui sont aussi ceux du cours :
 
@@ -251,7 +252,7 @@ Trois principes, qui sont aussi ceux du cours :
 | **La statistique d'abord** | Le graphique affiche les chiffres qui comptent : n, médiane, test, taille d'effet |
 | **Un dossier = une page** | `gallery/<famille>/<graphique>/plot.py` : on lit, on copie, on adapte |
 
-## Dix familles, cinq questions de stratège {.scrollable}
+## Les familles, et les questions du stratège {.scrollable}
 
 | La question | La famille PyStatlas | Graphiques utiles aujourd'hui | Séance |
 |---|---|---|---|
@@ -263,7 +264,7 @@ Trois principes, qui sont aussi ceux du cours :
 | — | Séries chronologiques, Survie, Multivarié, Inférence | | cas, projets |
 
 ::: {.muted}
-On n'apprend pas 48 graphiques. On apprend à **partir de la question**, à trouver la famille, et à
+On n'apprend pas 57 graphiques. On apprend à **partir de la question**, à trouver la famille, et à
 lire un script assez bien pour le faire travailler sur ses propres données.
 :::
 
@@ -278,19 +279,20 @@ Extrait de *Histogramme avec densité* ([distributions/histogram-density](https:
 title: Histogram with density            ← 1. LA FICHE : ce que montre le graphique,
 summary: Histogram, kernel density ...      son équivalent R, ses mots-clés
 """
-import matplotlib.pyplot as plt
+import statsmodels.api as sm
 from scipy import stats
-from sklearn.datasets import load_breast_cancer
 
-x = load_breast_cancer(as_frame=True).frame["mean area"].to_numpy()   # ← 2. LES DONNÉES
+wb = sm.datasets.fertility.load_pandas().data                         # ← 2. LES DONNÉES
+x = wb["2011"].dropna().to_numpy()            # fécondité de chaque pays en 2011
 mean, median, sd = x.mean(), np.median(x), x.std(ddof=1)
 
 skew, kurt = stats.skew(x), stats.kurtosis(x)                          # ← 3. LA STATISTIQUE
 W, p = stats.shapiro(x)
 
 fig, ax = plt.subplots(figsize=(8, 5))                                 # ← 4. LA FIGURE
-ax.hist(x, bins=40, density=True, ...)
-ax.set_title("Tumour area is strongly right-skewed", pad=26)           #    titre = le message
+ax.hist(x, bins=30, density=True, ...)
+ax.set_title(f"Fertility is right-skewed: median {median:.1f} births per woman, "
+             f"{(x > 5).sum()} countries above 5", pad=26)            #    titre = le message
 ax.text(0, 1.02, f"n = {len(x)} · skewness = {skew:.2f} · ...",        #    sous-titre = la preuve
         transform=ax.transAxes, fontsize=9.5, color="#6E6E73")
 ```
@@ -357,13 +359,14 @@ enregistrez une page blanche.
 Cinq démonstrations sur **nos** données, une par question.
 
 ::: {.muted}
-Les jeux d'exemple de la galerie viennent souvent de **scikit-learn**. Vous n'en avez pas
-besoin : c'est justement la ligne que vous remplacez.
+Les exemples de la galerie sont déjà des données de sciences sociales, fournies avec
+**statsmodels** ou **lifelines**. Lisez-les pour comprendre le graphique, puis remplacez ces
+lignes par nos données : c'est le geste 3.
 :::
 
 ## 1 · Distribution : histogramme avec densité
 
-[distributions/histogram-density](https://warint.github.io/pystatlas/fr/distributions/histogram-density/) · *quelle forme a le PIB par habitant ?*
+[distributions/histogram-density](https://warint.github.io/pystatlas/fr/distributions/histogram-density/) · *quelle forme a le PIB par habitant ?*<br>*Exemple de la galerie : fécondité de 198 pays en 2011 : médiane de 2,3 enfants par femme, longue traîne à droite.*
 
 ```{python}
 #| output-location: slide
@@ -412,7 +415,7 @@ C'est la passerelle vers la séance 6.
 
 ## 2 · Groupes : le nuage de pluie
 
-[distributions/raincloud](https://warint.github.io/pystatlas/fr/distributions/raincloud/) · *la marge nette diffère-t-elle selon le secteur ?*
+[distributions/raincloud](https://warint.github.io/pystatlas/fr/distributions/raincloud/) · *la marge nette diffère-t-elle selon le secteur ?*<br>*Exemple de la galerie : durée au pouvoir des dirigeants selon le type de régime (démocraties parlementaires, présidentielles, dictatures militaires).*
 
 ```{python}
 #| output-location: slide
@@ -473,7 +476,7 @@ L'axe est coupé à −40 % et la légende le **dit**. Couper sans le dire, c'es
 
 ## 3 · Relation : nuage de points avec statistiques
 
-[correlation/scatter-with-stats](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) · *les pays riches commercent-ils plus ?*
+[correlation/scatter-with-stats](https://warint.github.io/pystatlas/fr/correlation/scatter-with-stats/) · *les pays riches commercent-ils plus ?*<br>*Exemple de la galerie : 303 districts scolaires californiens : plus d'élèves défavorisés, moins d'élèves au-dessus de la médiane nationale en maths (r = −0,83).*
 
 ```{python}
 #| output-location: slide
@@ -511,7 +514,7 @@ plt.show()
 
 ## 4 · Deux groupes : fonctions de répartition empiriques
 
-[distributions/ecdf-comparison](https://warint.github.io/pystatlas/fr/distributions/ecdf-comparison/) · *les pays riches croissent-ils moins vite ?*
+[distributions/ecdf-comparison](https://warint.github.io/pystatlas/fr/distributions/ecdf-comparison/) · *les pays riches croissent-ils moins vite ?*<br>*Exemple de la galerie : âge à la sortie de prison des hommes récidivistes et non récidivistes (étude de Rossi).*
 
 ```{python}
 #| output-location: slide
@@ -561,7 +564,7 @@ compris (2,5 % par an) — ne sont pas en tête. C'est ce que la théorie appell
 
 ## 5 · Une distribution dans le temps : les crêtes
 
-[distributions/ridgeline](https://warint.github.io/pystatlas/fr/distributions/ridgeline/) · *comment la croissance mondiale s'est-elle répartie, année après année ?*
+[distributions/ridgeline](https://warint.github.io/pystatlas/fr/distributions/ridgeline/) · *comment la croissance mondiale s'est-elle répartie, année après année ?*<br>*Exemple de la galerie : fécondité des pays par décennie, de 1960 à 2010 : la transition démographique en un graphique.*
 
 ```{python}
 #| output-location: slide
